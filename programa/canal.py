@@ -564,17 +564,17 @@ def cmd_revisar(args):
     for p in procesos:
         p.wait()
     hoja = SALIDA / f"revision-{n}.jpg"
-    columnas = 4
+    columnas = 3
     entradas = []
     for f in fotos:
         entradas += ["-i", str(f)]
     filas = (len(fotos) + columnas - 1) // columnas
-    capas = "".join(f"[{i}:v]scale=405:720[v{i}];" for i in range(len(fotos)))
+    capas = "".join(f"[{i}:v]scale=640:360[v{i}];" for i in range(len(fotos)))
     huecos = len(fotos)
-    pos = "|".join(f"{(i % columnas) * 405}_{(i // columnas) * 720}" for i in range(huecos))
+    pos = "|".join(f"{(i % columnas) * 640}_{(i // columnas) * 360}" for i in range(huecos))
     filtro = capas + "".join(f"[v{i}]" for i in range(huecos)) + f"xstack=inputs={huecos}:layout={pos}:fill=white"
     if huecos == 1:
-        filtro = "[0:v]scale=405:720"
+        filtro = "[0:v]scale=640:360"
     subprocess.run([ffmpeg(), "-v", "error", "-y", *entradas, "-filter_complex", filtro, str(hoja)], check=True)
     print(f"✓ Hoja de revisión: {hoja}  (variante {props['variante']}; {', '.join(f'{x}s' for x in segundos)})")
     chequear_planos(n, pf)

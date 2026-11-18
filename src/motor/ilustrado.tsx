@@ -100,7 +100,7 @@ export const Ilustrado: React.FC<{ tinta?: number; saturacion?: number }> = ({ t
     const mat = new THREE.ShaderMaterial({
       uniforms: {
         tColor: { value: null }, tNormal: { value: null }, tProf: { value: null }, uRes: { value: new THREE.Vector2(W, H) },
-        uCerca: { value: 0.1 }, uLejos: { value: 400 }, uNieblaIni: { value: 30 }, uNieblaFin: { value: 120 }, uGrosor: { value: 2.2 * (H / 1920) },
+        uCerca: { value: 0.1 }, uLejos: { value: 400 }, uNieblaIni: { value: 30 }, uNieblaFin: { value: 120 }, uGrosor: { value: 2.2 * (Math.min(W, H) / 1080) },
         uSat: { value: saturacion }, uTinta: { value: tinta }, uColorTinta: { value: new THREE.Color("#120e1c") },
       },
       vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }",

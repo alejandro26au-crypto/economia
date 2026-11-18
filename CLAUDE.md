@@ -10,12 +10,12 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
 océano (para reutilizar) y estructura del código. Piezas para decorados: `src/motor/atrezo.ts`.
 
 ## Estado (18 nov 2026)
-- Recién creado: motor copiado del océano y limpio. `src/ideas/ejemplo.ts` = el vídeo de Holland (vertical) como
+- Recién creado: motor copiado del océano y limpio. `src/ideas/8.ts` = EJEMPLO, el vídeo de Holland (vertical) como
   modelo de escenas.
 - PENDIENTE (en este orden): 1) motor en horizontal 1920×1080 (cámara, rótulos, subtítulos); 2) montaje de
   vídeos largos en tramos que se unen sin cortes (la nube corta procesos de más de 2 h); 3) borrador automático de
   escenas a partir del guion; 4) vídeo piloto.
-- Por decidir con el usuario: público exacto (España, Latinoamérica o ambos), voz de ElevenLabs en español,
+- Público: España y Latinoamérica (español neutro). Por decidir: voz de ElevenLabs en español, tipo de personajes,
   nombre y logo del canal, idea del piloto.
 
 ## Lo que dicen los datos (vidIQ, 18 nov 2026)

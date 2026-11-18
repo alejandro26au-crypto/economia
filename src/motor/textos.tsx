@@ -2,7 +2,7 @@
 import React from "react";
 import { AbsoluteFill, Easing, useCurrentFrame } from "remotion";
 import { TINTA } from "./estilo";
-import { FPS, normal, tramo, useVoz } from "./tiempo";
+import { ALTO, ANCHO, FPS, normal, tramo, useVoz } from "./tiempo";
 import { Palabra, Rotulo } from "./tipos";
 
 export const FUENTE = "OceanoBlack, 'Inter Display', 'Arial Black', sans-serif";
@@ -67,8 +67,8 @@ export const Subtitulos: React.FC<{ palabras: Palabra[]; rotulos?: RotuloVisible
   const pop = tramo(f, f0 - 1, f0 + 5, Easing.out(Easing.back(2.2)));
   const limpia = (t: string) => t.replace(/[.,;:!?…«»"]/g, "").toUpperCase();
   return (
-    <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: 1330 }}>
-      <div style={{ transform: `scale(${0.85 + pop * 0.15})`, display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", maxWidth: 900 }}>
+    <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: Math.round(ALTO * (ANCHO > ALTO ? 0.82 : 0.69)) }}>
+      <div style={{ transform: `scale(${0.85 + pop * 0.15})`, display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", maxWidth: ANCHO * 0.8 }}>
         {quedan.map((i) => {
           const activa = s >= palabras[i].ini - 0.04;
           return (
@@ -95,8 +95,8 @@ export const RotuloEscena: React.FC<{ r: Rotulo; i: number }> = ({ r, i }) => {
     <div
       style={{
         position: "absolute",
-        left: (r.x ?? 0.5) * 1080,
-        top: (r.y ?? 0.22) * 1920 + bote,
+        left: (r.x ?? 0.5) * ANCHO,
+        top: (r.y ?? 0.22) * ALTO + bote,
         transform: `translate(-50%, -50%) scale(${k}) rotate(${r.giro ?? 0}deg)`,
         opacity: fuera,
         fontFamily: FUENTE,

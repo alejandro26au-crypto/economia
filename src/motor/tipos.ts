@@ -160,7 +160,7 @@ export type Rotulo = {
   texto: string;
   x?: number;
   y?: number;
-  tam?: number; // alto de letra en px (vídeo 1080x1920)
+  tam?: number; // alto de letra en px (vídeo 1920x1080)
   color?: string;
   giro?: number;
   hasta?: En;

@@ -1,0 +1,65 @@
+{
+  "titulo": "Why Don't Submarines Sink",
+  "dato": "John Philip Holland (1841-1914), an Irish-born schoolteacher in Paterson, New Jersey, submitted a submarine design to the US Navy in 1875; it was turned down as unworkable (Dictionary of Irish Biography: rejected as 'a fantastic scheme of a civilian landsman'). The Fenian Brotherhood (Irish republicans) then funded his work, hoping to use submarines against the British Navy; Holland I was launched on the Passaic River in 1878 and the Fenian Ram in 1881. In November 1883, in a dispute over money, members of the Fenian Brotherhood stole the Fenian Ram from its slip in Jersey City and took it to New Haven, but nobody knew how to operate it and Holland refused to help. On 11 April 1900 the US Navy bought Holland VI for $150,000; commissioned 12 October 1900 as USS Holland, the first commissioned submarine of the US Navy (64 long tons surfaced, 74 submerged). Physics: Archimedes' principle, a submerged body is pushed up by a force equal to the weight of the water it displaces; submarines flood ballast tanks to dive and blow them with compressed air to surface. Holland's patents: diving by admitting water until buoyancy is reduced to about 1/500 of displacement, keeping a small positive buoyancy and driving the boat down with diving planes while under way, so if power is lost it rises. Electric Boat (founded 1899 to take over Holland's company) is now General Dynamics Electric Boat, which builds US Navy submarines; CRS (Jan 2026) estimates a Virginia-class boat at about $5.0 billion. 1/500 of 74 long tons (165,760 lb) is about 330 lb, so 'about 300 pounds' of reserve buoyancy (rnsubs.co.uk also gives about 300 lb for the Holland boats).",
+  "fuentes": [
+    "https://en.wikipedia.org/wiki/John_Philip_Holland",
+    "https://www.ria.ie/node/98652",
+    "https://collection.sciencemuseumgroup.org.uk/people/cp38718/john-philip-holland",
+    "https://en.wikipedia.org/wiki/Fenian_Ram",
+    "https://en.wikipedia.org/wiki/USS_Holland_(SS-1)",
+    "https://patents.google.com/patent/US702729",
+    "https://science.howstuffworks.com/transport/engines-equipment/submarine1.htm",
+    "https://news.usni.org/2026/01/27/report-to-congress-on-the-virginia-class-submarine-program-and-aukus-pillar-i",
+    "https://rnsubs.co.uk/index.php?PageID=987"
+  ],
+  "apodo": "civilian landsman",
+  "reparto": [
+    {
+      "tipo": "bent",
+      "nombre": "holland",
+      "figura": "maestro"
+    },
+    {
+      "tipo": "almirante",
+      "nombre": "almirante",
+      "figura": "almirante"
+    },
+    {
+      "tipo": "bent",
+      "nombre": "rebelde",
+      "figura": "rebelde"
+    }
+  ],
+  "escenarios": {
+    "gancho": "barco",
+    "rival": "palacio",
+    "burlas": "barco",
+    "pista_falsa": "barco",
+    "raro": "naufragio",
+    "giro": "laboratorio",
+    "ciencia": "arrecife",
+    "final": "barco"
+  },
+  "gancho": "Ever wondered why a submarine floats? 74 tons of steel! It should sink! A schoolteacher cracked it. And the Navy laughed at him!",
+  "_ayuda_gancho": "GANCHO raro y sin explicar (1-2 frases). Nada de 'because': que el espectador no entienda todavía.",
+  "rival": "1875. John Holland sends his design to the US Navy.",
+  "_ayuda_rival": "RIVAL PODEROSO: alguien o algo grande que va contra el héroe (un rey, una flota, el mayor depredador).",
+  "burlas": "Their answer? A fantastic scheme of a civilian landsman. Back to class, teacher!",
+  "_ayuda_burlas": "BURLAS Y APODO: se ríen del héroe y le ponen un apodo (escríbelo también en 'apodo').",
+  "pista_falsa": "Everybody knew: steel sinks. Period.",
+  "_ayuda_pista_falsa": "PISTA FALSA: la explicación equivocada que todos creen.",
+  "raro": [
+    "Then something weird happened. Irish rebels paid him to build one. To sink British warships!",
+    "Then it got weirder. His own backers stole his sub! Nobody could drive it.",
+    "Then the weirdest part. 1900. The same Navy that laughed paid him 150,000 dollars. America's first Navy submarine!"
+  ],
+  "_ayuda_raro": "TRES frases que escalan: 'Then something weird happened.' / 'Then it got weirder.' / 'Then the weirdest part.'",
+  "giro": "The teacher was right.",
+  "_ayuda_giro": "GIRO: la verdad, en pocas palabras y con sorpresa.",
+  "ciencia": "A sub floats when it's lighter than the water it pushes away. Flood the tanks? It dives. Blow them with air? It rises. Holland's trick? Stay 300 pounds light. Dive on the fins. Engine dies? It pops right back up!",
+  "_ayuda_ciencia": "CIENCIA ESCONDIDA: el porqué real, con un dato concreto y comprobado (cifras en número).",
+  "final": "The company born from his sub still builds America's subs. 5 billion dollars each. Not bad for a landsman. Now you know.",
+  "_ayuda_final": "FINAL QUE HACE LOOP: frase seca que se queda a medias y se completa con la primera frase del gancho.",
+  "formato": "Empieza con «Ever wondered why…?» (decisión del usuario, variante del «Did you know?» del vídeo 5) y cierra con «Now you know.» Protagonista: Holland, maestro de escuela (reparto nuevo). Tono efusivo, público hombres EE. UU. 25-35.",
+  "hashtags": "#submarine #ocean #history #navy #physics #shorts"
+}

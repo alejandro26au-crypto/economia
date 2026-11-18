@@ -4,8 +4,8 @@ import { Easing, interpolate } from "remotion";
 import { En, Palabra } from "./tipos";
 
 export const FPS = 30;
-export const ANCHO = 1080;
-export const ALTO = 1920;
+export const ANCHO = 1920; // vídeo HORIZONTAL (YouTube largo)
+export const ALTO = 1080;
 
 export const normal = (s: string) =>
   s
