@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Canal de economía: el programa que hace los vídeos.
+"""Canal «Inercia del consumo»: el programa que hace los vídeos (motor 2D, src/motor).
 
     canal comprobar                 ¿está todo instalado?
     canal ideas                     lista de ideas con su guion
@@ -264,7 +264,10 @@ SONIDOS = {
     "raro": ("0.32*sin(2*PI*(620-260*t+40*sin(2*PI*7*t))*t)*min(1,t*10)*exp(-1.6*t)+0.16*sin(2*PI*(931-390*t)*t)*exp(-2*t)", 1.3, "aecho=0.8:0.6:120:0.35"),
     "ding": ("0.5*sin(2*PI*1320*t)*exp(-3*t)+0.25*sin(2*PI*2640*t)*exp(-5*t)", 1.2, "anull"),
     "chasquido": ("0.9*(random(0)*2-1)*exp(-90*t)+0.6*sin(2*PI*2200*t)*exp(-60*t)", 0.25, "highpass=f=700"),
-    "sonar": ("0.45*sin(2*PI*1180*t)*exp(-2.2*t)*min(1,t*60)", 1.4, "aecho=0.8:0.7:300:0.3"),
+    "vuelo": ("(random(0)*2-1)*pow(sin(PI*t/1.0),2)*(0.5+0.5*sin(2*PI*3*t))", 1.0, "bandpass=f=900:width_type=o:w=2.5,volume=2.4"),
+    "lapiz": ("(random(0)*2-1)*(0.5+0.5*sin(2*PI*11*t))*exp(-1.5*t)", 0.9, "highpass=f=2500,lowpass=f=7000,volume=1.2"),
+    "sello": ("1.0*sin(2*PI*(70+60*exp(-20*t))*t)*exp(-9*t)+0.6*(random(0)*2-1)*exp(-40*t)", 0.5, "lowpass=f=1800"),
+    "caja": ("0.45*sin(2*PI*2093*t)*exp(-6*t)+0.35*sin(2*PI*2637*(t-0.09))*exp(-6*(t-0.09))*gt(t,0.09)+0.3*(random(0)*2-1)*exp(-60*t)", 0.9, "anull"),
 }
 
 
@@ -581,14 +584,6 @@ def elegir_variante(n, args):
     return v
 
 
-def chequear_planos(n, pf):
-    """Avisa de planos con la cámara metida en un objeto o con el personaje fuera del encuadre (medio segundo)."""
-    js = SALIDA / "chequeo.js"
-    r = subprocess.run([npx(), "esbuild", "programa/chequeo.ts", "--bundle", "--platform=node", f"--outfile={js}", "--log-level=error"], cwd=RAIZ, env=entorno())
-    if r.returncode == 0:
-        subprocess.run(["node", str(js), str(pf)], cwd=RAIZ, env=entorno())
-
-
 def preparar_props(n, args):
     prueba = "--prueba" in args
     fich = PUBLIC / "voces" / str(n) / ("prueba.json" if prueba else "tiempos.json")
@@ -663,7 +658,7 @@ def cmd_montar(args):
             sys.exit(3)
         t0 = time.time()
         tmp = carpeta / f"v{k:03}.tmp.mp4"
-        orden = [npx(), "remotion", "render", str(paquete), "short", str(tmp), f"--props={pf}", f"--frames={a}-{b}", f"--concurrency={hilos}", "--muted", "--crf=19", "--x264-preset=veryfast", "--log=error"]
+        orden = [npx(), "remotion", "render", str(paquete), "video", str(tmp), f"--props={pf}", f"--frames={a}-{b}", f"--concurrency={hilos}", "--muted", "--crf=19", "--x264-preset=veryfast", "--log=error"]
         if "--rapido" in args:
             orden.append("--scale=0.5")
         with open(registro, "a", encoding="utf-8") as reg:
@@ -679,7 +674,7 @@ def cmd_montar(args):
     if not audio.exists():
         print("  · Mezclando el audio…", flush=True)
         with open(registro, "a", encoding="utf-8") as reg:
-            r = subprocess.run([npx(), "remotion", "render", str(paquete), "short", str(carpeta / "audio.tmp.aac"), f"--props={pf}", "--codec=aac", "--log=error"], cwd=RAIZ, stdout=reg, stderr=subprocess.STDOUT, env=entorno())
+            r = subprocess.run([npx(), "remotion", "render", str(paquete), "video", str(carpeta / "audio.tmp.aac"), f"--props={pf}", "--codec=aac", "--log=error"], cwd=RAIZ, stdout=reg, stderr=subprocess.STDOUT, env=entorno())
         if r.returncode != 0:
             fallo(f"No se ha podido mezclar el audio. Mira salida/montaje-{n}.log")
         (carpeta / "audio.tmp.aac").rename(audio)
@@ -708,7 +703,7 @@ def cmd_foto(args):
         fallo("Dime el segundo. Ejemplo:  canal foto 1 3.5")
     props, pf, _ = preparar_props(n, args)
     out = SALIDA / f"foto-{n}-{seg:g}s.png"
-    r = subprocess.run([npx(), "remotion", "still", "src/index.ts", "short", str(out), f"--props={pf}", f"--frame={int(seg * 30)}", "--log=error"], cwd=RAIZ, env=entorno())
+    r = subprocess.run([npx(), "remotion", "still", "src/index.ts", "video", str(out), f"--props={pf}", f"--frame={int(seg * 30)}", "--log=error"], cwd=RAIZ, env=entorno())
     if r.returncode != 0:
         fallo("No se ha podido sacar la foto (mira el error de arriba).")
     print(f"✓ {out}")
@@ -720,7 +715,7 @@ def tiempos_escenas(n, props):
     ts_src = (RAIZ / "src" / "ideas" / f"{n}.ts").read_text(encoding="utf-8")
     # igual que el montaje (indicePalabra en tiempo.tsx): un número es el índice de la palabra; un texto se busca
     # desde la palabra donde empieza la escena anterior (incluida)
-    desdes = re.findall(r'\n    \{\n      desde: (?:"([^"]+)"|(\d+))', ts_src)
+    desdes = re.findall(r'\n      desde: (?:"([^"]+)"|(\d+))', ts_src)
     inicios = [0.0]
     k = 0
     for dsd, num in desdes:
@@ -757,7 +752,7 @@ def cmd_revisar(args):
     for i, seg in enumerate(segundos):
         out = SALIDA / f"rev-{n}-{i + 1}.png"
         fotos.append(out)
-        procesos.append(subprocess.Popen([npx(), "remotion", "still", str(paquete), "short", str(out), f"--props={pf}", f"--frame={int(seg * 30)}", "--scale=0.5", "--log=error"], cwd=RAIZ, env=entorno()))
+        procesos.append(subprocess.Popen([npx(), "remotion", "still", str(paquete), "video", str(out), f"--props={pf}", f"--frame={int(seg * 30)}", "--scale=0.5", "--log=error"], cwd=RAIZ, env=entorno()))
         if len(procesos) >= (4 if NUBE else 3):
             procesos.pop(0).wait()
     for p in procesos:
@@ -776,7 +771,6 @@ def cmd_revisar(args):
         filtro = "[0:v]scale=640:360"
     subprocess.run([ffmpeg(), "-v", "error", "-y", *entradas, "-filter_complex", filtro, str(hoja)], check=True)
     print(f"✓ Hoja de revisión: {hoja}  (variante {props['variante']}; {', '.join(f'{x}s' for x in segundos)})")
-    chequear_planos(n, pf)
 
 
 def cmd_todo(args):

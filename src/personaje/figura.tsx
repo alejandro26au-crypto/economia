@@ -1,10 +1,8 @@
-// EL REPARTO: personajes 2D de "palito" con cara expresiva. Cabeza blanca grande, cejas que cuentan la emoción,
-// cuerpo pequeño con la ropa del papel que hacen y brazos y piernas finos de tinta. Cada vídeo elige su
-// protagonista (pirata, farero, cocinero…) del catálogo (reparto.ts) o uno nuevo.
-// Usa la misma pose y las mismas animaciones que el muñeco de BENT (src/bent/animaciones.ts): mismas unidades
-// (pies en y = 0, ~950 de alto hasta lo alto del sombrero) y la misma cara (src/bent/rig.tsx).
+// LA ESPECIE del canal «Inercia del consumo» (ficha completa en docs/personaje.md): boceto a tinta en papel, como
+// referencias/personaje.png. Todos los personajes son de esta especie y cambian solo la ropa y los accesorios.
+// Unidades: pies en y = 0, ~950 de alto. Las poses y animaciones están en pose.ts y animaciones.ts.
 import React from "react";
-import { Brazo, ManoDibujo, Pierna, Pose } from "../bent/rig";
+import { Brazo, ManoDibujo, Pierna, Pose } from "./pose";
 
 export const TINTA = "#09080d";
 const L = 7;
@@ -626,7 +624,7 @@ export function alcanza(hombro: P, punto: P, fuera: 1 | -1 = 1): { h: number; c:
 }
 
 // ---------------------------------------------------------------- figura completa
-export const Figura: React.FC<{ p: Pose; d: Diseno; f: number; id?: string }> = ({ p, d, f, id = "fg" }) => {
+export const Figura: React.FC<{ p: Pose; d: Diseno; f: number; id?: string; simple?: boolean }> = ({ p, d, f, id = "fg", simple }) => {
   const caderaA: P = [-26, -6];
   const caderaB: P = [30, -6];
   const pierna = (c: P, q: Pierna) => {
@@ -740,17 +738,20 @@ export const Figura: React.FC<{ p: Pose; d: Diseno; f: number; id?: string }> = 
       </defs>
       {/* sombra rayada en el suelo */}
       <ellipse cx={p.x + 10} cy={6} rx={110 - Math.min(60, -p.y * 0.3)} ry={14} fill={`url(#rs${id})`} />
-      <g filter={`url(#lz${id})`}>{cuerpo}</g>
+      {/* en el mundo (simple) el filtro de lápiz lo pone la capa entera; en las hojas, cada figura */}
+      {simple ? cuerpo : <g filter={`url(#lz${id})`}>{cuerpo}</g>}
       {/* segunda pasada del trazo, desplazada y suave: el «boceto a varias pasadas» */}
-      <g filter={`url(#lz2${id})`} opacity={0.22} transform="translate(3 -2)">
-        {cuerpo}
-      </g>
+      {!simple && (
+        <g filter={`url(#lz2${id})`} opacity={0.22} transform="translate(3 -2)">
+          {cuerpo}
+        </g>
+      )}
     </g>
   );
 };
 
 // ---------------------------------------------------------------- expresiones del reparto (naturales)
-import type { Expresion } from "../bent/animaciones";
+import type { Expresion } from "./animaciones";
 /** Caras más naturales que las de BENT: la neutra relajada, sin ceño. Al hablar las cejas acompañan a la voz. */
 export function caraReparto(e: Expresion, abre: number, f: number): Partial<Pose> {
   const voz = abre > 0.05 ? Math.sin(f * 0.21) * 0.12 + abre * 0.1 : 0; // las cejas suben y bajan al hablar

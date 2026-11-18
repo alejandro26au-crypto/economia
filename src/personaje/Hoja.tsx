@@ -3,8 +3,8 @@
 // - "reparto": el protagonista y el reparto de ejemplo (banquero, inversor, político, trabajador, rey, estafador)
 import React from "react";
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
-import { Brazo, POSE_BASE, Pose } from "../bent/rig";
-import { cara, cuerpo } from "../bent/animaciones";
+import { Brazo, POSE_BASE, Pose } from "./pose";
+import { cara, cuerpo } from "./animaciones";
 import { Figura, PUNTOS, alcanza, caraReparto } from "./figura";
 import { REPARTO } from "./reparto";
 import { Signo, SignoDibujo } from "./signos";

@@ -1,8 +1,8 @@
 // Animaciones de BENT (y de toda su especie): cada una devuelve la pose en el fotograma t (desde que empezó).
 // Se mezclan solas al pasar de una a otra. Las caras se ponen aparte (cara.ts), así cualquier animación vale con
 // cualquier expresión.
-import { Brazo, Pose, POSE_BASE, mezclaPose } from "./rig";
-import { PUNTOS, alcanza } from "../reparto/figura";
+import { Brazo, Pose, POSE_BASE, mezclaPose } from "./pose";
+import { PUNTOS, alcanza } from "./figura";
 
 export type Anim = "quieto" | "camina" | "corre" | "habla" | "senala" | "piensa" | "encoge" | "saluda" | "victoria" | "asustado" | "cruza" | "salta" | "mira" | "cabeza" | "agotado";
 

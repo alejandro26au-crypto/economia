@@ -1,7 +1,6 @@
-// Todas las ideas. Para añadir una: crea su ficha y guion («./canal guion nuevo N …»), src/ideas/N.ts y apúntala aquí.
-// 8.ts = EJEMPLO: el vídeo de los submarinos de Holland del canal del océano (formato vertical), como modelo de escenas.
+// Todas las ideas. Para añadir una: «./canal guion nuevo N …», «./canal guion N» (hace el borrador y lo apunta aquí).
+// 90 = EJEMPLO de 15 s del formato (no es un guion del canal).
 import { Idea } from "../motor/tipos";
 import { idea90 } from "./90";
-import { idea8 } from "./8";
 
-export const IDEAS: Idea[] = [idea8, idea90];
+export const IDEAS: Idea[] = [idea90];

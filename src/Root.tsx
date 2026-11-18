@@ -1,39 +1,43 @@
 import React from "react";
-import { Composition } from "remotion";
-import { HojaEspecie, HojaReparto } from "./reparto/Hoja";
-import { Short } from "./motor/Short";
-import { Chequeo } from "./motor/Chequeo";
-import { ALTO, ANCHO, FPS } from "./motor/tiempo";
-import { PropsShort } from "./motor/tipos";
+import { AbsoluteFill, Composition, useCurrentFrame } from "remotion";
+import { HojaEspecie, HojaReparto } from "./personaje/Hoja";
+import { Video, useFuentes } from "./motor/Video";
+import { FPS, ALTO, ANCHO } from "./motor/tiempo";
+import { PropsVideo } from "./motor/tipos";
+import { Cielo, Ciudad, Delante, Lejos, ANCHO_MUNDO } from "./mundo/ciudad";
+import { PatronesLapiz } from "./mundo/trazo";
 
-// Guion de la idea 0 (Textos/0 - …txt) para ver algo en el estudio sin voz.
-const GUION_0 =
-  "Bacon is frying at the bottom of the sea. During World War Two, a navy crew heard it. Their sonar was the best in the fleet. And out there, enemy submarines were hunting them. But all the sonar guy heard was sizzling. The crew laughed and called him Bacon Ears. The captain was sure it was a secret enemy weapon, jamming their sonar. Then something weird happened. The sizzling got louder near every reef. Then it got weirder. It came from the whole sea floor at once. Then the weirdest part. It got so loud, it could hide an enemy submarine. So the navy called in scientists. And the secret weapon was a shrimp. Smaller than your finger. It snaps its giant claw so fast, the water rips open into a bubble. When that bubble collapses, it gets nearly as hot as the surface of the Sun. It even flashes light. Millions of them, snapping at once. Bacon Ears was right all along. And right now, on warm reefs all over the world,";
+const EJEMPLO: PropsVideo = { n: 90, variante: 1, duracion: 15, palabras: [{ p: "…", ini: 0, fin: 1 }], voz: null, musica: null };
 
-// Valores de ejemplo para el estudio (usa la idea 0, la de prueba); el programa pasa los de verdad.
-const EJEMPLO: PropsShort = {
-  n: 8,
-  variante: 1,
-  duracion: 62,
-  palabras: GUION_0.split(" ").map((p, i) => ({ p, ini: 0.2 + i * 0.355, fin: 0.5 + i * 0.355 })),
-  voz: null,
-  musica: null,
+/** El mundo entero de un vistazo (para revisar la ciudad): npx remotion still src/index.ts mundo salida/mundo.png */
+const VistaMundo: React.FC = () => {
+  useFuentes();
+  const f = useCurrentFrame();
+  const z = ANCHO / (ANCHO_MUNDO + 400);
+  return (
+    <AbsoluteFill style={{ background: "#f4efe2" }}>
+      <svg width={ANCHO} height={ALTO}>
+        <defs>
+          <PatronesLapiz />
+        </defs>
+        <g transform={`scale(${z}) translate(200 ${-1000 + ALTO / z / 2 - 900})`}>
+          <g transform="scale(2)">
+            <Cielo f={f} />
+          </g>
+          <Lejos f={f} />
+          <Ciudad f={f} />
+          <Delante f={f} />
+        </g>
+      </svg>
+    </AbsoluteFill>
+  );
 };
 
 export const Root: React.FC = () => (
   <>
-  <Composition id="especie" component={HojaEspecie} width={1920} height={1340} fps={FPS} durationInFrames={30} />
-  <Composition id="reparto" component={HojaReparto} width={1920} height={1080} fps={FPS} durationInFrames={30} />
-  <Composition id="chequeo" component={Chequeo} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={1} defaultProps={EJEMPLO} />
-  <Composition
-    id="short"
-    component={Short}
-    width={ANCHO}
-    height={ALTO}
-    fps={FPS}
-    durationInFrames={FPS * 10}
-    defaultProps={EJEMPLO}
-    calculateMetadata={({ props }) => ({ durationInFrames: Math.ceil((props.duracion + 0.7) * FPS) })}
-  />
+    <Composition id="video" component={Video} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={FPS * 10} defaultProps={EJEMPLO} calculateMetadata={({ props }) => ({ durationInFrames: Math.ceil((props.duracion + 0.7) * FPS) })} />
+    <Composition id="mundo" component={VistaMundo} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={30} />
+    <Composition id="especie" component={HojaEspecie} width={1920} height={1340} fps={FPS} durationInFrames={30} />
+    <Composition id="reparto" component={HojaReparto} width={1920} height={1080} fps={FPS} durationInFrames={30} />
   </>
 );
