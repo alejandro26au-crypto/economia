@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Atajo: ./canal montar 1  (usa el Python del proyecto si existe; si no, el del sistema, como en la nube)
+cd "$(dirname "$0")"
+[ -d node/bin ] && export PATH="$PWD/node/bin:$PATH"
+if [ -x .venv/bin/python ]; then exec .venv/bin/python programa/canal.py "$@"; fi
+exec python3 programa/canal.py "$@"

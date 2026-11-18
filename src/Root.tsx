@@ -1,0 +1,41 @@
+import React from "react";
+import { Composition } from "remotion";
+import { Ficha, FichaCerca } from "./bent/Ficha";
+import { HojaReparto } from "./reparto/Hoja";
+import { Short } from "./motor/Short";
+import { Chequeo } from "./motor/Chequeo";
+import { ALTO, ANCHO, FPS } from "./motor/tiempo";
+import { PropsShort } from "./motor/tipos";
+
+// Guion de la idea 0 (Textos/0 - …txt) para ver algo en el estudio sin voz.
+const GUION_0 =
+  "Bacon is frying at the bottom of the sea. During World War Two, a navy crew heard it. Their sonar was the best in the fleet. And out there, enemy submarines were hunting them. But all the sonar guy heard was sizzling. The crew laughed and called him Bacon Ears. The captain was sure it was a secret enemy weapon, jamming their sonar. Then something weird happened. The sizzling got louder near every reef. Then it got weirder. It came from the whole sea floor at once. Then the weirdest part. It got so loud, it could hide an enemy submarine. So the navy called in scientists. And the secret weapon was a shrimp. Smaller than your finger. It snaps its giant claw so fast, the water rips open into a bubble. When that bubble collapses, it gets nearly as hot as the surface of the Sun. It even flashes light. Millions of them, snapping at once. Bacon Ears was right all along. And right now, on warm reefs all over the world,";
+
+// Valores de ejemplo para el estudio (usa la idea 0, la de prueba); el programa pasa los de verdad.
+const EJEMPLO: PropsShort = {
+  n: 8,
+  variante: 1,
+  duracion: 62,
+  palabras: GUION_0.split(" ").map((p, i) => ({ p, ini: 0.2 + i * 0.355, fin: 0.5 + i * 0.355 })),
+  voz: null,
+  musica: null,
+};
+
+export const Root: React.FC = () => (
+  <>
+  <Composition id="reparto" component={HojaReparto} width={2560} height={1900} fps={FPS} durationInFrames={30} />
+  <Composition id="ficha-cerca" component={FichaCerca} width={2000} height={1000} fps={FPS} durationInFrames={30} />
+  <Composition id="ficha-bent" component={Ficha} width={2560} height={2100} fps={FPS} durationInFrames={30} />
+  <Composition id="chequeo" component={Chequeo} width={1080} height={1920} fps={FPS} durationInFrames={1} defaultProps={EJEMPLO} />
+  <Composition
+    id="short"
+    component={Short}
+    width={ANCHO}
+    height={ALTO}
+    fps={FPS}
+    durationInFrames={FPS * 10}
+    defaultProps={EJEMPLO}
+    calculateMetadata={({ props }) => ({ durationInFrames: Math.ceil((props.duracion + 0.7) * FPS) })}
+  />
+  </>
+);

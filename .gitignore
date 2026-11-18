@@ -1,0 +1,17 @@
+node_modules
+.venv/
+node/
+uv/
+salida/
+Vídeos listos/*
+!Vídeos listos/.gitkeep
+Pon aquí tu voz/*
+!Pon aquí tu voz/.gitkeep
+Pon aquí tu música/*
+!Pon aquí tu música/.gitkeep
+public/voces/
+public/musica/
+oceano.cmd
+.DS_Store
+*.zip
+__pycache__/
