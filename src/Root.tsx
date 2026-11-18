@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, Composition, useCurrentFrame } from "remotion";
-import { PersonajeDibujado } from "./personaje/Dibujo";
+import { ESPECIE, PersonajeDibujado } from "./personaje/Dibujo";
 import { DIBUJOS } from "./personaje/poses";
 import { Video, useFuentes } from "./motor/Video";
 import { FPS, ALTO, ANCHO } from "./motor/tiempo";
@@ -55,10 +55,38 @@ const HojaPersonaje: React.FC = () => {
   );
 };
 
+/** La especie: todos con su ropa, de pie y en otra pose: npx remotion still src/index.ts especie salida/e.png */
+const HojaEspecie: React.FC = () => {
+  useFuentes();
+  const f = useCurrentFrame();
+  const quienes = Object.keys(ESPECIE);
+  const otras = ["cabeza", "enfadado", "corre", "sentado", "agotado", "cabeza", "enfadado", "corre"];
+  return (
+    <AbsoluteFill style={{ background: "#f4efe2" }}>
+      <svg width={ANCHO} height={ALTO}>
+        {quienes.map((q, i) => (
+          <g key={q}>
+            <g transform={`translate(${130 + i * 236} 470) scale(1.0)`}>
+              <PersonajeDibujado dibujo="piensa" quien={q} f={f} t={30} habla={false} mira={1} id={`p${q}`} />
+              <text x={0} y={52} textAnchor="middle" fontSize={34} fontFamily="Marca, sans-serif" fill="#2b2e3d">
+                {ESPECIE[q].nombre}
+              </text>
+            </g>
+            <g transform={`translate(${130 + i * 236} 1010) scale(1.0)`}>
+              <PersonajeDibujado dibujo={otras[i]} quien={q} f={f} t={30} habla={false} mira={1} id={`o${q}`} />
+            </g>
+          </g>
+        ))}
+      </svg>
+    </AbsoluteFill>
+  );
+};
+
 export const Root: React.FC = () => (
   <>
     <Composition id="video" component={Video} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={FPS * 10} defaultProps={EJEMPLO} calculateMetadata={({ props }) => ({ durationInFrames: Math.ceil((props.duracion + 0.7) * FPS) })} />
     <Composition id="mundo" component={VistaMundo} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={30} />
+    <Composition id="especie" component={HojaEspecie} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={30} />
     <Composition id="personaje" component={HojaPersonaje} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={30} />
   </>
 );

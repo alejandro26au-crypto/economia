@@ -35,7 +35,7 @@ export type Accion =
   | { en: En; hace: "mira"; lado: 1 | -1 };
 
 export type Actor = {
-  quien: string; // quién es (de momento solo «protagonista»: los dibujos están en public/personaje)
+  quien: string; // de la especie (ESPECIE en src/personaje/Dibujo.tsx): protagonista, banquero, inversor, politico…
   x?: number; // desplazamiento desde el centro del lugar (px del mundo; ±400 cabe en un plano medio)
   fondo?: number; // 0 delante … 1 al fondo del paseo (por defecto 0.4)
   mira?: 1 | -1;
