@@ -1,9 +1,8 @@
 # Ficha del personaje — «Inercia del consumo»
 
 Referencias: `referencias/personaje.png` (pose y cara), `referencias/expresiones.png` (6 caras), logo
-`public/marca/logo.png` y portada `referencias/portada.png`. Código: `src/personaje/figura.tsx` (dibujo),
-`pose.ts` (esqueleto), `animaciones.ts` (movimientos), `reparto.ts` (ropa de cada uno), `signos.tsx` (¡! ¿? …).
-Hojas para comparar: `npx remotion still src/index.ts especie salida/especie.png` y `… reparto salida/reparto.png`.
+`public/marca/logo.png` y portada `referencias/portada.png`. Código: `src/personaje/Dibujo.tsx` (anima los
+dibujos), `poses.ts` (medidas, automático), `signos.tsx` (¡! ¿? …). Hoja: `npx remotion still src/index.ts personaje salida/p.png`.
 
 ## REGLA (19 nov 2026, decisión del usuario)
 El personaje debe ser EXACTAMENTE igual a la referencia, sin diferencias. Por eso NO se dibuja con código: se usan
