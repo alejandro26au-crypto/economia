@@ -19,7 +19,8 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
   comparación, dinero). Contador del bolsillo, sello «¡PERO!», rótulos de papel, lluvia de billetes, líneas,
   subtítulos con la letra de la portada (Rubik Dirt). Idea 90 = ejemplo de 15 s (no es guion del canal).
 - HECHO: ritmo por escena (calma/normal/alta) y límites automáticos de efectos para vídeo largo (docs/formato.md).
-- GUARDADO: todos los gráficos en `graficos/` (LEEME.md). El usuario va a REPLANTEAR el canal: preguntar antes de seguir.
+- GUARDADO: todos los gráficos en `graficos/` (LEEME.md). EN PAUSA (19 nov 2026): el usuario va a estudiar y
+  replantear el MODO DE EDICIÓN. No crear ni cambiar nada del motor hasta que él traiga la nueva dirección.
 - HECHO: montaje POR TRAMOS que se retoma (`canal montar N`); borrador automático (`canal borrador N`).
 - PENDIENTE (en este orden, poco a poco con el usuario): 1) visto bueno del ejemplo; 2) más detalle en la ciudad
   y lugares nuevos que pida la historia (fábrica, tienda, aeropuerto, interiores…); 3) elegir voz; 4) guion piloto.
