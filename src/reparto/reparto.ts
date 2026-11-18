@@ -3,6 +3,15 @@
 import { Diseno } from "./figura";
 
 export const REPARTO: Record<string, Diseno> = {
+  // ---- canal «Inercia del consumo»: la especie de referencias/personaje.png (pelo de pinchos por defecto)
+  protagonista: { nombre: "Protagonista", ropa: "camiseta", color: "#2b2a2f", pantalon: "#1f1e22", colorPelo: "#16141a" },
+  banquero: { nombre: "Banquero", ropa: "traje", color: "#4a4e58", color2: "#f4f2ea", corbata: "#c9a24a", colorPelo: "#2a2622", gafas: true, lleva: "maletin", barriga: 0.5 },
+  inversor: { nombre: "Inversor", ropa: "traje", color: "#34445e", color2: "#f4f2ea", corbata: "ninguna", colorPelo: "#4a3220", lleva: "billetes" },
+  politico: { nombre: "Político", ropa: "traje", color: "#3a3a42", color2: "#f4f2ea", corbata: "#a04a3a", pelo: "canoso", colorPelo: "#d6d6d0", insignia: "#c9a24a", barriga: 0.8, escala: [1.05, 1] },
+  trabajador: { nombre: "Trabajador", ropa: "chaleco-obra", color: "#c98c4e", pantalon: "#4a5a7a", pantalonLargo: true, sombrero: "casco", colorSombrero: "#d9b44a", bigote: "grueso", colorPelo: "#3a2a1c" },
+  monarca: { nombre: "Rey", ropa: "chaqueta", color: "#7a2a34", color2: "#efe6d0", sombrero: "corona", banda: "#7a8a5a", bigote: "grueso", barba: "perilla", colorPelo: "#5a4026", barriga: 0.8, cinturon: true, escala: [1.06, 1] },
+  estafador: { nombre: "Estafador", ropa: "gabardina", color: "#b09a6a", color2: "#efe6d0", corbata: "#5a6a4a", sombrero: "fedora", colorSombrero: "#3a3634", bigote: "fino", colorPelo: "#1a1614", lleva: "bolsa" },
+  // ---- heredados del canal del océano (misma especie, otra ropa)
   pirata: { nombre: "Pirata", ropa: "chaqueta", color: "#7a1a22", color2: "#f0e6d0", sombrero: "tricornio", colorSombrero: "#1e1a22", bigote: "manillar", barba: "perilla", colorPelo: "#2a1a10", parche: true, cinturon: true, zapato: "#3a2414" },
   grumete: { nombre: "Grumete", ropa: "rayas", color: "#f4f2ec", color2: "#2a4a8a", sombrero: "bandana", colorSombrero: "#c0242c", pelo: "rizado", colorPelo: "#5a3218", escala: [0.92, 0.9], zapato: "#3a2414" },
   capitan: { nombre: "Capitán", ropa: "chaqueta", color: "#1c2a52", color2: "#f4f4f6", sombrero: "capitan", barba: "corta", colorPelo: "#9a9ca6", barriga: 0.6, escala: [1.08, 1] },

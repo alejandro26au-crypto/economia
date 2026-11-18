@@ -1,7 +1,6 @@
 import React from "react";
 import { Composition } from "remotion";
-import { Ficha, FichaCerca } from "./bent/Ficha";
-import { HojaReparto } from "./reparto/Hoja";
+import { HojaEspecie, HojaReparto } from "./reparto/Hoja";
 import { Short } from "./motor/Short";
 import { Chequeo } from "./motor/Chequeo";
 import { ALTO, ANCHO, FPS } from "./motor/tiempo";
@@ -23,9 +22,8 @@ const EJEMPLO: PropsShort = {
 
 export const Root: React.FC = () => (
   <>
-  <Composition id="reparto" component={HojaReparto} width={2560} height={1900} fps={FPS} durationInFrames={30} />
-  <Composition id="ficha-cerca" component={FichaCerca} width={2000} height={1000} fps={FPS} durationInFrames={30} />
-  <Composition id="ficha-bent" component={Ficha} width={2560} height={2100} fps={FPS} durationInFrames={30} />
+  <Composition id="especie" component={HojaEspecie} width={1920} height={1340} fps={FPS} durationInFrames={30} />
+  <Composition id="reparto" component={HojaReparto} width={1920} height={1080} fps={FPS} durationInFrames={30} />
   <Composition id="chequeo" component={Chequeo} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={1} defaultProps={EJEMPLO} />
   <Composition
     id="short"
