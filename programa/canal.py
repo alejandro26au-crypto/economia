@@ -6,8 +6,8 @@
     canal guion nuevo N "Título"    crea la ficha de la fórmula viral (Textos/N - Título.json) para rellenarla
     canal guion N                   comprueba la ficha (vídeo largo), escribe el guion (.txt) y, si no
                                      existe, el borrador automático de escenas en src/ideas/N.ts
-    canal borrador N [--forzar]     borrador automático de escenas a partir del guion (escenarios del catálogo,
-                                     reparto, caras, signos, rótulos con las cifras)
+    canal borrador N [--forzar]     borrador automático de escenas a partir del guion (lugares de la ciudad,
+                                     reparto, caras, signos, nubes, rótulos con las cifras y golpes)
     canal voz N                     coge el audio más nuevo de «Pon aquí tu voz», lo nivela y apunta cuándo dice cada palabra
     canal prueba N                  prepara tiempos de mentira (sin voz) para ver el vídeo antes de grabar
     canal montar N [--variante S | --nueva] [--prueba] [--rapido] [--max-minutos M]
@@ -180,7 +180,7 @@ def cmd_voz(args):
     print("Escuchando la voz palabra a palabra (la primera vez descarga el modelo, ~500 MB)…", flush=True)
     from faster_whisper import WhisperModel
 
-    modelo = WhisperModel(os.environ.get("OCEANO_WHISPER", "small"), device="cpu", compute_type="int8")
+    modelo = WhisperModel(os.environ.get("CANAL_WHISPER", "small"), device="cpu", compute_type="int8")
     a = [normal(w) for w in guion]
 
     def escucha(pista):
@@ -285,47 +285,37 @@ def efectos_sonido():
 # ---------------------------------------------------------------- guion de vídeo LARGO y borrador de escenas
 PALABRAS_LARGO = (1500, 2200)  # 10-15 min de voz
 
-# Escenarios del catálogo y las palabras del guion que los llaman (el borrador elige el que más coincide).
-ESCENARIOS_CLAVE = {
-    "aseguradora": "banco bancos banquero banqueros préstamo préstamos crédito créditos hipoteca hipotecas cuenta ahorro ahorros depósito depósitos intereses interés seguro seguros oficina tarjeta",
-    "control": "bolsa bolsas acciones acción mercado mercados wall street índice cotización pantalla pantallas fondo fondos inversores inversión trading apuesta apuestas gráfico subió cayó desplomó",
-    "piso": "tu tus te ti sueldo salario alquiler casa nevera compra supermercado precio precios familia hogar mes factura facturas bolsillo cartera café",
-    "ministerio": "gobierno gobiernos ministro ministros ministerio ley leyes decreto estado impuestos impuesto presidente congreso parlamento político políticos regulador reguladores banco_central",
-    "trono": "rey reyes reina corona monarca imperio emperador regente duque corte nobles noble francia luis",
-    "palacio": "palacio lujo aristócratas fiesta fiestas versalles mansión mansiones",
-    "guarida": "estafa estafas secreto secretos plan conspiración fraude trampa mafia cártel escobar narcotráfico sobornos soborno escondido",
-    "bodega": "oro plata tesoro monedas moneda lingotes fortuna botín billetes efectivo cajas",
-    "puerto": "barco barcos comercio colonias colonia mercancía mercancías mississippi américa especias exportar importar puerto",
-    "academia": "economista economistas teoría científicos nobel universidad profesores profesor modelo fórmula matemáticas genios",
-    "aula": "aprende aprender escuela explicación lección clase entender significa",
-    "expediente": "investigación juicio policía tribunal cárcel informe fiscal acusado condenado pruebas",
-    "almirantazgo": "guerra mapa mapas estrategia ejército soldados batalla",
-    "club": "club ricos rico millonarios millonario multimillonario élite whisky puros",
-    "nave": "fábrica fábricas obreros trabajadores producción industria empleo empleos despidos",
-    "gabinete": "crisis emergencia reunión rescate pánico urgente noche",
-    "taberna": "taberna cerveza rumor rumores pueblo gente calle calles",
+# Lugares de la Ciudad Inercia y las palabras del guion que los llaman (el borrador elige el que más coincide).
+LUGARES_CLAVE = {
+    "casa": "tu tus te ti sueldo salario alquiler casa nevera compra familia hogar factura facturas bolsillo colchón ahorras ahorrar mes vida",
+    "banco": "banco bancos banquero banqueros préstamo préstamos crédito créditos cuenta cuentas depósito depósitos intereses interés deuda deudas hipoteca hipotecas",
+    "bolsa": "bolsa bolsas acciones acción wall street índice cotización inversores inversor inversión invertir fondo fondos burbuja especulación especuladores apuesta quiebra",
+    "mercado": "comprar compras vender venta precio precios mercado oferta demanda tienda consumo consumir producto productos inflación supermercado",
+    "puerto": "comercio barco barcos exportar importar exportaciones colonias mercancía mississippi compañía américa china aranceles mar",
+    "cajeros": "efectivo cajero cajeros sacar retirar corralito pánico cola colas billetes monedas",
+    "gobierno": "gobierno estado ley leyes impuestos presidente ministro central imprimir imprenta moneda reserva rey regente reina emperador político",
 }
-RESERVA = ["piso", "aseguradora", "control", "ministerio", "oficina"]
-# Personajes del reparto que se llaman por palabras del guion
 REPARTO_CLAVE = {
     "banquero": "banco bancos banquero banqueros prestamista",
-    "inversor": "inversor inversores especulador especuladores accionista accionistas fondo trader burry soros buffett",
-    "politico": "gobierno político políticos ministro presidente congreso diputado regulador",
+    "inversor": "inversor inversores especulador especuladores accionista accionistas fondo trader",
+    "politico": "gobierno político políticos ministro presidente congreso diputado",
     "trabajador": "trabajador trabajadores obrero obreros empleado empleados sueldo salario",
     "monarca": "rey reina regente monarca emperador duque",
-    "estafador": "estafa estafador estafadores fraude timador ladrón ladrones law madoff",
+    "estafador": "estafa estafador estafadores fraude timador ladrón ladrones",
+    "economista": "economista economistas profesor universidad nobel",
 }
 CARAS_CLAVE = [
     # (palabras, cara, pose, signo)
-    ("crisis quiebra quebró ruina arruinado arruinados perdió perdieron pérdidas desastre deuda deudas hundió desplomó cayó", "triste", "agotado", "sudor"),
+    ("crisis quiebra quebró ruina arruinado arruinados perdió perdieron pérdidas desastre hundió desplomó cayó", "triste", "agotado", "sudor"),
     ("pánico miedo terror colapso explotó estalló", "asustado", "cabeza", "susto"),
     ("furioso rabia mentira mintió robaron robo engaño engañó traición", "enfadado", "cruza", "enfado"),
     ("rieron risa burla burlaron ridículo loco", "risa", "brazos", None),
     ("ganó ganaron millones fortuna rico ricos éxito subió duplicó triplicó", "feliz", "victoria", "dinero"),
     ("idea descubrió entendió inventó solución truco", "sorpresa", "senala", "idea"),
 ]
+GIROS = {"pero": "¡PERO!", "aún": "¡Y AÚN PEOR!", "embargo": "¡PERO!", "hasta": "¡GIRO!", "entonces": "¡Y ENTONCES!"}
 NUMERO = re.compile(r"\d")
-UNIDAD = re.compile(r"^(millones|millón|mil|billones|dólares|euros|%|por|años|veces|marcos|pesos)$", re.I)
+UNIDAD = re.compile(r"^(millones|millón|mil|billones|dólares|euros|%|por|años|meses|días|horas|veces|marcos|pesos|libras)$", re.I)
 
 
 def norm_es(w):
@@ -344,10 +334,20 @@ def frases(texto):
     return out
 
 
+def cifra_de(f, j):
+    w = f[j].strip(".,;:!?…«»\"()¿¡")
+    if j + 1 < len(f) and UNIDAD.match(norm_es(f[j + 1])):
+        if norm_es(f[j + 1]) == "por" and j + 2 < len(f) and f[j + 2].lower().startswith("ciento"):
+            return w + " %"
+        return w + " " + f[j + 1].strip(".,;:!?…«»\"()")
+    return w
+
+
 def borrador_largo(n, titulo, guion, reparto_fijo=None):
-    """Escenas de borrador para un vídeo largo: una escena cada ~40-80 palabras (cortando en frases y párrafos),
-    escenario por palabras clave del catálogo (sin repetir el anterior), personajes del reparto que se nombran,
-    caras, poses y signos según lo que dice cada frase, rótulos con las cifras y golpes de efecto en ellas."""
+    """Escenas de borrador (motor 2D): una escena cada ~40-80 palabras (cortando en frases y párrafos), lugar de la
+    Ciudad Inercia por palabras clave (procurando cambiar: la cámara vuela siguiendo al billete), personajes que se
+    nombran, caras/poses/signos por frase, rótulos con las cifras, NUBE con la cifra cuando la escena explica
+    números, sello en los giros («Pero…», «Y aún…») y lluvia de billetes con los millones."""
     fs = frases(guion)
     escenas, actual, cuenta = [], [], 0
     for ws, fin_par in fs:
@@ -361,39 +361,34 @@ def borrador_largo(n, titulo, guion, reparto_fijo=None):
             escenas[-1] += actual
         else:
             escenas.append(actual)
-    bloques, idx, previo = [], 0, None
+    bloques, idx, previo, nube_antes = [], 0, None, True
     usados = {}
     for k, frs in enumerate(escenas):
         palabras = [w for f in frs for w in f]
-        texto = " ".join(norm_es(w) for w in palabras)
-        bolsa = set(texto.split())
-        # escenario
-        puntos = {e: len(bolsa & set(c.split())) for e, c in ESCENARIOS_CLAVE.items()}
+        bolsa = {norm_es(w) for w in palabras}
+        puntos = {e: len(bolsa & set(c.split())) for e, c in LUGARES_CLAVE.items()}
         candidatos = sorted(puntos, key=lambda e: (-puntos[e], usados.get(e, 0)))
-        esc = next((e for e in candidatos if e != previo and puntos[e] > 0), None)
-        if not esc:
-            esc = min((e for e in RESERVA if e != previo), key=lambda e: usados.get(e, 0))
-        usados[esc] = usados.get(esc, 0) + 1
-        previo = esc
-        # reparto
+        lugar = next((e for e in candidatos if e != previo and puntos[e] > 0), None) or min((e for e in LUGARES_CLAVE if e != previo), key=lambda e: usados.get(e, 0))
+        usados[lugar] = usados.get(lugar, 0) + 1
+        previo = lugar
         figuras = [f for f, c in REPARTO_CLAVE.items() if bolsa & set(c.split())]
         if reparto_fijo:
             figuras = [f for f in reparto_fijo if f in figuras] or figuras
-        tu = bool(bolsa & {"tu", "tus", "te", "ti", "usted", "imagina", "imagínate"})
-        lista = (["protagonista"] if tu or not figuras else []) + figuras
-        lista = lista[:3]
-        # acciones por frase (el primer personaje es el que habla/reacciona)
+        lista = (["protagonista"] + figuras)[:3]
         acciones = {f: [] for f in lista}
-        rotulos, efectos = [], []
+        rotulos, golpes, cifras = [], [], []
         pos = idx
         for f in frs:
             ini = pos
             t = {norm_es(w) for w in f}
             quien = lista[0]
-            for fg in lista:
+            for fg in lista[1:]:
                 if t & set(REPARTO_CLAVE.get(fg, "").split()):
                     quien = fg
                     break
+            primera = norm_es(f[0])
+            if primera in GIROS or (primera == "y" and len(f) > 1 and norm_es(f[1]) == "aún"):
+                golpes.append({"tipo": "sello", "en": ini, "texto": GIROS.get(primera, "¡Y AÚN PEOR!")})
             hecho = False
             for claves, cara, pose, signo in CARAS_CLAVE:
                 hit = next((ini + j for j, w in enumerate(f) if norm_es(w) in claves.split()), None)
@@ -401,52 +396,56 @@ def borrador_largo(n, titulo, guion, reparto_fijo=None):
                     acciones[quien] += [{"en": hit, "hace": "cara", "cara": cara}, {"en": hit, "hace": "pose", "pose": pose}]
                     if signo:
                         acciones[quien].append({"en": hit, "hace": "signo", "signo": signo})
+                    if signo == "dinero" and not any(g["tipo"] == "lluvia" for g in golpes):
+                        golpes.append({"tipo": "lluvia", "en": hit})
                     hecho = True
                     break
-            final = f[-1]
-            if not hecho and final.endswith("?"):
+            if not hecho and f[-1].endswith("?"):
                 acciones[quien] += [{"en": ini, "hace": "cara", "cara": "piensa"}, {"en": ini, "hace": "pose", "pose": "piensa"}, {"en": ini + len(f) - 1, "hace": "signo", "signo": "pregunta"}]
                 hecho = True
-            elif not hecho and final.endswith("!"):
+            elif not hecho and f[-1].endswith("!"):
                 acciones[quien] += [{"en": ini, "hace": "cara", "cara": "sorpresa"}, {"en": ini, "hace": "signo", "signo": "exclama"}]
+                golpes.append({"tipo": "zoom", "en": ini, "a": 1.12})
                 hecho = True
             if hecho and pos + len(f) < idx + len(palabras):
-                # al empezar la frase siguiente vuelve a la cara normal (los gestos no se quedan pegados)
                 acciones[quien] += [{"en": pos + len(f), "hace": "cara", "cara": "normal"}, {"en": pos + len(f), "hace": "pose", "pose": "brazos"}]
-            # una cifra por frase: rótulo de papel con la cifra y su unidad, y golpe de efecto
             for j, w in enumerate(f):
-                if NUMERO.search(w) and len(rotulos) < 4:
-                    cifra = w.strip(".,;:!?…«»\"()")
-                    if j + 1 < len(f) and UNIDAD.match(norm_es(f[j + 1])):
-                        cifra += " " + f[j + 1].strip(".,;:!?…«»\"()")
-                        if j + 2 < len(f) and norm_es(f[j + 1]) == "por" and f[j + 2].lower().startswith("ciento"):
-                            cifra = w + " %"
-                    rotulos.append({"en": ini + j, "texto": cifra.upper(), "y": 0.2, "tam": 130, "hasta": min(ini + j + 8, idx + len(palabras) - 1)})
-                    efectos.append({"tipo": "golpe" if len(efectos) % 2 == 0 else "zoom", "en": ini + j})
+                if NUMERO.search(w):
+                    cifras.append((ini + j, cifra_de(f, j).upper()))
                     break
             pos += len(f)
+        # dos cifras o más en la escena (y no hubo nube justo antes): la explicación va DENTRO de la nube
+        nube = None
+        if len(cifras) >= 2 and not nube_antes:
+            nube = {"tipo": "cifra", "texto": cifras[-1][1], "sub": cifras[0][1]}
+            nube_antes = True
+        else:
+            nube_antes = False
+            for en, texto in cifras[:3]:
+                rotulos.append({"en": en, "texto": texto, "hasta": min(en + 8, idx + len(palabras) - 1)})
+                golpes.append({"tipo": "temblor", "en": en})
         lineas = [f"    // {k + 1}. {' '.join(palabras)[:90]}…", "    {"]
         if k > 0:
             lineas.append(f"      desde: {idx},")
-        lineas.append(f'      escenario: "{esc}",')
+        lineas.append(f'      lugar: "{lugar}",')
+        if nube:
+            lineas.append(f"      nube: {json.dumps(nube, ensure_ascii=False)},")
         lineas.append("      actores: [")
         for a_i, fg in enumerate(lista):
-            x = 0.5 if len(lista) == 1 else 0.32 + 0.36 * a_i / (len(lista) - 1)
-            extra = {"figura": fg}
-            if a_i == 0:
-                extra["narra"] = True
+            x = -150 if len(lista) > 1 and a_i == 0 else 0 if len(lista) == 1 else 150 + (a_i - 1) * 260
+            extra = ", narra: true" if a_i == 0 else ""
             acc = json.dumps(acciones[fg], ensure_ascii=False)
-            lineas.append(f'        {{ tipo: "bent", nombre: "{fg}", x: {x:.2f}, z: 0.45, mira: {1 if x < 0.5 else -1}, extra: {json.dumps(extra, ensure_ascii=False)}, acciones: {acc} }},')
+            lineas.append(f'        {{ quien: "{fg}", x: {x}, mira: {1 if x <= 0 else -1}{extra}, acciones: {acc} }},')
         lineas.append("      ],")
         if rotulos:
             lineas.append(f"      rotulos: {json.dumps(rotulos, ensure_ascii=False)},")
-        if efectos:
-            lineas.append(f"      efectos: {json.dumps(efectos, ensure_ascii=False)},")
+        if golpes:
+            lineas.append(f"      golpes: {json.dumps(golpes, ensure_ascii=False)},")
         lineas.append("    },")
         bloques.append("\n".join(lineas))
         idx += len(palabras)
-    cab = f"// Borrador AUTOMÁTICO hecho por «canal borrador {n}» a partir del guion. Ajusta escenarios, personajes, acciones,\n"
-    cab += "// rótulos y planos a mano. Las escenas y acciones van por ÍNDICE de palabra del guion (lo más seguro).\n"
+    cab = f"// Borrador AUTOMÁTICO hecho por «canal borrador {n}» a partir del guion. Retoca lugares, personajes, acciones,\n"
+    cab += "// nubes, rótulos y golpes. Escenas y acciones van por ÍNDICE de palabra del guion (lo más seguro).\n"
     cab += 'import { Idea } from "../motor/tipos";\n\n'
     return cab + f"export const idea{n}: Idea = {{\n  n: {n},\n  titulo: {json.dumps(titulo, ensure_ascii=False)},\n  escenas: [\n" + "\n".join(bloques) + "\n  ],\n};\n"
 
@@ -471,7 +470,8 @@ def cmd_borrador(args):
     reparto = json.loads(fi.read_text(encoding="utf-8")).get("reparto") if fi else None
     ts.write_text(borrador_largo(n, d["titulo"], d["guion"], reparto if isinstance(reparto, list) else None), encoding="utf-8")
     apuntar_en_lista(n)
-    print(f"✓ Borrador de escenas: src/ideas/{n}.ts ({ts.read_text(encoding='utf-8').count('escenario:')} escenas), apuntado en src/ideas/lista.ts.")
+    cuantas = ts.read_text(encoding="utf-8").count("lugar:")
+    print(f"✓ Borrador de escenas: src/ideas/{n}.ts ({cuantas} escenas), apuntado en src/ideas/lista.ts.")
 
 
 def idea_sin_escenas(args):

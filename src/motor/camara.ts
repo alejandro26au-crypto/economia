@@ -6,6 +6,7 @@ import { Easing } from "remotion";
 import { LUGARES, SUELO } from "../mundo/ciudad";
 import { NUBE_H, NUBE_W } from "../mundo/nube";
 import { CtxEscena, EstadoActor, cabezaDe, estadoActor } from "./actores";
+import { cortado } from "../personaje/Dibujo";
 import { FPS, azar, indicePalabra, mezcla, tramo } from "./tiempo";
 import { Escena, TipoPlano } from "./tipos";
 
@@ -71,7 +72,9 @@ function objetivo(t: Toma, ec: EscenaCalc, f: number, variante: number): Cam {
   const estados: EstadoActor[] = (e.actores ?? []).map((a, i) => estadoActor(a, i, e, ec.c, Math.max(f, ec.c.ini), variante));
   const s = estados[t.actor] ?? estados[0];
   const lado = azar(variante, t.ini) > 0.5 ? 1 : -1;
-  switch (t.tipo) {
+  // si el dibujo está cortado por las rodillas, nada de planos de cuerpo entero: de cintura para arriba
+  const tipo = s && cortado(s.dibujo) && (t.tipo === "general" || t.tipo === "medio" || t.tipo === "contra" || t.tipo === "dos") ? "cerca" : t.tipo;
+  switch (tipo) {
     case "general":
       return { x: L.x, y: SUELO - 380, z: 0.55, r: 0 };
     case "edificio":

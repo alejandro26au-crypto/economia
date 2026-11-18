@@ -2,7 +2,7 @@
   "name": "economia",
   "version": "1.0.0",
   "private": true,
-  "description": "Shorts animados de curiosidades del océano",
+  "description": "Inercia del consumo: vídeos animados de historias de dinero (motor 2D)",
   "scripts": {
     "estudio": "remotion studio src/index.ts",
     "tsc": "tsc --noEmit -p ."

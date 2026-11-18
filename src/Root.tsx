@@ -1,6 +1,7 @@
 import React from "react";
 import { AbsoluteFill, Composition, useCurrentFrame } from "remotion";
-import { HojaEspecie, HojaReparto } from "./personaje/Hoja";
+import { PersonajeDibujado } from "./personaje/Dibujo";
+import { DIBUJOS } from "./personaje/poses";
 import { Video, useFuentes } from "./motor/Video";
 import { FPS, ALTO, ANCHO } from "./motor/tiempo";
 import { PropsVideo } from "./motor/tipos";
@@ -33,11 +34,31 @@ const VistaMundo: React.FC = () => {
   );
 };
 
+/** Todos los dibujos del personaje tal como salen en el vídeo: npx remotion still src/index.ts personaje salida/p.png */
+const HojaPersonaje: React.FC = () => {
+  useFuentes();
+  const f = useCurrentFrame();
+  const nombres = Object.keys(DIBUJOS);
+  return (
+    <AbsoluteFill style={{ background: "#f4efe2" }}>
+      <svg width={ANCHO} height={ALTO}>
+        {nombres.map((n, i) => (
+          <g key={n} transform={`translate(${150 + i * 270} 820) scale(1.45)`}>
+            <PersonajeDibujado dibujo={n} f={f} t={30} habla={false} mira={1} id={n} />
+            <text x={0} y={60} textAnchor="middle" fontSize={34} fontFamily="Marca, sans-serif" fill="#2b2e3d">
+              {n}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </AbsoluteFill>
+  );
+};
+
 export const Root: React.FC = () => (
   <>
     <Composition id="video" component={Video} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={FPS * 10} defaultProps={EJEMPLO} calculateMetadata={({ props }) => ({ durationInFrames: Math.ceil((props.duracion + 0.7) * FPS) })} />
     <Composition id="mundo" component={VistaMundo} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={30} />
-    <Composition id="especie" component={HojaEspecie} width={1920} height={1340} fps={FPS} durationInFrames={30} />
-    <Composition id="reparto" component={HojaReparto} width={1920} height={1080} fps={FPS} durationInFrames={30} />
+    <Composition id="personaje" component={HojaPersonaje} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={30} />
   </>
 );

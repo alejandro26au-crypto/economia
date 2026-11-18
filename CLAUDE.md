@@ -1,36 +1,28 @@
-# Canal de economía (en español)
+# Canal «Inercia del consumo» (economía, en español)
 
-Vídeos LARGOS (10-15 min, horizontal 1920×1080, en español) con historias REALES de dinero y economía: escenarios
-3D (Three.js, acabado "3D ilustrado" con contorno de tinta) con personajes 2D dentro, cámara que nunca para y efectos
-de sonido en cada cambio. El motor viene del canal del océano (repositorio `oceano-animado-`). Historias y
-personajes propios: no copiar otros canales.
+Vídeos LARGOS (10-15 min, horizontal 1920×1080, español neutro para España y Latinoamérica) con historias REALES de
+dinero. Formato propio **«Sigue el dinero»** (`docs/formato.md`): la historia es un viaje por la **Ciudad Inercia**
+(mundo 2D a tinta y acuarela, `src/mundo`) con el protagonista (el espectador) dentro. Motor 2D NUEVO en Remotion
+(`src/motor`), sin 3D. Historias y personajes propios: no copiar otros canales.
 Habla con el usuario en español llano, frases cortas y pasos numerados. Puede trabajar solo mientras está fuera.
 
-**Lee `docs/catalogo.md` SOLO cuando haga falta:** catálogo de escenarios, modelos 3D y reparto heredados del
-océano (para reutilizar) y estructura del código. Piezas para decorados: `src/motor/atrezo.ts`.
+**Personaje:** ficha en `docs/personaje.md` (LEER antes de tocarlo). Debe ser EXACTAMENTE igual a
+`referencias/personaje.png` y `referencias/expresiones.png`: por eso se usan los DIBUJOS DEL USUARIO recortados
+(`programa/recortar.py` → `public/personaje/`), nunca un dibujo hecho con código (el usuario lo rechazó dos veces).
 
 ## Estado (18 nov 2026)
-- Canal: **Inercia del consumo** (youtube.com/@Inercial.delconsumo). Logo `public/marca/logo.png`, portada
-  `referencias/portada.png`, personaje `referencias/personaje.png` y caras `referencias/expresiones.png`.
-- HECHO: especie del canal (`src/reparto/figura.tsx`, boceto a tinta como la referencia: cabeza redonda, pelo de
-  mechones, ojos blancos grandes, camiseta oscura rayada a lápiz, palitos) y reparto de ejemplo en `reparto.ts`
-  (protagonista, banquero, inversor, politico, trabajador, monarca, estafador). Hojas: `especie` y `reparto`
-  (`npx remotion still src/index.ts especie salida/especie.png`). Signos de cómic (`signos.tsx`): acción
-  `{ hace: "signo", signo: "pregunta" | "exclama" | "enfado" | "sudor" | "susto" | "velocidad" | "idea" | "dinero" }`.
-  Poses nuevas: `cabeza` (manos a la cabeza) y `agotado`. `alcanza()` lleva una mano a un punto (PUNTOS).
-- HECHO: estilo PAPEL Y LÁPIZ para todo el 3D (`ilustrado.tsx`, `papel`): color apagado tipo acuarela, rayado en
-  sombras y grano. Letra de la portada (Rubik Dirt, `public/fuentes`): subtítulos en tinta azul noche con halo de
-  papel; rótulos como etiquetas de papel. Colores de marca en `textos.tsx` (PAPEL, TINTA_MARCA, ORO, SALVIA).
-- HECHO: montaje POR TRAMOS (`canal montar N`): tramos de 45 s que se guardan; si se corta, se relanza la misma orden
-  y sigue. En la nube para solo a los 100 min (`--max-minutos`). Audio entero aparte; une sin recomprimir.
-  Velocidad medida: ~0,7 s por fotograma → 12 min de vídeo ≈ 4 h (3 lanzamientos en la nube).
-- HECHO: borrador automático (`canal borrador N`): escenas cada 40-80 palabras, escenario por palabras clave,
-  reparto que se nombra, caras/poses/signos por frase, rótulos con las cifras. Luego se retoca a mano.
-- HECHO: escenarios nuevos `banco` (cámara acorazada abierta) y `salon` (tu casa: facturas, hucha, tele con IPC)
-  en `escenarios-economia.tsx`. Idea 90 = EJEMPLO de 15 s (no es guion del canal).
-- PENDIENTE: decisiones del usuario (voz, nombre del protagonista, visto bueno a la especie y al estilo papel);
-  más escenarios de economía (bolsa, despacho del gobierno, calle/supermercado, fábrica…); guion del piloto.
-- Público: España y Latinoamérica (español neutro).
+- HECHO: el protagonista = 7 dibujos del usuario recortados (hoja `personaje`). FALTAN dibujos de cuerpo entero
+  (de pie neutro, hablando, señalando, contento, caminando…) y los demás personajes: pedirlos al usuario.
+- HECHO: motor 2D nuevo. La ciudad (casa, banco, bolsa, mercado, puerto, cajeros, gobierno) con paralaje, cosas que
+  se mueven (nubes, pájaros, barcos, bandera, imprenta de billetes, pantalla de bolsa). Cámara automática con «zoom
+  golpe», deriva continua y VUELO siguiendo a un billete entre lugares. Nube de pensamiento (gráfico, cifra,
+  comparación, dinero). Contador del bolsillo, sello «¡PERO!», rótulos de papel, lluvia de billetes, líneas,
+  subtítulos con la letra de la portada (Rubik Dirt). Idea 90 = ejemplo de 15 s (no es guion del canal).
+- HECHO: montaje POR TRAMOS que se retoma (`canal montar N`); borrador automático (`canal borrador N`).
+- PENDIENTE (en este orden, poco a poco con el usuario): 1) visto bueno del ejemplo; 2) más detalle en la ciudad
+  y lugares nuevos que pida la historia (fábrica, tienda, aeropuerto, interiores…); 3) elegir voz; 4) guion piloto.
+- Decisiones del usuario pendientes: voz de ElevenLabs, nombre del protagonista, idea del piloto.
+- El usuario pidió NO guardar cosas del motor viejo del océano (ya borrado; queda en el historial de git).
 
 ## Lo que dicen los datos (vidIQ, 18 nov 2026)
 - En español destacan los vídeos que tocan TU dinero y una verdad escondida: «Cómo los ricos usan la deuda» (17x,
@@ -54,23 +46,23 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   Banco Mundial, hemerotecas, libros de historia económica). Lo cómico es dramatización; las cifras, nunca.
 - Enseñar el guion en un bloque para copiar. El usuario hace la voz en ElevenLabs con el texto EXACTO.
 
-## Escenarios
-- Reutilizar todo lo posible de `docs/catalogo.md` (despachos, salas del trono, bancos, tabernas, oficinas, muelles,
-  guaridas, aulas…) y crear los que pida la historia con `src/motor/plantilla-escenario.tsx` y `atrezo.ts`.
-- Nivel de calidad: el del CAMAROTE (muchos objetos con textura pintada, luz cálida contra fría, centro libre).
-- Puntos de interés y obstáculos en METROS (`metros: true`); actores con `...enMetros("escenario", x, z)`.
+## Cómo se escribe una idea (`src/ideas/N.ts`, tipos en `src/motor/tipos.ts`)
+- Escena = `{ desde: índice de palabra, lugar, actores, nube?, planos?, rotulos?, golpes? }`; `contador` en la idea.
+- Actores: `{ quien: "banquero", x: desplazamiento en px desde el lugar, mira, narra, acciones }`. Acciones por
+  palabra: cara, pose, habla, signo, va (camina a x), mira.
+- La cámara elige sola; `planos` solo para forzar (general, edificio, medio, cerca, contra, dos, detalle).
 
 ## Proceso
-1. Guion aprobado → `./canal guion nuevo N "Título"`, rellenar la ficha (campo `guion` = texto EXACTO), `./canal guion N`
-   (escribe el .txt y el BORRADOR automático de escenas, ya apuntado en `src/ideas/lista.ts`).
-2. Retocar las escenas en `src/ideas/N.ts` (planos, acciones, rótulos) → `npx tsc --noEmit -p .`
-3. `./canal prueba N` + `./canal revisar N --prueba`: hoja de escenas + chequeo automático de planos.
-4. Llega el MP3 → «Pon aquí tu voz» → `./canal voz N` → `./canal revisar N` → fotos clave → `./canal montar N`
-   (en segundo plano; si para por tiempo, relanzar la MISMA orden hasta que diga «Vídeo listo») → enviar el vídeo.
-5. La variante (cámara) se guarda por idea en `Textos/variantes.json`.
-6. Guardar y subir; actualizar el «Estado» de arriba.
+1. Guion aprobado → `./canal guion nuevo N "Título"`, rellenar la ficha (`guion` = texto EXACTO de la voz, `dato`,
+   `fuentes`), `./canal guion N` (escribe el .txt y el BORRADOR de escenas, ya apuntado en `src/ideas/lista.ts`).
+2. Retocar `src/ideas/N.ts` → `npx tsc --noEmit -p .`
+3. `./canal prueba N` + `./canal revisar N --prueba` (hoja con una foto por escena) y fotos sueltas (`foto N SEG`).
+4. Llega el MP3 → «Pon aquí tu voz» → `./canal voz N` → `./canal revisar N` → `./canal montar N` (en segundo
+   plano; si para por tiempo, relanzar la MISMA orden hasta que diga «Vídeo listo») → enviar el vídeo.
+5. La variante se guarda por idea en `Textos/variantes.json`. Guardar y subir; actualizar el «Estado».
 
 ## Órdenes (`./canal …`)
-`comprobar` · `ideas` · `guion nuevo N "Título"` · `guion N` · `borrador N [--forzar]` · `voz N` · `prueba N` · `revisar N [--prueba]` ·
-`foto N SEG [--prueba]` · `montar N [--prueba] [--rapido] [--nueva | --variante S] [--tramo S] [--max-minutos M]` · `todo N` (voz + montar).
-En la nube, antes de `voz`: `pip install -r instalador/requirements.txt` y `npm ci`.
+`comprobar` · `ideas` · `guion nuevo N "Título"` · `guion N` · `borrador N [--forzar]` · `voz N` · `prueba N` ·
+`revisar N [--prueba]` · `foto N SEG [--prueba]` · `montar N [--prueba] [--rapido] [--nueva | --variante S]
+[--tramo S] [--max-minutos M]` · `todo N`. Hojas: `npx remotion still src/index.ts mundo|personaje salida/x.png`. Recortar dibujos: `python3 programa/recortar.py img nombre`.
+En la nube, antes de nada: `pip install -r instalador/requirements.txt` y `npm ci`.

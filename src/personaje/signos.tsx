@@ -2,7 +2,7 @@
 // enfado, gotas de sudor, rayas de susto y rayas de velocidad. Unidades de la figura (cabeza de radio ~125 en
 // (6, -380) respecto a la cadera). Se dibujan con trazo de lápiz y aparecen con un pequeño «pop».
 import React from "react";
-import { TINTA } from "./figura";
+export const TINTA = "#141316";
 
 export type Signo = "exclama" | "pregunta" | "enfado" | "sudor" | "susto" | "velocidad" | "idea" | "dinero";
 
@@ -11,7 +11,7 @@ const st = { fill: "none", stroke: TINTA, strokeWidth: 7, strokeLinecap: "round"
 /** Un signo junto a la cabeza. t = fotogramas desde que aparece (para el pop y el temblor). */
 export const SignoDibujo: React.FC<{ s: Signo; t?: number }> = (props) => (
   // las medidas de abajo son respecto a la cadera; la cadera de la figura de pie está a ~418 del suelo
-  <g transform="translate(0 -418)">
+  <g transform="translate(0 -220)">
     <SignoCadera {...props} />
   </g>
 );

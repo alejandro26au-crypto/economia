@@ -5,6 +5,23 @@ Referencias: `referencias/personaje.png` (pose y cara), `referencias/expresiones
 `pose.ts` (esqueleto), `animaciones.ts` (movimientos), `reparto.ts` (ropa de cada uno), `signos.tsx` (¡! ¿? …).
 Hojas para comparar: `npx remotion still src/index.ts especie salida/especie.png` y `… reparto salida/reparto.png`.
 
+## REGLA (19 nov 2026, decisión del usuario)
+El personaje debe ser EXACTAMENTE igual a la referencia, sin diferencias. Por eso NO se dibuja con código: se usan
+SUS DIBUJOS tal cual, recortados del fondo con `programa/recortar.py` (fondo blanco y huecos entre brazo y cuerpo
+→ transparentes; cara y manos se quedan) y guardados en `public/personaje/NOMBRE.png`. Las medidas (dónde está la
+cara, si se ven los pies) se apuntan solas en `src/personaje/poses.ts`. El motor los anima como «imágenes
+animadas» (`src/personaje/Dibujo.tsx`): respira, bota al hablar, «pop» al cambiar de dibujo, línea que hierve.
+
+Dibujos que hay: piensa (de pie, mano en la mejilla), corre, lee (sentado con libro), cabeza (manos a la cabeza),
+enfadado (brazos cruzados), agotado, sentado (piensa sentado). cabeza, enfadado y sentado están CORTADOS por las
+rodillas en la hoja original: la cámara los encuadra de cintura para arriba.
+Para añadir uno: `python3 programa/recortar.py imagen.png nombre [x0 y0 x1 y1]` y usarlo en `dibujoPara`
+(`src/motor/actores.ts`).
+
+FALTAN (pedir al usuario, con el mismo estilo y fondo blanco, cuerpo entero): de pie neutro, hablando con la mano
+abierta, señalando, contento/riendo de pie, triste de pie, sorprendido de pie, caminando (2-4 fotogramas) y los
+otros personajes (banquero, inversor, político, trabajador, rey, estafador) con su ropa.
+
 ## La especie (todos los personajes la comparten)
 - **Estilo:** boceto a tinta negra sobre papel crema, trazo a mano a varias pasadas (filtro «lápiz»), sombras con
   rayado a lápiz. Colores apagados; acentos verde salvia, amarillo dorado y beige.

@@ -46,13 +46,9 @@ export const idea90: Idea = {
       desde: 18,
       lugar: "banco",
       actores: [
-        { quien: "banquero", x: 160, mira: -1, cara: "chulo", pose: "cruza", acciones: [{ en: 23, hace: "habla", hasta: 27 }, { en: 25, hace: "cara", cara: "risa" }, { en: 28, hace: "pose", pose: "victoria" }, { en: 28, hace: "signo", signo: "dinero" }] },
         { quien: "protagonista", x: -200, mira: 1, narra: true, acciones: [{ en: 20, hace: "pose", pose: "senala" }, { en: 20, hace: "cara", cara: "enfadado" }, { en: 25, hace: "signo", signo: "enfado" }, { en: 28, hace: "pose", pose: "cruza" }] },
       ],
-      planos: [
-        { en: 23, tipo: "cerca", a: "banquero" },
-        { en: 27, tipo: "dos" },
-      ],
+      planos: [{ en: 23, tipo: "cerca" }],
       rotulos: [{ en: 25, texto: "INTERÉS: 0,5 %", hasta: 27, y: 0.2 }],
       golpes: [{ tipo: "zoom", en: 25, a: 1.12 }, { tipo: "lluvia", en: 28, hasta: 32 }],
     },

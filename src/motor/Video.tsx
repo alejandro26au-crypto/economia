@@ -7,8 +7,7 @@ import { AbsoluteFill, Audio, Sequence, cancelRender, continueRender, delayRende
 import { Cielo, Ciudad, Delante, Lejos, SUELO } from "../mundo/ciudad";
 import { NubeMundo } from "../mundo/nube";
 import { PatronesLapiz } from "../mundo/trazo";
-import { Figura } from "../personaje/figura";
-import { REPARTO } from "../personaje/reparto";
+import { PersonajeDibujado, alturaCabeza } from "../personaje/Dibujo";
 import { SignoDibujo } from "../personaje/signos";
 import { CtxEscena, estadoActor } from "./actores";
 import { Cam, EscenaCalc, camaraEn, planificar, posNube } from "./camara";
@@ -128,12 +127,12 @@ export const Video: React.FC<PropsVideo> = (props) => {
           </g>
           <g transform={capa(cam, 1, [0, 0])}>
             <Ciudad f={f} bolsa={e.bolsa} noche={e.noche} />
-            {estados.map(({ a, i, s }) =>
-              s.visible && REPARTO[a.quien] ? (
-                <g key={i} transform={`translate(${s.x} ${s.y}) scale(${s.esc * s.mira} ${s.esc})`}>
-                  <Figura p={s.pose} d={REPARTO[a.quien]} f={f + i * 17} id={`a${i}`} simple />
+            {estados.map(({ i, s }) =>
+              s.visible ? (
+                <g key={i} transform={`translate(${s.x} ${s.y})`}>
+                  <PersonajeDibujado dibujo={s.dibujo} f={f + i * 17} t={s.tDibujo} habla={s.habla} mira={s.mira} esc={s.esc} moviendo={s.moviendo} id={`a${i}`} />
                   {s.signo && (
-                    <g transform={`translate(${s.pose.x} ${s.pose.y}) scale(${s.mira} 1)`}>
+                    <g transform={`scale(${(alturaCabeza(s.esc) / 600) * s.mira} ${alturaCabeza(s.esc) / 600})`}>
                       <SignoDibujo s={s.signo.s} t={s.signo.t} />
                     </g>
                   )}

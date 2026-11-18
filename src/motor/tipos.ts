@@ -24,7 +24,7 @@ export type Lugar = "casa" | "banco" | "bolsa" | "mercado" | "puerto" | "cajeros
 export type Cara = "normal" | "feliz" | "sorpresa" | "triste" | "dormido" | "chulo" | "enfadado" | "risa" | "asustado" | "piensa" | "aburrido";
 export type Pose =
   | "bolsillos" | "brazos" | "camina" | "corre" | "senala" | "piensa" | "encoge" | "saluda" | "victoria" | "asustado"
-  | "cruza" | "salta" | "mira" | "cabeza" | "agotado";
+  | "cruza" | "salta" | "mira" | "cabeza" | "agotado" | "lee";
 
 export type Accion =
   | { en: En; hace: "cara"; cara: Cara }
@@ -35,7 +35,7 @@ export type Accion =
   | { en: En; hace: "mira"; lado: 1 | -1 };
 
 export type Actor = {
-  quien: string; // del reparto (src/personaje/reparto.ts): protagonista, banquero, inversor…
+  quien: string; // quién es (de momento solo «protagonista»: los dibujos están en public/personaje)
   x?: number; // desplazamiento desde el centro del lugar (px del mundo; ±400 cabe en un plano medio)
   fondo?: number; // 0 delante … 1 al fondo del paseo (por defecto 0.4)
   mira?: 1 | -1;
