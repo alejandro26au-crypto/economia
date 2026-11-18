@@ -12,7 +12,11 @@ import { Escena, TipoPlano } from "./tipos";
 
 export type Cam = { x: number; y: number; z: number; r: number };
 
-export type Toma = { ini: number; tipo: TipoPlano | "nube"; escena: number; actor: number; vuelo: boolean };
+export type Toma = { ini: number; tipo: TipoPlano | "nube"; escena: number; actor: number; vuelo: boolean; fundido?: boolean; golpe: boolean };
+
+/** Huecos entre cortes (fotogramas) según el ritmo: [mínimo tras una pausa, máximo sin cortar]. */
+const HUECO = { calma: [270, 360], normal: [180, 240], alta: [75, 120] } as const;
+export const ritmoDe = (e: Escena) => e.ritmo ?? (e.nube ? "calma" : "normal");
 
 export type EscenaCalc = { e: Escena; k: number; c: CtxEscena };
 
@@ -36,10 +40,14 @@ export function planificar(escenas: EscenaCalc[], variante: number): Toma[] {
     const forzados = (e.planos ?? []).map((p) => ({ f: Math.round(c.palabras[indicePalabra(c.palabras, p.en, c.base)].ini * FPS), tipo: p.tipo, actor: Math.max(0, e.actores?.findIndex((a) => a.quien === p.a) ?? 0) }));
     // primera toma: tras volar, se ve el edificio (si cambió de lugar) o un plano medio
     const cambia = k === 0 || escenas[k - 1].e.lugar !== e.lugar;
-    tomas.push({ ini: c.ini, tipo: e.nube ? "medio" : cambia && k > 0 ? "edificio" : k === 0 ? "general" : "medio", escena: k, actor: 0, vuelo: cambia && k > 0 });
+    const ritmo = ritmoDe(e);
+    // el vuelo del billete es la transición de marca: no más de uno cada ~75 s (los demás, fundido en papel)
+    const ultVuelo = [...tomas].reverse().find((t) => t.vuelo);
+    const vuelo = cambia && k > 0 && (!ultVuelo || c.ini - ultVuelo.ini > 75 * FPS);
+    tomas.push({ ini: c.ini, tipo: e.nube ? "medio" : cambia && k > 0 ? "edificio" : k === 0 ? "general" : "medio", escena: k, actor: 0, vuelo, fundido: k > 0 && !vuelo, golpe: ritmo === "alta" });
     if (e.nube) {
       // a los ~1,5 s sube a la nube y se queda dentro (con algún plano del personaje si la escena es larga)
-      tomas.push({ ini: Math.min(c.fin - 20, c.ini + 45), tipo: "nube", escena: k, actor: 0, vuelo: false });
+      tomas.push({ ini: Math.min(c.fin - 20, c.ini + 45), tipo: "nube", escena: k, actor: 0, vuelo: false, golpe: false });
       continue;
     }
     // cortes automáticos: palabras que empiezan tras una pausa, cada 2,5-4 s
@@ -51,16 +59,17 @@ export function planificar(escenas: EscenaCalc[], variante: number): Toma[] {
       const forz = forzados.find((p) => Math.abs(p.f - fi) < 3);
       const pausa = i > 0 && /[.,;:!?…]$/.test(c.palabras[i - 1].p);
       const hueco = fi - ultimo;
-      if (forz || (hueco > 75 && pausa) || hueco > 120) {
+      const [hMin, hMax] = HUECO[ritmo];
+      if (forz || (hueco > hMin && pausa) || hueco > hMax) {
         let tipo = forz?.tipo ?? CICLO[j++ % CICLO.length];
         if (tipo === "dos" && nAct < 2) tipo = "medio";
         if ((tipo === "medio" || tipo === "cerca" || tipo === "contra") && nAct === 0) tipo = "edificio";
         const actor = forz ? forz.actor : nAct ? Math.floor(azar(variante, k, i) * nAct) : 0;
-        tomas.push({ ini: fi, tipo, escena: k, actor, vuelo: false });
+        tomas.push({ ini: fi, tipo, escena: k, actor, vuelo: false, golpe: ritmo === "alta" });
         ultimo = fi;
       }
     }
-    for (const p of forzados) if (!tomas.some((t) => Math.abs(t.ini - p.f) < 3)) tomas.push({ ini: p.f, tipo: p.tipo, escena: k, actor: p.actor, vuelo: false });
+    for (const p of forzados) if (!tomas.some((t) => Math.abs(t.ini - p.f) < 3)) tomas.push({ ini: p.f, tipo: p.tipo, escena: k, actor: p.actor, vuelo: false, golpe: ritmo === "alta" });
   }
   return tomas.sort((a, b) => a.ini - b.ini);
 }
@@ -114,7 +123,8 @@ export function camaraEn(f: number, tomas: Toma[], escenas: EscenaCalc[], varian
   // deriva: siempre se mueve un poco (se acerca, se desliza y se ladea)
   const dt = (f - t.ini) / FPS;
   const dir = azar(variante, t.ini, "d") > 0.5 ? 1 : -1;
-  const deriva = (c: Cam): Cam => ({ x: c.x + dir * dt * 14, y: c.y - dt * 3, z: c.z * (1 + dt * 0.018), r: c.r + Math.sin(dt * 0.9 + t.ini) * 0.6 });
+  const lento = t.golpe ? 1 : 0.6; // en calma/normal la cámara flota más despacio
+  const deriva = (c: Cam): Cam => ({ x: c.x + dir * dt * 14 * lento, y: c.y - dt * 3 * lento, z: c.z * (1 + dt * 0.018 * lento), r: c.r + Math.sin(dt * 0.5 + t.ini) * 0.4 });
   if (k === 0) return { ...deriva(dest), velocidad: 0, volando: 0 };
   const ant = tomas[k - 1];
   const origen0 = objetivo(ant, escenas[ant.escena], f, variante);
@@ -132,8 +142,11 @@ export function camaraEn(f: number, tomas: Toma[], escenas: EscenaCalc[], varian
     return { x: mezcla(origen.x, d.x, u), y: mezcla(origen.y, d.y, u) - sube * 380, z, r: mezcla(origen.r, d.r, u) + sube * 6, velocidad: vel, volando: f < t.ini + dur ? u : 0 };
   }
   // ZOOM GOLPE: llega rápido (12 fotogramas) con un pequeño rebote
-  const dur = t.tipo === "nube" ? 26 : 12;
-  const u = tramo(f, t.ini, t.ini + dur, t.tipo === "nube" ? Easing.inOut(Easing.cubic) : Easing.out(Easing.back(1.25)));
+  // fundido en papel entre lugares: la cámara ya está en el sitio nuevo (el papel tapa el salto)
+  if (t.fundido) return { ...deriva(dest), velocidad: 0, volando: 0 };
+  // ritmo alto: ZOOM GOLPE (12 fotogramas con rebote); calma/normal: movimiento suave de ~1,2 s
+  const dur = t.tipo === "nube" ? 30 : t.golpe ? 12 : 36;
+  const u = tramo(f, t.ini, t.ini + dur, t.golpe && t.tipo !== "nube" ? Easing.out(Easing.back(1.25)) : Easing.inOut(Easing.cubic));
   const d = deriva(dest);
   const lin = tramo(f, t.ini, t.ini + dur);
   return {

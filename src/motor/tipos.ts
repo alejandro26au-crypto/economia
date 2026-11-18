@@ -67,6 +67,10 @@ export type Golpe =
 /** El contador del bolsillo (esquina de arriba): «TU DINERO» y cómo cambia en cada palabra. */
 export type Contador = { titulo?: string; valores: { en: En; valor: number }[]; unidad?: string };
 
+/** RITMO de la escena (vídeo largo = no todo a tope): calma = explicar (planos de 9-12 s, movimientos lentos y
+ *  sin sonidos de cámara) · normal = contar (6-8 s, suaves) · alta = gancho y giros (3-4 s, «zoom golpe», whoosh). */
+export type Ritmo = "calma" | "normal" | "alta";
+
 export type TipoPlano = "general" | "edificio" | "medio" | "cerca" | "contra" | "dos" | "detalle";
 export type Plano = { en: En; tipo: TipoPlano; a?: string };
 
@@ -79,6 +83,7 @@ export type Escena = {
   rotulos?: Rotulo[];
   golpes?: Golpe[];
   bolsa?: "sube" | "baja"; // la pantalla de la bolsa
+  ritmo?: Ritmo; // por defecto "normal" (la nube va en "calma")
   noche?: boolean;
 };
 

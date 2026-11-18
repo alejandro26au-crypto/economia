@@ -11,6 +11,7 @@ export const idea90: Idea = {
     // Tienes 1.000 euros guardados en casa. Parece seguro, ¿verdad?
     {
       lugar: "casa",
+      ritmo: "alta",
       actores: [
         {
           quien: "protagonista",
@@ -45,6 +46,7 @@ export const idea90: Idea = {
     {
       desde: 18,
       lugar: "banco",
+      ritmo: "normal",
       actores: [
         { quien: "protagonista", x: -200, mira: 1, narra: true, acciones: [{ en: 20, hace: "pose", pose: "senala" }, { en: 20, hace: "cara", cara: "enfadado" }, { en: 25, hace: "signo", signo: "enfado" }, { en: 28, hace: "pose", pose: "cruza" }] },
       ],

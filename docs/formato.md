@@ -15,7 +15,7 @@ VIAJE por la **Ciudad Inercia** (el mundo del canal), con el protagonista (el es
    cada golpe de la historia (sonido de caja registradora). Es el hilo que mantiene la tensión 15 minutos.
 2. **Sigue el dinero**: entre lugares la cámara vuela siguiendo a un billete (se aleja, cruza la ciudad y vuelve
    a entrar). Es la «inercia» del nombre del canal y la transición de marca.
-3. **El sello «¡PERO!»** estampado en cada giro (cada 1-2 min): «¡PERO!», «¡Y AÚN PEOR!», «¡Y ENTONCES!».
+3. **El sello «¡PERO!»** estampado SOLO en los giros de verdad (5-7 por vídeo): «¡PERO!», «¡Y AÚN PEOR!», «¡Y ENTONCES!».
 4. **La nube de pensamiento**: cuando toca explicar cifras, sale de la cabeza del protagonista y la cámara entra:
    gráfico que se dibuja, cifra gigante o comparación de barras (tu sueldo contra…).
 5. **El protagonista eres tú**: reacciona a cada cifra (sudor, manos a la cabeza, enfado) con signos de cómic.
@@ -31,10 +31,21 @@ VIAJE por la **Ciudad Inercia** (el mundo del canal), con el protagonista (el es
 | Tu bolsillo | 11:00-13:00 | casa | Qué significa hoy: el contador hace la cuenta con el sueldo/alquiler/ahorro del espectador. |
 | Cierre | últimos 30 s | casa | Frase redonda + pregunta para comentarios + gancho al siguiente vídeo. |
 
-## Ritmo visual (lo hace el motor solo)
-- Plano nuevo cada 2,5-4 s, siempre al empezar una palabra tras una pausa, con «zoom golpe» (llega rápido y rebota).
-- La cámara NUNCA está quieta: deriva despacio entre cortes.
-- Cada cifra → rótulo de papel + temblor. Cada «millones» → lluvia de billetes. Cada pregunta → signo «?».
+## Ritmo para vídeo LARGO (19 nov 2026: «tantos efectos en un vídeo largo aburren»)
+Lo especial solo funciona si es raro. El vídeo sube y baja de intensidad, como una buena historia:
+- **Ritmo por escena** (`ritmo` en la idea; el borrador lo pone solo):
+  - `alta` (gancho y giros, ~15 % del vídeo): plano cada 3-4 s con «zoom golpe» y whoosh.
+  - `normal` (contar la historia, ~60 %): plano cada 6-8 s, movimientos suaves de ~1 s, SIN sonido de cámara.
+  - `calma` (la nube, explicar cifras, ~25 %): plano cada 9-12 s, la cámara flota despacio.
+- **Límites automáticos** (`limitarEfectos` en `src/motor/Video.tsx`): sello ≥ 60 s entre uno y otro · lluvia de
+  billetes ≥ 2 min · temblor y zoom ≥ 20 s · signos del mismo personaje ≥ 12 s. Lo que sobra se quita.
+- **Transiciones:** el vuelo del billete (la de marca) como mucho una vez cada ~75 s; los demás cambios de lugar,
+  fundido suave en papel.
+- **Sonido:** la música y la voz llevan el vídeo; efectos solo en momentos marcados (vuelo, sello, caja registradora
+  del contador, ritmo alto).
+- **Subtítulos:** frases de 3-5 palabras, sin rebote; la palabra que suena en dorado.
+- **Presupuesto orientativo para 12 min:** 5-7 sellos, 1-3 lluvias, 6-10 cambios del contador, 3-5 nubes,
+  4-6 vuelos.
 
 ## Miniatura (pendiente de probar)
 El protagonista grande con la cara de la emoción del vídeo + el contador con una cifra en rojo + 2-3 palabras con

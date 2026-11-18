@@ -421,13 +421,17 @@ def borrador_largo(n, titulo, guion, reparto_fijo=None):
             nube_antes = True
         else:
             nube_antes = False
-            for en, texto in cifras[:3]:
+            for j, (en, texto) in enumerate(cifras[:3]):
                 rotulos.append({"en": en, "texto": texto, "hasta": min(en + 8, idx + len(palabras) - 1)})
-                golpes.append({"tipo": "temblor", "en": en})
+                if j == 0:
+                    golpes.append({"tipo": "temblor", "en": en})
         lineas = [f"    // {k + 1}. {' '.join(palabras)[:90]}…", "    {"]
         if k > 0:
             lineas.append(f"      desde: {idx},")
         lineas.append(f'      lugar: "{lugar}",')
+        # ritmo: el gancho y los giros van en ALTA; las explicaciones (nube) en CALMA; el resto, normal
+        ritmo = "calma" if nube else "alta" if k == 0 or any(g["tipo"] == "sello" for g in golpes) else "normal"
+        lineas.append(f'      ritmo: "{ritmo}",')
         if nube:
             lineas.append(f"      nube: {json.dumps(nube, ensure_ascii=False)},")
         lineas.append("      actores: [")

@@ -21,10 +21,10 @@ export function grupos(palabras: Palabra[]) {
   const out: { ini: number; fin: number; idx: number[] }[] = [];
   for (let i = 0; i < palabras.length; i++) {
     const g = [i];
-    while (g.length < 3) {
+    while (g.length < 5) {
       const a = palabras[g[g.length - 1]];
       const b = palabras[g[g.length - 1] + 1];
-      if (!b || /[.,;:!?…]$/.test(a.p) || g.reduce((n, k) => n + palabras[k].p.length, 0) + b.p.length > 14 || b.ini - a.fin > 0.25) break;
+      if (!b || /[.,;:!?…]$/.test(a.p) || g.reduce((n, k) => n + palabras[k].p.length, 0) + b.p.length > 24 || b.ini - a.fin > 0.25) break;
       g.push(g[g.length - 1] + 1);
     }
     out.push({ ini: palabras[g[0]].ini, fin: palabras[g[g.length - 1]].fin, idx: g });
@@ -44,14 +44,14 @@ export const Subtitulos: React.FC<{ palabras: Palabra[]; f: number; ocultas: Set
   const quedan = g.idx.filter((i) => !ocultas.has(normal(palabras[i].p)));
   if (!quedan.length) return null;
   const f0 = Math.round(g.ini * FPS);
-  const pop = tramo(f, f0 - 1, f0 + 5, Easing.out(Easing.back(2.2)));
+  const pop = tramo(f, f0 - 1, f0 + 4, Easing.out(Easing.cubic));
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: Math.round(ALTO * 0.8) }}>
-      <div style={{ transform: `scale(${0.85 + pop * 0.15})`, display: "flex", gap: 28, justifyContent: "center", maxWidth: ANCHO * 0.85 }}>
+      <div style={{ transform: `translateY(${(1 - pop) * 10}px)`, opacity: pop, display: "flex", gap: 22, justifyContent: "center", maxWidth: ANCHO * 0.85 }}>
         {quedan.map((i) => {
-          const activa = s >= palabras[i].ini - 0.04 && i === quedan[quedan.length - 1] && quedan.length > 1;
+          const activa = s >= palabras[i].ini - 0.04 && s <= palabras[i].fin + 0.05 && quedan.length > 1;
           return (
-            <span key={i} style={{ fontFamily: FUENTE, fontSize: 76, lineHeight: 1, letterSpacing: 2, color: activa ? "#a8761a" : TINTA_MARCA, textShadow: HALO }}>
+            <span key={i} style={{ fontFamily: FUENTE, fontSize: 62, lineHeight: 1, letterSpacing: 2, color: activa ? "#a8761a" : TINTA_MARCA, textShadow: HALO }}>
               {palabras[i].p.replace(/^[¿¡«"(]+|[.,;:!?…»")]+$/g, "").toUpperCase()}
             </span>
           );

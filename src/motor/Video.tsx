@@ -48,14 +48,17 @@ export function preparar(idea: Idea, palabras: PropsVideo["palabras"], variante:
     desde = i;
   });
   const inicios = bases.map((i, k) => (k === 0 ? 0 : Math.max(1, Math.round(palabras[i].ini * FPS) - 4)));
-  const escenas: EscenaCalc[] = idea.escenas.map((e, k) => ({ e, k, c: { palabras, base: bases[k], ini: inicios[k], fin: k + 1 < inicios.length ? inicios[k + 1] : total } as CtxEscena }));
+  const escenas0: EscenaCalc[] = idea.escenas.map((e, k) => ({ e, k, c: { palabras, base: bases[k], ini: inicios[k], fin: k + 1 < inicios.length ? inicios[k + 1] : total } as CtxEscena }));
+  const escenas = limitarEfectos(escenas0);
   const tomas = planificar(escenas, variante);
   const F = (c: CtxEscena, en: number | string) => Math.round(palabras[indicePalabra(palabras, en, c.base)].ini * FPS);
   const sonidos: Sonido[] = [];
+  // sonidos de cámara SOLO en el vuelo del billete y en el ritmo alto (en calma/normal la cámara se mueve en silencio)
   tomas.forEach((t, i) => {
     if (i === 0) return;
-    sonidos.push({ f: t.ini - 3, s: t.vuelo ? "vuelo" : ["whoosh1", "whoosh2", "whoosh3"][Math.floor(azar(variante, i) * 3)], vol: t.vuelo ? 0.55 : 0.32 });
-    if (t.tipo === "nube") sonidos.push({ f: t.ini, s: "lapiz", vol: 0.5 });
+    if (t.vuelo) sonidos.push({ f: t.ini - 3, s: "vuelo", vol: 0.45 });
+    else if (t.golpe) sonidos.push({ f: t.ini - 3, s: ["whoosh1", "whoosh2", "whoosh3"][Math.floor(azar(variante, i) * 3)], vol: 0.28 });
+    if (t.tipo === "nube") sonidos.push({ f: t.ini, s: "lapiz", vol: 0.35 });
   });
   for (const { e, c } of escenas) {
     for (const g of e.golpes ?? []) {
@@ -67,11 +70,42 @@ export function preparar(idea: Idea, palabras: PropsVideo["palabras"], variante:
       if (g.tipo === "lluvia") sonidos.push({ f, s: "caja", vol: 0.6 });
       if (g.tipo === "flash") sonidos.push({ f, s: "ding", vol: 0.4 });
     }
-    for (const a of e.actores ?? []) for (const ac of a.acciones ?? []) if (ac.hace === "signo") sonidos.push({ f: F(c, ac.en), s: "pop", vol: 0.45 });
-    for (const r of e.rotulos ?? []) sonidos.push({ f: F(c, r.en), s: "pop", vol: 0.35 });
+    for (const a of e.actores ?? []) for (const ac of a.acciones ?? []) if (ac.hace === "signo") sonidos.push({ f: F(c, ac.en), s: "pop", vol: 0.25 });
+    for (const r of e.rotulos ?? []) sonidos.push({ f: F(c, r.en), s: "pop", vol: 0.2 });
   }
   for (const v of idea.contador?.valores ?? []) sonidos.push({ f: Math.round(palabras[indicePalabra(palabras, v.en)].ini * FPS), s: "caja", vol: 0.5 });
   return { escenas, tomas, sonidos: sonidos.filter((x) => x.f >= 0 && x.f < total).sort((a, b) => a.f - b.f), F };
+}
+
+/** LÍMITES DE EFECTOS para que un vídeo largo no canse: lo especial solo funciona si es raro.
+ *  sello ≥ 60 s entre uno y otro · lluvia ≥ 120 s · temblor y zoom ≥ 20 s · flash ≥ 30 s · signos del mismo
+ *  personaje ≥ 12 s · contador: lo decide la idea (pocos cambios). Lo que sobra se quita (no se mueve). */
+const SEPARACION: Record<string, number> = { sello: 60, lluvia: 120, temblor: 20, zoom: 20, flash: 30, lineas: 40 };
+function limitarEfectos(escenas: EscenaCalc[]): EscenaCalc[] {
+  const ultimo: Record<string, number> = {};
+  const ultSigno: Record<string, number> = {};
+  return escenas.map((ec) => {
+    const { e, c } = ec;
+    const F = (en: number | string) => Math.round(c.palabras[indicePalabra(c.palabras, en, c.base)].ini * FPS);
+    const golpes = (e.golpes ?? []).filter((g) => {
+      const f = F(g.en);
+      const sep = (SEPARACION[g.tipo] ?? 0) * FPS;
+      if (ultimo[g.tipo] !== undefined && f - ultimo[g.tipo] < sep) return false;
+      ultimo[g.tipo] = f;
+      return true;
+    });
+    const actores = (e.actores ?? []).map((a) => ({
+      ...a,
+      acciones: (a.acciones ?? []).filter((ac) => {
+        if (ac.hace !== "signo") return true;
+        const f = F(ac.en);
+        if (ultSigno[a.quien] !== undefined && f - ultSigno[a.quien] < 12 * FPS) return false;
+        ultSigno[a.quien] = f;
+        return true;
+      }),
+    }));
+    return { ...ec, e: { ...e, golpes, actores } };
+  });
 }
 
 /** Transformación de una capa con paralaje p (1 = la ciudad; <1 lejos; >1 delante). */
@@ -166,7 +200,7 @@ export const Video: React.FC<PropsVideo> = (props) => {
       )}
       {golpes.map(({ g, t }, i) => (g.tipo === "sello" ? <Sello key={`s${i}`} texto={g.texto ?? "¡PERO!"} t={t} /> : null))}
       {golpes.map(({ g, t }, i) => (g.tipo === "flash" ? <Flash key={`f${i}`} t={t} /> : null))}
-      {f < c.ini + 6 && ec.k > 0 && escenas[ec.k - 1].e.lugar === e.lugar && <Flash t={f - c.ini} />}
+      {ec.k > 0 && f < c.ini + 16 && tomas.some((t) => t.ini === c.ini && t.fundido) && <AbsoluteFill style={{ background: "#f4efe2", opacity: 1 - (f - c.ini) / 16 }} />}
       <Subtitulos palabras={palabras} f={f} ocultas={ocultas} />
       {sonidos.map((x, i) => (
         <Sequence key={`s${i}`} from={x.f} durationInFrames={Math.round(FPS * 1.6)}>
