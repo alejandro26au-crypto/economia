@@ -49,7 +49,7 @@ function aToon(m: THREE.Material): THREE.Material {
 }
 
 const FINAL = /* glsl */ `
-uniform sampler2D tColor, tNormal, tProf; uniform vec2 uRes; uniform float uCerca, uLejos, uNieblaIni, uNieblaFin, uGrosor, uSat, uTinta;
+uniform sampler2D tColor, tNormal, tProf; uniform vec2 uRes; uniform float uCerca, uLejos, uNieblaIni, uNieblaFin, uGrosor, uSat, uTinta, uPapel;
 uniform vec3 uColorTinta; varying vec2 vUv;
 float lin(float d){ float z = d*2.0-1.0; return (2.0*uCerca*uLejos)/(uLejos+uCerca - z*(uLejos-uCerca)); }
 vec3 nrm(vec2 uv){ return texture2D(tNormal, uv).xyz*2.0-1.0; }
@@ -57,13 +57,15 @@ void main(){
   vec4 c = texture2D(tColor, vUv);
   vec2 px = uGrosor / uRes;
   float d0 = lin(texture2D(tProf, vUv).r);
-  vec3 n0 = nrm(vUv);
+  // contorno un poco tembloroso, como dibujado a mano (solo en el estilo papel)
+  vec2 tiembla = uPapel * vec2(sin(vUv.y*97.0 + sin(vUv.x*31.0)*2.0), cos(vUv.x*83.0 + sin(vUv.y*27.0)*2.0)) * 0.9 / uRes;
+  vec3 n0 = nrm(vUv + tiembla);
   float bordeP = 0.0, bordeN = 0.0;
   vec2 offs[4]; offs[0]=vec2(px.x,0.0); offs[1]=vec2(-px.x,0.0); offs[2]=vec2(0.0,px.y); offs[3]=vec2(0.0,-px.y);
   for (int i=0;i<4;i++){
-    float d = lin(texture2D(tProf, vUv+offs[i]).r);
+    float d = lin(texture2D(tProf, vUv+tiembla+offs[i]).r);
     bordeP += abs(d - d0);
-    vec3 n = nrm(vUv+offs[i]);
+    vec3 n = nrm(vUv+tiembla+offs[i]);
     bordeN += (1.0 - clamp(dot(n, n0), 0.0, 1.0));
   }
   float relP = bordeP / max(d0, 0.001);
@@ -76,13 +78,31 @@ void main(){
   float l = dot(col, vec3(0.2126,0.7152,0.0722));
   col = mix(vec3(l), col, uSat);
   col = col * mix(vec3(0.94,0.97,1.08), vec3(1.06,1.0,0.93), smoothstep(0.1, 0.9, l));
+  if (uPapel > 0.0) {
+    // ESTILO PAPEL (canal Inercia del consumo): color apagado tipo acuarela sobre papel crema, sombras rayadas a
+    // lápiz (rayado y, en lo más oscuro, rayado cruzado) y grano de papel. Como la portada del canal.
+    vec3 papel = vec3(0.957, 0.937, 0.886);
+    vec3 cs = pow(max(col, vec3(0.0)), vec3(1.0/2.2));     // a espacio de pantalla (lo que ve el ojo)
+    float lp = dot(cs, vec3(0.2126,0.7152,0.0722));
+    vec3 apagado = mix(vec3(lp), cs, 0.62);
+    vec3 lavado = 1.0 - (1.0 - apagado) * 0.72;          // aclara: tinta aguada sobre papel
+    vec3 acuarela = papel * lavado;
+    vec2 q = gl_FragCoord.xy;
+    float r1 = 1.0 - smoothstep(0.06, 0.16, abs(fract((q.x + q.y) / 10.0) - 0.5));
+    float r2 = 1.0 - smoothstep(0.06, 0.16, abs(fract((q.x - q.y) / 12.0) - 0.5));
+    float rayado = r1 * (1.0 - smoothstep(0.12, 0.26, lp)) * 0.24 + r2 * (1.0 - smoothstep(0.04, 0.1, lp)) * 0.22;
+    float grano = fract(sin(dot(floor(q), vec2(12.9898, 78.233))) * 43758.5453);
+    acuarela *= 1.0 - rayado * (1.0 - lejos * 0.7) - (grano - 0.5) * 0.04;
+    acuarela = pow(acuarela, vec3(2.2));                   // de vuelta a lineal
+    col = mix(col, acuarela, uPapel);
+  }
   col = mix(col, uColorTinta, e*0.92);
   gl_FragColor = vec4(col, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
 
-export const Ilustrado: React.FC<{ tinta?: number; saturacion?: number }> = ({ tinta = 1, saturacion = 1.18 }) => {
+export const Ilustrado: React.FC<{ tinta?: number; saturacion?: number; papel?: number }> = ({ tinta = 1, saturacion = 1.18, papel = 1 }) => {
   const { gl, size } = useThree();
   const W = size.width * gl.getPixelRatio();
   const H = size.height * gl.getPixelRatio();
@@ -101,7 +121,7 @@ export const Ilustrado: React.FC<{ tinta?: number; saturacion?: number }> = ({ t
       uniforms: {
         tColor: { value: null }, tNormal: { value: null }, tProf: { value: null }, uRes: { value: new THREE.Vector2(W, H) },
         uCerca: { value: 0.1 }, uLejos: { value: 400 }, uNieblaIni: { value: 30 }, uNieblaFin: { value: 120 }, uGrosor: { value: 2.2 * (Math.min(W, H) / 1080) },
-        uSat: { value: saturacion }, uTinta: { value: tinta }, uColorTinta: { value: new THREE.Color("#120e1c") },
+        uSat: { value: saturacion }, uTinta: { value: tinta }, uPapel: { value: papel }, uColorTinta: { value: new THREE.Color("#120e1c") },
       },
       vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }",
       fragmentShader: FINAL,
@@ -113,7 +133,7 @@ export const Ilustrado: React.FC<{ tinta?: number; saturacion?: number }> = ({ t
     m.frustumCulled = false;
     escena.add(m);
     return { escena, mat, cam: new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1) };
-  }, [W, H, saturacion, tinta]);
+  }, [W, H, saturacion, tinta, papel]);
 
   useFrame(({ scene, camera }) => {
     // 1) sombreado en bandas para todo lo que tenga luz realista

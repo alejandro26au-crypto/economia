@@ -8,11 +8,13 @@ import { Anim, Expresion, poseCompleta } from "../bent/animaciones";
 import { ATUENDOS, Muneco } from "../bent/rig";
 import { Figura, caraReparto } from "../reparto/figura";
 import { REPARTO } from "../reparto/reparto";
+import { Signo, SignoDibujo } from "../reparto/signos";
+import { useVoz } from "./tiempo";
 import { aPantalla } from "./camara";
 import { DatosEscenario } from "./escenarios-datos";
 import { EstadoActor, mundo } from "./estado";
 import { ALTO_DIBUJO, PERSONAS } from "./personajes";
-import { Actor, Cara, Pose } from "./tipos";
+import { Accion, Actor, Cara, Pose } from "./tipos";
 
 const ALTO_MUNECO = 950; // unidades del muñeco de los pies a lo alto de la gorra
 
@@ -31,6 +33,8 @@ export const ANIM: Record<Pose, Anim> = {
   cruza: "cruza",
   salta: "salta",
   mira: "mira",
+  cabeza: "cabeza",
+  agotado: "agotado",
 };
 export const EXPRESION: Record<Cara, Expresion> = {
   normal: "seria",
@@ -55,7 +59,20 @@ export const abreBoca = (f: number, semilla: number) => {
 /** ¿Se pinta en 2D? (muñeco de BENT con extra.dosd o una figura del reparto con extra.figura) */
 export const es2D = (a: Actor) => a.extra?.dosd === true || typeof a.extra?.figura === "string";
 
+/** El signo de cómic que lleva ahora (acción «signo»): dura ~2 s o hasta su palabra. */
+function signoActivo(actor: Actor, f: number, F: (en: Accion["en"] | undefined, d?: number) => number): { s: Signo; f0: number } | null {
+  let out: { s: Signo; f0: number } | null = null;
+  for (const ac of actor.acciones ?? []) {
+    if (ac.hace !== "signo") continue;
+    const a = F(ac.en);
+    const b = ac.hasta !== undefined ? F(ac.hasta) : a + 66;
+    if (f >= a && f <= b) out = { s: ac.signo, f0: a };
+  }
+  return out;
+}
+
 export const ActorEscena: React.FC<{ actor: Actor; e: EstadoActor; i: number; f: number; cam: THREE.PerspectiveCamera; esc: DatosEscenario; variante: number }> = ({ actor, e, i, f, cam, esc, variante }) => {
+  const { F } = useVoz();
   if (!(PERSONAS.includes(actor.tipo) || es2D(actor)) || !e.visible || e.opacidad <= 0.01) return null;
   const semilla = (variante * 31 + i * 7) % 100;
   const base = mundo(esc, e);
@@ -82,6 +99,7 @@ export const ActorEscena: React.FC<{ actor: Actor; e: EstadoActor; i: number; f:
   const pose0 = poseCompleta({ anim, animAnt: ant, t, expresion: EXPRESION[e.cara], abre, semilla, f });
   const pose = typeof actor.extra?.figura === "string" ? { ...pose0, ...caraReparto(EXPRESION[e.cara], abre, f + semilla) } : pose0;
   const k = (altoPx / ALTO_MUNECO) * e.pop;
+  const signo = signoActivo(actor, f, F);
   return (
     <div style={{ position: "absolute", left: p0.x, top: p0.y, width: 0, height: 0, opacity: e.opacidad * (1 - niebla * 0.35), transform: `rotate(${inclina}deg)`, filter: filtro }}>
       <svg width={1} height={1} style={{ overflow: "visible", position: "absolute" }}>
@@ -89,12 +107,21 @@ export const ActorEscena: React.FC<{ actor: Actor; e: EstadoActor; i: number; f:
           <filter id={`luz${i}`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
             <feFlood floodColor={esc.tinte} result="c" />
             <feComposite in="c" in2="SourceGraphic" operator="in" result="m" />
-            <feBlend in="m" in2="SourceGraphic" mode="multiply" />
+            <feBlend in="m" in2="SourceGraphic" mode="multiply" result="t" />
+            {/* los personajes del reparto solo cogen parte del color de la luz: la cabeza sigue blanca como el papel */}
+            <feComposite in="t" in2="SourceGraphic" operator="arithmetic" k1={0} k2={es2D(actor) && actor.extra?.figura ? 0.35 : 1} k3={es2D(actor) && actor.extra?.figura ? 0.65 : 0} k4={0} />
           </filter>
         </defs>
         <g filter={`url(#luz${i})`} transform={`scale(${k * e.mira} ${k}) rotate(${e.giro} 0 -475)`}>
           {typeof actor.extra?.figura === "string" && REPARTO[actor.extra.figura] ? (
-            <Figura p={pose} d={REPARTO[actor.extra.figura]} f={f + semilla} id={`a${i}`} />
+            <g>
+              <Figura p={pose} d={REPARTO[actor.extra.figura]} f={f + semilla} id={`a${i}`} />
+              {signo && (
+                <g transform={`translate(${pose.x} ${pose.y})`}>
+                  <SignoDibujo s={signo.s} t={f - signo.f0} />
+                </g>
+              )}
+            </g>
           ) : (
             <Muneco p={pose} a={ATUENDOS[actor.tipo] ?? ATUENDOS.bent} f={f + semilla} id={`a${i}`} />
           )}

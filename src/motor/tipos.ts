@@ -99,7 +99,9 @@ export type Pose =
   | "asustado"
   | "cruza" // brazos cruzados
   | "salta"
-  | "mira"; // mano de visera
+  | "mira" // mano de visera
+  | "cabeza" // manos a la cabeza (¡no puede ser!)
+  | "agotado"; // encorvado, brazos colgando (arruinado, cansado)
 
 export type Cara = "normal" | "feliz" | "sorpresa" | "triste" | "dormido" | "chulo" | "enfadado" | "risa" | "asustado" | "piensa" | "aburrido";
 
@@ -112,6 +114,7 @@ export type Accion =
   | { en: En; hace: "mueve"; a: { x?: number; z?: number; alto?: number }; dura?: number }
   | { en: En; hace: "escala"; a: number; dura?: number } // cambia de tamaño (0.5 = a la mitad)
   | { en: En; hace: "mira"; lado: 1 | -1 }
+  | { en: En; hace: "signo"; signo: "exclama" | "pregunta" | "enfado" | "sudor" | "susto" | "velocidad" | "idea" | "dinero"; hasta?: En } // signo de cómic junto a la cabeza (~2 s o hasta esa palabra)
   | { en: En; hace: "va"; a: string }; // camina hasta un punto de interés del escenario y lo mira/señala (puesta.ts)
 
 export type Actor = {

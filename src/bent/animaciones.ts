@@ -2,8 +2,9 @@
 // Se mezclan solas al pasar de una a otra. Las caras se ponen aparte (cara.ts), así cualquier animación vale con
 // cualquier expresión.
 import { Brazo, Pose, POSE_BASE, mezclaPose } from "./rig";
+import { PUNTOS, alcanza } from "../reparto/figura";
 
-export type Anim = "quieto" | "camina" | "corre" | "habla" | "senala" | "piensa" | "encoge" | "saluda" | "victoria" | "asustado" | "cruza" | "salta" | "mira";
+export type Anim = "quieto" | "camina" | "corre" | "habla" | "senala" | "piensa" | "encoge" | "saluda" | "victoria" | "asustado" | "cruza" | "salta" | "mira" | "cabeza" | "agotado";
 
 const s = Math.sin;
 const B = POSE_BASE;
@@ -92,6 +93,19 @@ export function cuerpo(anim: Anim, t: number, semilla = 0): Partial<Pose> {
         bA: brazo(-30 - vuelo * 120, 20, "puno"),
         bB: brazo(30 + vuelo * 120, -20, "puno"),
       };
+    }
+    case "cabeza": {
+      // manos a la cabeza (la viñeta 3 de referencias/expresiones.png); tiembla un poco al principio
+      const k = Math.min(1, t / 6);
+      const tiembla = s(t * 1.9) * (t < 18 ? 2 : 0.5);
+      const a = alcanza(PUNTOS.hombroA, PUNTOS.orejaA, 1);
+      const b = alcanza(PUNTOS.hombroB, PUNTOS.orejaB, -1);
+      return { x: tiembla, hombros: 0.3 * k, bA: brazo(-20 + (a.h + 20) * k, a.c * k, "abierta", 180), bB: brazo(20 + (b.h - 20) * k, b.c * k, "abierta", 180) };
+    }
+    case "agotado": {
+      // encorvado, brazos colgando y la cabeza baja (la viñeta 5)
+      const bal = s(t * 0.06 + semilla) * 2;
+      return { respira: r * 0.5, inclina: 16 + bal, cabeza: 14, hombros: 0.6, bA: brazo(4 + bal, 6, "abierta"), bB: brazo(14 + bal, 4, "abierta"), pA: { h: -14, r: 12 }, pB: { h: 18, r: -2 } };
     }
     case "mira": {
       // se gira a mirar algo, con la mano de visera

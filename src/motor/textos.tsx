@@ -5,7 +5,16 @@ import { TINTA } from "./estilo";
 import { ALTO, ANCHO, FPS, normal, tramo, useVoz } from "./tiempo";
 import { Palabra, Rotulo } from "./tipos";
 
-export const FUENTE = "OceanoBlack, 'Inter Display', 'Arial Black', sans-serif";
+// letra de la portada del canal (Rubik Dirt: redonda, gruesa y gastada); la «limpia» para cifras pequeñas
+export const FUENTE = "Marca, MarcaLimpia, 'Arial Black', sans-serif";
+export const FUENTE_MANO = "Mano, Marca, sans-serif";
+// colores de la marca (los de la portada): papel crema, tinta azul noche, y acentos amarillo dorado y verde salvia
+export const PAPEL = "#f6f0e1";
+export const TINTA_MARCA = "#2b2e3d";
+export const ORO = "#e9b949";
+export const SALVIA = "#8fa876";
+/** Halo de papel alrededor de la letra (se lee sobre cualquier fondo sin perder la textura gastada). */
+export const HALO = [0, 45, 90, 135, 180, 225, 270, 315].map((a) => `${(Math.cos((a * Math.PI) / 180) * 7).toFixed(1)}px ${(Math.sin((a * Math.PI) / 180) * 7).toFixed(1)}px 0 ${PAPEL}`).join(", ") + ", 0 10px 14px rgba(20,18,28,0.45)";
 
 const trazo = (px: number, color = TINTA): React.CSSProperties => ({
   WebkitTextStroke: `${px}px ${color}`,
@@ -67,12 +76,12 @@ export const Subtitulos: React.FC<{ palabras: Palabra[]; rotulos?: RotuloVisible
   const pop = tramo(f, f0 - 1, f0 + 5, Easing.out(Easing.back(2.2)));
   const limpia = (t: string) => t.replace(/[.,;:!?…«»"]/g, "").toUpperCase();
   return (
-    <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: Math.round(ALTO * (ANCHO > ALTO ? 0.82 : 0.69)) }}>
+    <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: Math.round(ALTO * (ANCHO > ALTO ? 0.8 : 0.69)) }}>
       <div style={{ transform: `scale(${0.85 + pop * 0.15})`, display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", maxWidth: ANCHO * 0.8 }}>
         {quedan.map((i) => {
           const activa = s >= palabras[i].ini - 0.04;
           return (
-            <span key={i} style={{ fontFamily: FUENTE, fontSize: 60, lineHeight: 1, letterSpacing: 1, color: activa && i === quedan[quedan.length - 1] && quedan.length > 1 ? "#5fd8ff" : "#ffffff", ...trazo(9), textShadow: "0 4px 10px rgba(0,0,0,0.6)" }}>
+            <span key={i} style={{ fontFamily: FUENTE, fontSize: 74, lineHeight: 1, letterSpacing: 2, color: activa && i === quedan[quedan.length - 1] && quedan.length > 1 ? "#b07d1a" : TINTA_MARCA, textShadow: HALO }}>
               {limpia(palabras[i].p)}
             </span>
           );
@@ -91,21 +100,27 @@ export const RotuloEscena: React.FC<{ r: Rotulo; i: number }> = ({ r, i }) => {
   const k = tramo(f, a, a + 10, Easing.out(Easing.back(2)));
   const fuera = r.hasta !== undefined ? 1 - tramo(f, b - 6, b) : 1;
   const bote = Math.sin(f * 0.15 + i) * 6;
+  // etiqueta de papel pegada (como una nota): papel crema, borde a lápiz y letra de la portada en tinta azul noche
+  const tam = (r.tam ?? 150) * 0.6;
   return (
     <div
       style={{
         position: "absolute",
         left: (r.x ?? 0.5) * ANCHO,
         top: (r.y ?? 0.22) * ALTO + bote,
-        transform: `translate(-50%, -50%) scale(${k}) rotate(${r.giro ?? 0}deg)`,
+        transform: `translate(-50%, -50%) scale(${k}) rotate(${r.giro ?? (i % 2 ? 2.5 : -2)}deg)`,
         opacity: fuera,
         fontFamily: FUENTE,
-        fontSize: (r.tam ?? 150) * 0.55,
-        color: r.color ?? "#ffffff",
+        fontSize: tam,
+        lineHeight: 1,
+        color: r.color ?? TINTA_MARCA,
         whiteSpace: "nowrap",
         letterSpacing: 3,
-        ...trazo(Math.round((r.tam ?? 150) * 0.06)),
-        textShadow: "0 6px 18px rgba(0,0,0,0.7)",
+        padding: `${tam * 0.22}px ${tam * 0.42}px ${tam * 0.16}px`,
+        background: PAPEL,
+        border: `${Math.max(4, tam * 0.05)}px solid ${TINTA_MARCA}`,
+        borderRadius: `${tam * 0.12}px ${tam * 0.05}px ${tam * 0.14}px ${tam * 0.06}px`,
+        boxShadow: `${tam * 0.08}px ${tam * 0.1}px 0 rgba(20,18,28,0.45)`,
       }}
     >
       {r.texto}
@@ -117,7 +132,7 @@ export const Profundidad: React.FC<{ texto: string }> = ({ texto }) => {
   const f = useCurrentFrame();
   const k = tramo(f, 0, 10, Easing.out(Easing.cubic));
   return (
-    <div style={{ position: "absolute", right: 44, top: 48, opacity: k, transform: `translateX(${(1 - k) * 60}px)`, display: "flex", alignItems: "center", gap: 10, fontFamily: FUENTE, fontSize: 36, letterSpacing: 2, color: "#bff6ff", ...trazo(6) }}>
+    <div style={{ position: "absolute", right: 44, top: 48, opacity: k, transform: `translateX(${(1 - k) * 60}px)`, display: "flex", alignItems: "center", gap: 10, fontFamily: FUENTE, fontSize: 40, letterSpacing: 2, color: PAPEL, ...trazo(7, TINTA_MARCA) }}>
       <span style={{ fontSize: 28 }}>▼</span>
       {texto}
     </div>

@@ -4,12 +4,15 @@
     canal comprobar                 ¿está todo instalado?
     canal ideas                     lista de ideas con su guion
     canal guion nuevo N "Título"    crea la ficha de la fórmula viral (Textos/N - Título.json) para rellenarla
-    canal guion N                   comprueba la ficha con la fórmula, escribe el guion (.txt) y, si no
-                                     existe, un borrador de escenas en src/ideas/N.ts
+    canal guion N                   comprueba la ficha (vídeo largo), escribe el guion (.txt) y, si no
+                                     existe, el borrador automático de escenas en src/ideas/N.ts
+    canal borrador N [--forzar]     borrador automático de escenas a partir del guion (escenarios del catálogo,
+                                     reparto, caras, signos, rótulos con las cifras)
     canal voz N                     coge el audio más nuevo de «Pon aquí tu voz», lo nivela y apunta cuándo dice cada palabra
     canal prueba N                  prepara tiempos de mentira (sin voz) para ver el vídeo antes de grabar
-    canal montar N [--variante S | --nueva] [--prueba] [--rapido]
-                                     hace el short N y lo deja en «Vídeos listos» con su .txt para subirlo.
+    canal montar N [--variante S | --nueva] [--prueba] [--rapido] [--max-minutos M]
+                                     hace el vídeo N POR TRAMOS (se puede cortar y retomar: vuelve a lanzar la
+                                     misma orden) y lo deja en «Vídeos listos» con su .txt para subirlo.
                                      Usa la variante guardada de la idea (la misma que la hoja); --nueva sortea otra.
                                      --prueba usa los tiempos de mentira; --rapido lo hace a media resolución
     canal foto N SEGUNDO [--prueba] saca un fotograma (PNG) para revisar cómo queda
@@ -20,6 +23,7 @@ N es el número de la idea: el guion está en «Textos/N - Título.txt» y las e
 """
 import difflib
 import json
+import math
 import os
 import random
 import re
@@ -275,20 +279,207 @@ def efectos_sonido():
             subprocess.run(orden, check=True)
 
 
-# ---------------------------------------------------------------- generador de guiones (la fórmula)
-TRAMOS = [
-    ("gancho", "GANCHO raro y sin explicar (1-2 frases). Nada de 'because': que el espectador no entienda todavía."),
-    ("rival", "RIVAL PODEROSO: alguien o algo grande que va contra el héroe (un rey, una flota, el mayor depredador)."),
-    ("burlas", "BURLAS Y APODO: se ríen del héroe y le ponen un apodo (escríbelo también en 'apodo')."),
-    ("pista_falsa", "PISTA FALSA: la explicación equivocada que todos creen."),
-    ("raro", "TRES frases que escalan: 'Then something weird happened.' / 'Then it got weirder.' / 'Then the weirdest part.'"),
-    ("giro", "GIRO: la verdad, en pocas palabras y con sorpresa."),
-    ("ciencia", "CIENCIA ESCONDIDA: el porqué real, con un dato concreto y comprobado (cifras en número)."),
-    ("final", "FINAL QUE HACE LOOP: frase seca que se queda a medias y se completa con la primera frase del gancho."),
+# ---------------------------------------------------------------- guion de vídeo LARGO y borrador de escenas
+PALABRAS_LARGO = (1500, 2200)  # 10-15 min de voz
+
+# Escenarios del catálogo y las palabras del guion que los llaman (el borrador elige el que más coincide).
+ESCENARIOS_CLAVE = {
+    "aseguradora": "banco bancos banquero banqueros préstamo préstamos crédito créditos hipoteca hipotecas cuenta ahorro ahorros depósito depósitos intereses interés seguro seguros oficina tarjeta",
+    "control": "bolsa bolsas acciones acción mercado mercados wall street índice cotización pantalla pantallas fondo fondos inversores inversión trading apuesta apuestas gráfico subió cayó desplomó",
+    "piso": "tu tus te ti sueldo salario alquiler casa nevera compra supermercado precio precios familia hogar mes factura facturas bolsillo cartera café",
+    "ministerio": "gobierno gobiernos ministro ministros ministerio ley leyes decreto estado impuestos impuesto presidente congreso parlamento político políticos regulador reguladores banco_central",
+    "trono": "rey reyes reina corona monarca imperio emperador regente duque corte nobles noble francia luis",
+    "palacio": "palacio lujo aristócratas fiesta fiestas versalles mansión mansiones",
+    "guarida": "estafa estafas secreto secretos plan conspiración fraude trampa mafia cártel escobar narcotráfico sobornos soborno escondido",
+    "bodega": "oro plata tesoro monedas moneda lingotes fortuna botín billetes efectivo cajas",
+    "puerto": "barco barcos comercio colonias colonia mercancía mercancías mississippi américa especias exportar importar puerto",
+    "academia": "economista economistas teoría científicos nobel universidad profesores profesor modelo fórmula matemáticas genios",
+    "aula": "aprende aprender escuela explicación lección clase entender significa",
+    "expediente": "investigación juicio policía tribunal cárcel informe fiscal acusado condenado pruebas",
+    "almirantazgo": "guerra mapa mapas estrategia ejército soldados batalla",
+    "club": "club ricos rico millonarios millonario multimillonario élite whisky puros",
+    "nave": "fábrica fábricas obreros trabajadores producción industria empleo empleos despidos",
+    "gabinete": "crisis emergencia reunión rescate pánico urgente noche",
+    "taberna": "taberna cerveza rumor rumores pueblo gente calle calles",
+}
+RESERVA = ["piso", "aseguradora", "control", "ministerio", "oficina"]
+# Personajes del reparto que se llaman por palabras del guion
+REPARTO_CLAVE = {
+    "banquero": "banco bancos banquero banqueros prestamista",
+    "inversor": "inversor inversores especulador especuladores accionista accionistas fondo trader burry soros buffett",
+    "politico": "gobierno político políticos ministro presidente congreso diputado regulador",
+    "trabajador": "trabajador trabajadores obrero obreros empleado empleados sueldo salario",
+    "monarca": "rey reina regente monarca emperador duque",
+    "estafador": "estafa estafador estafadores fraude timador ladrón ladrones law madoff",
+}
+CARAS_CLAVE = [
+    # (palabras, cara, pose, signo)
+    ("crisis quiebra quebró ruina arruinado arruinados perdió perdieron pérdidas desastre deuda deudas hundió desplomó cayó", "triste", "agotado", "sudor"),
+    ("pánico miedo terror colapso explotó estalló", "asustado", "cabeza", "susto"),
+    ("furioso rabia mentira mintió robaron robo engaño engañó traición", "enfadado", "cruza", "enfado"),
+    ("rieron risa burla burlaron ridículo loco", "risa", "brazos", None),
+    ("ganó ganaron millones fortuna rico ricos éxito subió duplicó triplicó", "feliz", "victoria", "dinero"),
+    ("idea descubrió entendió inventó solución truco", "sorpresa", "senala", "idea"),
 ]
-PALABRAS_OBJETIVO = (150, 180)  # ~60 s de voz
-ESCENARIO_DEFECTO = {"gancho": "barco", "rival": "palacio", "burlas": "barco", "pista_falsa": "barco", "raro": "naufragio", "giro": "laboratorio", "ciencia": "arrecife", "final": "barco"}
-REPARTO_DEFECTO = [{"tipo": "bent", "nombre": "heroe"}, {"tipo": "capitan", "nombre": "capi"}, {"tipo": "marinero", "nombre": "risas"}]
+NUMERO = re.compile(r"\d")
+UNIDAD = re.compile(r"^(millones|millón|mil|billones|dólares|euros|%|por|años|veces|marcos|pesos)$", re.I)
+
+
+def norm_es(w):
+    return re.sub(r"[^a-záéíóúüñ0-9_]", "", w.lower())
+
+
+def frases(texto):
+    """Lista de (palabras, fin_de_párrafo) por frase; las palabras son las del guion tal cual (con signos)."""
+    out = []
+    for par in [p for p in re.split(r"\n\s*\n|\n", texto) if p.strip()]:
+        trozos = re.split(r"(?<=[.!?…])\s+", par.strip())
+        for k, t in enumerate(trozos):
+            ws = t.split()
+            if ws:
+                out.append((ws, k == len(trozos) - 1))
+    return out
+
+
+def borrador_largo(n, titulo, guion, reparto_fijo=None):
+    """Escenas de borrador para un vídeo largo: una escena cada ~40-80 palabras (cortando en frases y párrafos),
+    escenario por palabras clave del catálogo (sin repetir el anterior), personajes del reparto que se nombran,
+    caras, poses y signos según lo que dice cada frase, rótulos con las cifras y golpes de efecto en ellas."""
+    fs = frases(guion)
+    escenas, actual, cuenta = [], [], 0
+    for ws, fin_par in fs:
+        actual.append(ws)
+        cuenta += len(ws)
+        if cuenta >= 80 or (cuenta >= 40 and fin_par):
+            escenas.append(actual)
+            actual, cuenta = [], 0
+    if actual:
+        if escenas and cuenta < 20:
+            escenas[-1] += actual
+        else:
+            escenas.append(actual)
+    bloques, idx, previo = [], 0, None
+    usados = {}
+    for k, frs in enumerate(escenas):
+        palabras = [w for f in frs for w in f]
+        texto = " ".join(norm_es(w) for w in palabras)
+        bolsa = set(texto.split())
+        # escenario
+        puntos = {e: len(bolsa & set(c.split())) for e, c in ESCENARIOS_CLAVE.items()}
+        candidatos = sorted(puntos, key=lambda e: (-puntos[e], usados.get(e, 0)))
+        esc = next((e for e in candidatos if e != previo and puntos[e] > 0), None)
+        if not esc:
+            esc = min((e for e in RESERVA if e != previo), key=lambda e: usados.get(e, 0))
+        usados[esc] = usados.get(esc, 0) + 1
+        previo = esc
+        # reparto
+        figuras = [f for f, c in REPARTO_CLAVE.items() if bolsa & set(c.split())]
+        if reparto_fijo:
+            figuras = [f for f in reparto_fijo if f in figuras] or figuras
+        tu = bool(bolsa & {"tu", "tus", "te", "ti", "usted", "imagina", "imagínate"})
+        lista = (["protagonista"] if tu or not figuras else []) + figuras
+        lista = lista[:3]
+        # acciones por frase (el primer personaje es el que habla/reacciona)
+        acciones = {f: [] for f in lista}
+        rotulos, efectos = [], []
+        pos = idx
+        for f in frs:
+            ini = pos
+            t = {norm_es(w) for w in f}
+            quien = lista[0]
+            for fg in lista:
+                if t & set(REPARTO_CLAVE.get(fg, "").split()):
+                    quien = fg
+                    break
+            hecho = False
+            for claves, cara, pose, signo in CARAS_CLAVE:
+                hit = next((ini + j for j, w in enumerate(f) if norm_es(w) in claves.split()), None)
+                if hit is not None:
+                    acciones[quien] += [{"en": hit, "hace": "cara", "cara": cara}, {"en": hit, "hace": "pose", "pose": pose}]
+                    if signo:
+                        acciones[quien].append({"en": hit, "hace": "signo", "signo": signo})
+                    hecho = True
+                    break
+            final = f[-1]
+            if not hecho and final.endswith("?"):
+                acciones[quien] += [{"en": ini, "hace": "cara", "cara": "piensa"}, {"en": ini, "hace": "pose", "pose": "piensa"}, {"en": ini + len(f) - 1, "hace": "signo", "signo": "pregunta"}]
+                hecho = True
+            elif not hecho and final.endswith("!"):
+                acciones[quien] += [{"en": ini, "hace": "cara", "cara": "sorpresa"}, {"en": ini, "hace": "signo", "signo": "exclama"}]
+                hecho = True
+            if hecho and pos + len(f) < idx + len(palabras):
+                # al empezar la frase siguiente vuelve a la cara normal (los gestos no se quedan pegados)
+                acciones[quien] += [{"en": pos + len(f), "hace": "cara", "cara": "normal"}, {"en": pos + len(f), "hace": "pose", "pose": "brazos"}]
+            # una cifra por frase: rótulo de papel con la cifra y su unidad, y golpe de efecto
+            for j, w in enumerate(f):
+                if NUMERO.search(w) and len(rotulos) < 4:
+                    cifra = w.strip(".,;:!?…«»\"()")
+                    if j + 1 < len(f) and UNIDAD.match(norm_es(f[j + 1])):
+                        cifra += " " + f[j + 1].strip(".,;:!?…«»\"()")
+                        if j + 2 < len(f) and norm_es(f[j + 1]) == "por" and f[j + 2].lower().startswith("ciento"):
+                            cifra = w + " %"
+                    rotulos.append({"en": ini + j, "texto": cifra.upper(), "y": 0.2, "tam": 130, "hasta": min(ini + j + 8, idx + len(palabras) - 1)})
+                    efectos.append({"tipo": "golpe" if len(efectos) % 2 == 0 else "zoom", "en": ini + j})
+                    break
+            pos += len(f)
+        lineas = [f"    // {k + 1}. {' '.join(palabras)[:90]}…", "    {"]
+        if k > 0:
+            lineas.append(f"      desde: {idx},")
+        lineas.append(f'      escenario: "{esc}",')
+        lineas.append("      actores: [")
+        for a_i, fg in enumerate(lista):
+            x = 0.5 if len(lista) == 1 else 0.32 + 0.36 * a_i / (len(lista) - 1)
+            extra = {"figura": fg}
+            if a_i == 0:
+                extra["narra"] = True
+            acc = json.dumps(acciones[fg], ensure_ascii=False)
+            lineas.append(f'        {{ tipo: "bent", nombre: "{fg}", x: {x:.2f}, z: 0.45, mira: {1 if x < 0.5 else -1}, extra: {json.dumps(extra, ensure_ascii=False)}, acciones: {acc} }},')
+        lineas.append("      ],")
+        if rotulos:
+            lineas.append(f"      rotulos: {json.dumps(rotulos, ensure_ascii=False)},")
+        if efectos:
+            lineas.append(f"      efectos: {json.dumps(efectos, ensure_ascii=False)},")
+        lineas.append("    },")
+        bloques.append("\n".join(lineas))
+        idx += len(palabras)
+    cab = f"// Borrador AUTOMÁTICO hecho por «canal borrador {n}» a partir del guion. Ajusta escenarios, personajes, acciones,\n"
+    cab += "// rótulos y planos a mano. Las escenas y acciones van por ÍNDICE de palabra del guion (lo más seguro).\n"
+    cab += 'import { Idea } from "../motor/tipos";\n\n'
+    return cab + f"export const idea{n}: Idea = {{\n  n: {n},\n  titulo: {json.dumps(titulo, ensure_ascii=False)},\n  escenas: [\n" + "\n".join(bloques) + "\n  ],\n};\n"
+
+
+def apuntar_en_lista(n):
+    lista = RAIZ / "src" / "ideas" / "lista.ts"
+    s = lista.read_text(encoding="utf-8")
+    if f'from "./{n}"' in s:
+        return
+    s = s.replace('import { Idea } from "../motor/tipos";\n', f'import {{ Idea }} from "../motor/tipos";\nimport {{ idea{n} }} from "./{n}";\n')
+    s = re.sub(r"export const IDEAS: Idea\[\] = \[(.*?)\];", lambda m: f"export const IDEAS: Idea[] = [{m.group(1)}, idea{n}];", s, flags=re.S)
+    lista.write_text(s, encoding="utf-8")
+
+
+def cmd_borrador(args):
+    """Escribe (o REESCRIBE con --forzar) el borrador de escenas src/ideas/N.ts a partir del guion."""
+    n, d = idea_sin_escenas(args)
+    ts = RAIZ / "src" / "ideas" / f"{n}.ts"
+    if ts.exists() and "--forzar" not in args:
+        fallo(f"Ya existe src/ideas/{n}.ts. Para rehacerlo desde el guion (se pierde lo retocado):  canal borrador {n} --forzar")
+    fi = fichas().get(n)
+    reparto = json.loads(fi.read_text(encoding="utf-8")).get("reparto") if fi else None
+    ts.write_text(borrador_largo(n, d["titulo"], d["guion"], reparto if isinstance(reparto, list) else None), encoding="utf-8")
+    apuntar_en_lista(n)
+    print(f"✓ Borrador de escenas: src/ideas/{n}.ts ({ts.read_text(encoding='utf-8').count('escenario:')} escenas), apuntado en src/ideas/lista.ts.")
+
+
+def idea_sin_escenas(args):
+    try:
+        n = int(args[0])
+    except (IndexError, ValueError):
+        fallo("Dime el número. Ejemplo:  canal borrador 1")
+    todas = ideas()
+    if n not in todas:
+        fallo(f"No hay guion para la idea {n} en «Textos».")
+    return n, todas[n]
 
 
 def fichas():
@@ -300,80 +491,29 @@ def fichas():
     return out
 
 
-def texto_ficha(fi):
-    """Los 8 tramos de la fórmula en orden (los tres 'raro' juntos)."""
-    out = []
-    for k, _ in TRAMOS:
-        v = fi.get(k, "")
-        out.append(" ".join(v) if isinstance(v, list) else str(v))
-    return [p.strip() for p in out]
-
-
 def revisar_ficha(fi):
-    """Comprueba la ficha con la fórmula. Devuelve (fallos, avisos)."""
+    """Comprueba la ficha del vídeo largo. Devuelve (fallos, avisos)."""
     fallos, avisos = [], []
-    for k, ayuda in TRAMOS:
-        v = fi.get(k)
-        if not v or (isinstance(v, list) and not all(str(x).strip() for x in v)):
-            fallos.append(f"Falta «{k}»: {ayuda}")
-    raro = fi.get("raro", [])
-    if not isinstance(raro, list) or len(raro) != 3:
-        fallos.append("«raro» tiene que ser una lista de TRES frases que van a más (escalada x3).")
-    elif not re.search(r"something weird happen", raro[0], re.I):
-        fallos.append("La 1ª frase de «raro» tiene que decir «Then something weird happened».")
-    elif not all(re.search(r"weird", r, re.I) for r in raro):
-        avisos.append("Mejor si las 3 frases de «raro» dicen weird / weirder / weirdest (suena el efecto «raro» en cada una).")
-    apodo = fi.get("apodo", "").strip()
-    if not apodo:
-        fallos.append("Falta «apodo»: el mote que le ponen al héroe.")
-    elif apodo.lower() not in fi.get("burlas", "").lower():
-        fallos.append(f"El apodo «{apodo}» tiene que salir en «burlas».")
-    gancho = fi.get("gancho", "")
-    if len(gancho.split()) > 22:
-        avisos.append("El gancho es largo: que quepa en 2-4 segundos (20 palabras como mucho).")
-    if re.search(r"\b(because|that's why|the reason)\b", gancho, re.I):
-        fallos.append("El gancho explica demasiado: quita el «because/that's why». El misterio se resuelve en el giro.")
-    final = fi.get("final", "").strip()
-    # formato fijo (18 nov 2026): el final cierra con «Now you know.»
-    if not re.search(r"now you know\.?$", final, re.I):
-        avisos.append("El final debe cerrar con «Now you know.» (formato fijo del canal).")
-    ciencia = fi.get("ciencia", "")
-    if not re.search(r"\d", ciencia) and not re.search(r"\b(hotter|faster|bigger|longer|older|times|nearly|almost)\b", ciencia, re.I):
-        avisos.append("La ciencia no tiene ninguna cifra ni comparación: un dato concreto engancha más.")
+    guion = fi.get("guion", "").strip()
+    if not guion:
+        fallos.append("Falta «guion»: el texto EXACTO que dirá la voz (párrafos separados por una línea en blanco).")
+        return fallos, avisos
+    n = len(guion.split())
+    if not PALABRAS_LARGO[0] <= n <= PALABRAS_LARGO[1]:
+        avisos.append(f"El guion tiene {n} palabras; para 10-15 min apunta a {PALABRAS_LARGO[0]}-{PALABRAS_LARGO[1]}.")
+    gancho = " ".join(guion.split()[:75])
+    if "?" not in gancho and not NUMERO.search(gancho):
+        avisos.append("El gancho (primeros 30 s) no tiene ni pregunta ni cifra: empieza con la pregunta o la cifra brutal.")
+    giros = len(re.findall(r"\b(pero|y aún|y entonces|sin embargo|hasta que|lo peor)\b", guion, re.I))
+    if giros < n / 260:
+        avisos.append(f"Pocos giros ({giros}): mete un «Y aún es peor…» / «Pero…» cada 1-2 minutos.")
+    if not re.search(r"\b(tu|tus|te)\b", guion, re.I):
+        avisos.append("No le hablas al espectador: compara con SU sueldo, SU alquiler, SU banco.")
     if not fi.get("fuentes"):
-        fallos.append("Faltan «fuentes»: cada dato tiene que estar comprobado (artículo científico, NOAA, museo…).")
-    n = sum(len(p.split()) for p in texto_ficha(fi))
-    if not PALABRAS_OBJETIVO[0] <= n <= PALABRAS_OBJETIVO[1]:
-        avisos.append(f"El guion tiene {n} palabras; para ~60 s apunta a {PALABRAS_OBJETIVO[0]}-{PALABRAS_OBJETIVO[1]}.")
+        fallos.append("Faltan «fuentes»: cada cifra tiene que estar comprobada (banco central, FMI, hemeroteca, libro).")
+    if not fi.get("dato"):
+        avisos.append("Falta «dato»: la cifra o el hecho central, en una frase.")
     return fallos, avisos
-
-
-def borrador_ts(n, fi):
-    """Escenas de borrador: una por tramo de la fórmula; cada una empieza en la primera palabra de su tramo."""
-    tramos = texto_ficha(fi)
-    norm = [normal(w) for w in " ".join(tramos).split()]
-    esc = fi.get("escenarios", {})
-    reparto = fi.get("reparto") or REPARTO_DEFECTO
-    bloques, pos, base = [], 0, 0
-    for (clave, _), texto in zip(TRAMOS, tramos):
-        trozos = texto.split()
-        lineas = [f"    // {clave}: {texto[:70]}", "    {"]
-        if pos > 0 and trozos:
-            primera = normal(trozos[0])
-            vez = sum(1 for w in norm[base : pos + 1] if w == primera)
-            lineas.append(f'      desde: "{trozos[0].strip(".,!?;:")}{"#" + str(vez) if vez > 1 else ""}",')
-            base = pos
-        lineas.append(f'      escenario: "{esc.get(clave, ESCENARIO_DEFECTO[clave])}",')
-        lineas.append("      actores: [")
-        for i, a in enumerate(reparto):
-            x = 0.3 + 0.4 * i / max(1, len(reparto) - 1)
-            lineas.append(f'        {{ tipo: "{a["tipo"]}", nombre: "{a.get("nombre", a["tipo"])}", x: {x:.2f}, z: 0.4 }},')
-        lineas += ["      ],", "    },"]
-        bloques.append("\n".join(lineas))
-        pos += len(trozos)
-    cab = f"// Borrador hecho por «canal guion {n}». Ajusta escenarios, personajes, acciones y planos.\n"
-    cab += 'import { Idea } from "../motor/tipos";\n\n'
-    return cab + f"export const idea{n}: Idea = {{\n  n: {n},\n  titulo: {json.dumps(fi.get('titulo', ''))},\n  escenas: [\n" + "\n".join(bloques) + "\n  ],\n};\n"
 
 
 def cmd_guion(args):
@@ -381,18 +521,23 @@ def cmd_guion(args):
         try:
             n = int(args[1])
         except (IndexError, ValueError):
-            fallo('Ejemplo:  canal guion nuevo 1 "The Whale With a Harpoon"')
+            fallo('Ejemplo:  canal guion nuevo 1 "El hombre que imprimió dinero"')
         titulo = " ".join(args[2:]).strip() or "Sin titulo"
         f = TEXTOS / f"{n} - {titulo}.json"
         if f.exists():
             fallo(f"Ya existe «{f.name}».")
-        ficha = {"titulo": titulo, "dato": "", "fuentes": [], "apodo": "", "reparto": REPARTO_DEFECTO, "escenarios": dict(ESCENARIO_DEFECTO)}
-        for k, ayuda in TRAMOS:
-            ficha[k] = ["Then something weird happened. ", "Then it got weirder. ", "Then the weirdest part. "] if k == "raro" else ""
-            ficha["_ayuda_" + k] = ayuda
+        ficha = {
+            "titulo": titulo,
+            "guion": "",
+            "dato": "",
+            "fuentes": [],
+            "reparto": ["protagonista"],
+            "hashtags": TAGS,
+            "_ayuda": "guion = el texto EXACTO de la voz (1.500-2.200 palabras, párrafos con línea en blanco). Gancho en los primeros 30 s; un giro cada 1-2 min; compara con el bolsillo del espectador. reparto = figuras de src/reparto/reparto.ts que salen.",
+        }
         TEXTOS.mkdir(exist_ok=True)
         f.write_text(json.dumps(ficha, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"✓ Ficha creada: «Textos/{f.name}». Rellénala (en español) y luego:  canal guion {n}")
+        print(f"✓ Ficha creada: «Textos/{f.name}». Rellénala y luego:  canal guion {n}")
         return
     try:
         n = int(args[0])
@@ -408,19 +553,16 @@ def cmd_guion(args):
     if fallos:
         for x in fallos:
             print("  ✗ " + x)
-        fallo("La ficha no cumple la fórmula todavía.")
-    guion = "\n".join(texto_ficha(fi))
+        fallo("La ficha no está lista todavía.")
+    guion = fi["guion"].strip()
     titulo = fi.get("titulo") or re.match(r"\d+\s*-\s*(.+)\.json$", fs[n].name).group(1)
     for viejo in TEXTOS.glob(f"{n} - *.txt"):
         viejo.unlink()
     (TEXTOS / f"{n} - {titulo}.txt").write_text(guion + "\n", encoding="utf-8")
     palabras = len(guion.split())
-    print(f"✓ Guion escrito: «Textos/{n} - {titulo}.txt» ({palabras} palabras, unos {palabras / 2.8:.0f} s).")
-    ts = RAIZ / "src" / "ideas" / f"{n}.ts"
-    if not ts.exists():
-        ts.write_text(borrador_ts(n, fi), encoding="utf-8")
-        print(f"✓ Borrador de escenas: src/ideas/{n}.ts (apúntalo en src/ideas/lista.ts).")
-    print("\n" + guion)
+    print(f"✓ Guion escrito: «Textos/{n} - {titulo}.txt» ({palabras} palabras, unos {palabras / 2.6 / 60:.1f} min).")
+    if not (RAIZ / "src" / "ideas" / f"{n}.ts").exists():
+        cmd_borrador([str(n)])
 
 
 def elegir_variante(n, args):
@@ -470,26 +612,82 @@ def preparar_props(n, args):
     return props, pf, (pistas and elegida.name)
 
 
+TRAMO_SEG = int(AJUSTES.get("tramo_segundos", 45))  # cada tramo se dibuja aparte (y se puede retomar)
+
+
+def huella(props):
+    """Huella de lo que cambia el dibujo: si cambia (voz, variante, escenas), los tramos viejos no valen."""
+    import hashlib
+
+    h = hashlib.sha1(json.dumps(props, sort_keys=True).encode("utf-8"))
+    for f in sorted((RAIZ / "src").rglob("*.ts*")):
+        h.update(f.read_bytes())
+    return h.hexdigest()[:16]
+
+
 def cmd_montar(args):
+    """Monta el vídeo POR TRAMOS (de TRAMO_SEG segundos): cada tramo es un archivo aparte que se guarda al terminar.
+    Si el proceso se corta (la nube corta a las 2 h), al volver a lanzar la misma orden sigue por el primer tramo que
+    falta. Al final une los tramos SIN volver a comprimir (no se nota el corte) y les pone el audio entero."""
     n, d = idea(args)
     props, pf, musica = preparar_props(n, args)
     v = props["variante"]
-    bruto = SALIDA / f"short-{n}.mp4"
-    registro = SALIDA / f"short-{n}.log"
-    print(f"Haciendo el short {n} «{d['titulo']}» (variante {v})… suele tardar entre 1 y 10 minutos.", flush=True)
+    total = math.ceil((props["duracion"] + 0.7) * 30)
+    carpeta = SALIDA / f"tramos-{n}{'-prueba' if '--prueba' in args else ''}"
+    carpeta.mkdir(parents=True, exist_ok=True)
+    marca = huella(props) + ("-rapido" if "--rapido" in args else "")
+    if (carpeta / "huella.txt").exists() and (carpeta / "huella.txt").read_text().strip() != marca:
+        print("Ha cambiado algo (voz, escenas o variante): empiezo los tramos de cero.")
+        shutil.rmtree(carpeta)
+        carpeta.mkdir(parents=True)
+    (carpeta / "huella.txt").write_text(marca)
+    paso = TRAMO_SEG * 30
+    tramos = [(a, min(total, a + paso) - 1) for a in range(0, total, paso)]
+    hechos = sum((carpeta / f"v{k:03}.mp4").exists() for k in range(len(tramos)))
+    print(f"Montando la idea {n} «{d['titulo']}» (variante {v}): {total / 30:.0f} s en {len(tramos)} tramos de {TRAMO_SEG} s" + (f" ({hechos} ya hechos, sigo)" if hechos else "") + ".", flush=True)
+    registro = SALIDA / f"montaje-{n}.log"
+    hilos = "100%" if NUBE else "50%"
+    paquete = SALIDA / "paquete-montaje"
+    r = subprocess.run([npx(), "remotion", "bundle", "src/index.ts", f"--out-dir={paquete}", "--log=error"], cwd=RAIZ, env=entorno())
+    if r.returncode != 0:
+        fallo("No se ha podido preparar el proyecto (mira el error de arriba).")
     inicio = time.time()
-    hilos = "100%" if NUBE else "50%"  # en la nube no hay gráfica: todos los núcleos dibujan
-    orden = [npx(), "remotion", "render", "src/index.ts", "short", str(bruto), f"--props={pf}", f"--concurrency={hilos}", "--crf=20", "--x264-preset=veryfast", "--log=error"]
-    if "--rapido" in args:
-        orden.append("--scale=0.5")
-    with open(registro, "w", encoding="utf-8") as reg:
-        r = subprocess.run(orden, cwd=RAIZ, stdout=reg, stderr=subprocess.STDOUT, env=entorno())
-    if r.returncode != 0 or not bruto.exists():
-        fallo(f"El motor no ha podido hacer el vídeo. Mira salida/short-{n}.log\n" + registro.read_text(encoding="utf-8")[-1500:])
+    limite = float(args[args.index("--max-minutos") + 1]) if "--max-minutos" in args else (100 if NUBE else 1e9)
+    for k, (a, b) in enumerate(tramos):
+        out = carpeta / f"v{k:03}.mp4"
+        if out.exists():
+            continue
+        if (time.time() - inicio) / 60 > limite:
+            print(f"⏸ Paro aquí para no pasar el límite de la nube ({k}/{len(tramos)} tramos hechos). Vuelve a lanzar la MISMA orden y sigue donde lo dejó.")
+            sys.exit(3)
+        t0 = time.time()
+        tmp = carpeta / f"v{k:03}.tmp.mp4"
+        orden = [npx(), "remotion", "render", str(paquete), "short", str(tmp), f"--props={pf}", f"--frames={a}-{b}", f"--concurrency={hilos}", "--muted", "--crf=19", "--x264-preset=veryfast", "--log=error"]
+        if "--rapido" in args:
+            orden.append("--scale=0.5")
+        with open(registro, "a", encoding="utf-8") as reg:
+            r = subprocess.run(orden, cwd=RAIZ, stdout=reg, stderr=subprocess.STDOUT, env=entorno())
+        if r.returncode != 0 or not tmp.exists():
+            fallo(f"El tramo {k + 1} ha fallado. Mira salida/montaje-{n}.log\n" + registro.read_text(encoding="utf-8")[-1500:])
+        tmp.rename(out)
+        hechos_ahora = k + 1
+        falta = (time.time() - inicio) / max(1, hechos_ahora - hechos) * (len(tramos) - hechos_ahora)
+        print(f"  ✓ tramo {k + 1}/{len(tramos)} ({(b - a + 1) / 30:.0f} s de vídeo en {time.time() - t0:.0f} s). Faltan unos {falta / 60:.0f} min.", flush=True)
+    # el audio entero de una vez (voz, música y efectos): así no hay saltos en el sonido entre tramos
+    audio = carpeta / "audio.aac"
+    if not audio.exists():
+        print("  · Mezclando el audio…", flush=True)
+        with open(registro, "a", encoding="utf-8") as reg:
+            r = subprocess.run([npx(), "remotion", "render", str(paquete), "short", str(carpeta / "audio.tmp.aac"), f"--props={pf}", "--codec=aac", "--log=error"], cwd=RAIZ, stdout=reg, stderr=subprocess.STDOUT, env=entorno())
+        if r.returncode != 0:
+            fallo(f"No se ha podido mezclar el audio. Mira salida/montaje-{n}.log")
+        (carpeta / "audio.tmp.aac").rename(audio)
+    lista = carpeta / "lista.txt"
+    lista.write_text("".join(f"file 'v{k:03}.mp4'\n" for k in range(len(tramos))), encoding="utf-8")
     LISTOS.mkdir(exist_ok=True)
     final = LISTOS / f"{n} - {d['titulo']} ({v}){' PRUEBA' if '--prueba' in args else ''}.mp4"
-    # volumen de YouTube (−14 LUFS) sin volver a comprimir la imagen
-    subprocess.run([ffmpeg(), "-v", "error", "-y", "-i", str(bruto), "-c:v", "copy", "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", "48000", "-c:a", "aac", "-b:a", "192k", str(final)], check=True)
+    # une los tramos sin recomprimir la imagen y pone el audio al volumen de YouTube (−14 LUFS)
+    subprocess.run([ffmpeg(), "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(lista), "-i", str(audio), "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", "48000", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", str(final)], check=True)
     primera = re.split(r"(?<=[.!?])\s", d["guion"])[0]
     tags = TAGS
     for fi in TEXTOS.glob(f"{n} - *.json"):
@@ -498,7 +696,7 @@ def cmd_montar(args):
     if musica:
         txt += f"\nMúsica: {musica} (pon aquí su crédito si su licencia lo pide)\n"
     final.with_suffix(".txt").write_text(txt, encoding="utf-8")
-    print(f"✓ Short listo en {time.time() - inicio:.0f} s: «{LISTOS.name}/{final.name}»")
+    print(f"✓ Vídeo listo: «{LISTOS.name}/{final.name}»")
 
 
 def cmd_foto(args):
@@ -586,7 +784,7 @@ def cmd_todo(args):
     cmd_montar([a for a in args if a != "--prueba"])
 
 
-ORDENES = {"revisar": cmd_revisar, "todo": cmd_todo, "comprobar": cmd_comprobar, "ideas": cmd_ideas, "guion": cmd_guion, "voz": cmd_voz, "prueba": cmd_prueba, "montar": cmd_montar, "foto": cmd_foto}
+ORDENES = {"borrador": cmd_borrador, "revisar": cmd_revisar, "todo": cmd_todo, "comprobar": cmd_comprobar, "ideas": cmd_ideas, "guion": cmd_guion, "voz": cmd_voz, "prueba": cmd_prueba, "montar": cmd_montar, "foto": cmd_foto}
 
 if __name__ == "__main__":
     if len(sys.argv) < 2 or sys.argv[1] not in ORDENES:

@@ -21,16 +21,17 @@ import { ALTO, ANCHO, Ctx, FPS, ProveedorVoz, herramientas, indicePalabra, tramo
 import { Escena, Idea, PropsShort, Sonido } from "./tipos";
 import { IDEAS } from "../ideas/lista";
 
-function useFuente() {
-  const [h] = useState(() => delayRender("Cargando la letra"));
+/** Letras del canal: «Marca» = Rubik Dirt (la de la portada), «Mano» = Permanent Marker (notas a mano). */
+const FUENTES: [string, string][] = [
+  ["Marca", "fuentes/RubikDirt.woff2"],
+  ["MarcaLimpia", "fuentes/Rubik-Black.woff2"],
+  ["Mano", "fuentes/PermanentMarker.woff2"],
+];
+export function useFuente() {
+  const [h] = useState(() => delayRender("Cargando las letras"));
   useEffect(() => {
-    const fuente = new FontFace("OceanoBlack", `url(${staticFile("fuentes/InterDisplay-Black.otf")})`);
-    fuente
-      .load()
-      .then((ff) => {
-        document.fonts.add(ff);
-        continueRender(h);
-      })
+    Promise.all(FUENTES.map(([n, f]) => new FontFace(n, `url(${staticFile(f)})`).load().then((ff) => document.fonts.add(ff))))
+      .then(() => continueRender(h))
       .catch((e) => cancelRender(e));
   }, [h]);
 }
