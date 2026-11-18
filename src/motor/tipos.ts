@@ -36,7 +36,9 @@ export type Escenario =
   // vídeo de las olas monstruo (idea 7)
   | "tormenta" | "academia" | "expediente" | "draupner" | "control" | "espacio" | "bar"
   // vídeo de los submarinos de Holland (idea 8)
-  | "astillero" | "astillero-fiesta" | "aula" | "ministerio" | "guarida" | "canal" | "taller" | "bahia" | "nave";
+  | "astillero" | "astillero-fiesta" | "aula" | "ministerio" | "guarida" | "canal" | "taller" | "bahia" | "nave"
+  // canal de economía «Inercia del consumo» (escenarios-economia.tsx)
+  | "banco" | "salon";
 
 export type Criatura =
   | "bent" // EL PROTAGONISTA: cabeza blanca, gorra azul marino hacia atrás, sudadera negra y mochila

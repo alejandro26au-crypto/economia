@@ -7,6 +7,7 @@ Lo esencial y las reglas están en CLAUDE.md. Las piezas sueltas para decorados 
 
 | Archivo | Escenarios |
 |---|---|
+| `escenarios-economia.tsx` (canal de economía) | banco (sala de mármol, ventanillas, cámara acorazada abierta con oro, ventanales fríos) · salon (tu casa al anochecer: sofá, mesita con facturas y hucha, tele con IPC, cocina, lámpara cálida) |
 | `escenarios-holland.tsx` (vídeo 8) | astillero (muelle 1898, atardecer) · astillero-fiesta (mismo muelle, día, banderas) · aula (escuela 1875, noche de nieve) · ministerio (despacho oficial, atardecer por la ventana) · guarida (trastienda de conspiradores, velas) · canal (dársena de noche, luna) · taller (tanque de cristal, compresor) · bahia (bajo el agua, verde) · nave (astillero moderno, focos fríos) |
 | `escenarios-olas.tsx` (vídeo 5) | tormenta (cubierta en tormenta) · academia (sala de científicos 1900) · expediente (oficina de investigación) · draupner (plataforma de gas de noche) · control (sala de control 1995) · espacio (Tierra y satélite) · bar (bar de puerto con neón) |
 | `escenarios-pirata.tsx` (vídeo 4) | taberna · trono · puerto (muelle español, atardecer) · abordaje · consejo (cubierta de noche) · bodega (botín) · enfermeria · aseguradora (oficina moderna) |

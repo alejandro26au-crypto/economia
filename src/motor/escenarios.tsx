@@ -1,6 +1,7 @@
 // Escenarios 3D (Three.js) con aspecto cinematográfico: luz realista, niebla de profundidad, siluetas lejanas y
 // cosas en primer plano para que la cámara tenga capas (delante, medio, fondo). Los personajes 2D se colocan
 // dentro (ver Short.tsx). Medidas en metros: el suelo está en y = 0 y la cámara mira, por defecto, hacia -z.
+import { ESCENARIOS_ECONOMIA } from "./escenarios-economia";
 import React, { useMemo } from "react";
 import { useCurrentFrame } from "remotion";
 import { useThree } from "@react-three/fiber";
@@ -841,6 +842,7 @@ const FondoAquarius: React.FC<{ s: number }> = ({ s }) => (
 );
 
 export const ESCENARIOS3D: Record<Escenario, React.FC<{ s: number }>> = {
+  ...ESCENARIOS_ECONOMIA,
   arrecife: Arrecife,
   profundo: Profundo,
   naufragio: Naufragio,

@@ -635,16 +635,17 @@ def cmd_montar(args):
     total = math.ceil((props["duracion"] + 0.7) * 30)
     carpeta = SALIDA / f"tramos-{n}{'-prueba' if '--prueba' in args else ''}"
     carpeta.mkdir(parents=True, exist_ok=True)
-    marca = huella(props) + ("-rapido" if "--rapido" in args else "")
+    marca = huella(props) + ("-rapido" if "--rapido" in args else "") + (f"-t{args[args.index('--tramo') + 1]}" if "--tramo" in args else "")
     if (carpeta / "huella.txt").exists() and (carpeta / "huella.txt").read_text().strip() != marca:
         print("Ha cambiado algo (voz, escenas o variante): empiezo los tramos de cero.")
         shutil.rmtree(carpeta)
         carpeta.mkdir(parents=True)
     (carpeta / "huella.txt").write_text(marca)
-    paso = TRAMO_SEG * 30
+    seg_tramo = int(args[args.index("--tramo") + 1]) if "--tramo" in args else TRAMO_SEG
+    paso = seg_tramo * 30
     tramos = [(a, min(total, a + paso) - 1) for a in range(0, total, paso)]
     hechos = sum((carpeta / f"v{k:03}.mp4").exists() for k in range(len(tramos)))
-    print(f"Montando la idea {n} «{d['titulo']}» (variante {v}): {total / 30:.0f} s en {len(tramos)} tramos de {TRAMO_SEG} s" + (f" ({hechos} ya hechos, sigo)" if hechos else "") + ".", flush=True)
+    print(f"Montando la idea {n} «{d['titulo']}» (variante {v}): {total / 30:.0f} s en {len(tramos)} tramos de {seg_tramo} s" + (f" ({hechos} ya hechos, sigo)" if hechos else "") + ".", flush=True)
     registro = SALIDA / f"montaje-{n}.log"
     hilos = "100%" if NUBE else "50%"
     paquete = SALIDA / "paquete-montaje"

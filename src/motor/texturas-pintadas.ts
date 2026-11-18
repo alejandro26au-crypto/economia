@@ -7,7 +7,7 @@ const cache = new Map<string, THREE.CanvasTexture>();
 const R = (k: string, ...n: (string | number)[]) => azar(77, k, ...n);
 const TINTA = "rgba(18,14,28,";
 
-function lienzo(clave: string, w: number, h: number, pinta: (x: CanvasRenderingContext2D) => void, rep: [number, number] = [1, 1]) {
+export function lienzo(clave: string, w: number, h: number, pinta: (x: CanvasRenderingContext2D) => void, rep: [number, number] = [1, 1]) {
   const k = `${clave}|${rep.join("x")}`;
   const ya = cache.get(k);
   if (ya) return ya;

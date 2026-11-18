@@ -10,13 +10,27 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
 océano (para reutilizar) y estructura del código. Piezas para decorados: `src/motor/atrezo.ts`.
 
 ## Estado (18 nov 2026)
-- Recién creado: motor copiado del océano y limpio. `src/ideas/8.ts` = EJEMPLO, el vídeo de Holland (vertical) como
-  modelo de escenas.
-- PENDIENTE (en este orden): 1) motor en horizontal 1920×1080 (cámara, rótulos, subtítulos); 2) montaje de
-  vídeos largos en tramos que se unen sin cortes (la nube corta procesos de más de 2 h); 3) borrador automático de
-  escenas a partir del guion; 4) vídeo piloto.
-- Público: España y Latinoamérica (español neutro). Por decidir: voz de ElevenLabs en español, tipo de personajes,
-  nombre y logo del canal, idea del piloto.
+- Canal: **Inercia del consumo** (youtube.com/@Inercial.delconsumo). Logo `public/marca/logo.png`, portada
+  `referencias/portada.png`, personaje `referencias/personaje.png` y caras `referencias/expresiones.png`.
+- HECHO: especie del canal (`src/reparto/figura.tsx`, boceto a tinta como la referencia: cabeza redonda, pelo de
+  mechones, ojos blancos grandes, camiseta oscura rayada a lápiz, palitos) y reparto de ejemplo en `reparto.ts`
+  (protagonista, banquero, inversor, politico, trabajador, monarca, estafador). Hojas: `especie` y `reparto`
+  (`npx remotion still src/index.ts especie salida/especie.png`). Signos de cómic (`signos.tsx`): acción
+  `{ hace: "signo", signo: "pregunta" | "exclama" | "enfado" | "sudor" | "susto" | "velocidad" | "idea" | "dinero" }`.
+  Poses nuevas: `cabeza` (manos a la cabeza) y `agotado`. `alcanza()` lleva una mano a un punto (PUNTOS).
+- HECHO: estilo PAPEL Y LÁPIZ para todo el 3D (`ilustrado.tsx`, `papel`): color apagado tipo acuarela, rayado en
+  sombras y grano. Letra de la portada (Rubik Dirt, `public/fuentes`): subtítulos en tinta azul noche con halo de
+  papel; rótulos como etiquetas de papel. Colores de marca en `textos.tsx` (PAPEL, TINTA_MARCA, ORO, SALVIA).
+- HECHO: montaje POR TRAMOS (`canal montar N`): tramos de 45 s que se guardan; si se corta, se relanza la misma orden
+  y sigue. En la nube para solo a los 100 min (`--max-minutos`). Audio entero aparte; une sin recomprimir.
+  Velocidad medida: ~0,7 s por fotograma → 12 min de vídeo ≈ 4 h (3 lanzamientos en la nube).
+- HECHO: borrador automático (`canal borrador N`): escenas cada 40-80 palabras, escenario por palabras clave,
+  reparto que se nombra, caras/poses/signos por frase, rótulos con las cifras. Luego se retoca a mano.
+- HECHO: escenarios nuevos `banco` (cámara acorazada abierta) y `salon` (tu casa: facturas, hucha, tele con IPC)
+  en `escenarios-economia.tsx`. Idea 90 = EJEMPLO de 15 s (no es guion del canal).
+- PENDIENTE: decisiones del usuario (voz, nombre del protagonista, visto bueno a la especie y al estilo papel);
+  más escenarios de economía (bolsa, despacho del gobierno, calle/supermercado, fábrica…); guion del piloto.
+- Público: España y Latinoamérica (español neutro).
 
 ## Lo que dicen los datos (vidIQ, 18 nov 2026)
 - En español destacan los vídeos que tocan TU dinero y una verdad escondida: «Cómo los ricos usan la deuda» (17x,
@@ -47,15 +61,16 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - Puntos de interés y obstáculos en METROS (`metros: true`); actores con `...enMetros("escenario", x, z)`.
 
 ## Proceso
-1. Guion aprobado → `./canal guion nuevo N "Título"`, rellenar la ficha, `./canal guion N`.
-2. Escenas en `src/ideas/N.ts` (apúntala en `src/ideas/lista.ts`) → `npx tsc --noEmit -p .`
+1. Guion aprobado → `./canal guion nuevo N "Título"`, rellenar la ficha (campo `guion` = texto EXACTO), `./canal guion N`
+   (escribe el .txt y el BORRADOR automático de escenas, ya apuntado en `src/ideas/lista.ts`).
+2. Retocar las escenas en `src/ideas/N.ts` (planos, acciones, rótulos) → `npx tsc --noEmit -p .`
 3. `./canal prueba N` + `./canal revisar N --prueba`: hoja de escenas + chequeo automático de planos.
 4. Llega el MP3 → «Pon aquí tu voz» → `./canal voz N` → `./canal revisar N` → fotos clave → `./canal montar N`
-   (en segundo plano) → enviar el vídeo.
+   (en segundo plano; si para por tiempo, relanzar la MISMA orden hasta que diga «Vídeo listo») → enviar el vídeo.
 5. La variante (cámara) se guarda por idea en `Textos/variantes.json`.
 6. Guardar y subir; actualizar el «Estado» de arriba.
 
 ## Órdenes (`./canal …`)
-`comprobar` · `ideas` · `guion nuevo N "Título"` · `guion N` · `voz N` · `prueba N` · `revisar N [--prueba]` ·
-`foto N SEG [--prueba]` · `montar N [--prueba] [--rapido] [--nueva | --variante S]` · `todo N` (voz + montar).
+`comprobar` · `ideas` · `guion nuevo N "Título"` · `guion N` · `borrador N [--forzar]` · `voz N` · `prueba N` · `revisar N [--prueba]` ·
+`foto N SEG [--prueba]` · `montar N [--prueba] [--rapido] [--nueva | --variante S] [--tramo S] [--max-minutos M]` · `todo N` (voz + montar).
 En la nube, antes de `voz`: `pip install -r instalador/requirements.txt` y `npm ci`.

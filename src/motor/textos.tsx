@@ -77,7 +77,7 @@ export const Subtitulos: React.FC<{ palabras: Palabra[]; rotulos?: RotuloVisible
   const limpia = (t: string) => t.replace(/[.,;:!?…«»"]/g, "").toUpperCase();
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: Math.round(ALTO * (ANCHO > ALTO ? 0.8 : 0.69)) }}>
-      <div style={{ transform: `scale(${0.85 + pop * 0.15})`, display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center", maxWidth: ANCHO * 0.8 }}>
+      <div style={{ transform: `scale(${0.85 + pop * 0.15})`, display: "flex", gap: 30, flexWrap: "wrap", justifyContent: "center", maxWidth: ANCHO * 0.8 }}>
         {quedan.map((i) => {
           const activa = s >= palabras[i].ini - 0.04;
           return (

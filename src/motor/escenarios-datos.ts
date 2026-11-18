@@ -35,6 +35,26 @@ const ROCAS_PRIMER_PLANO: Obstaculo[] = [
 ];
 
 export const DATOS: Record<Escenario, DatosEscenario> = {
+  // ---- canal de economía (escenarios-economia.tsx)
+  banco: {
+    centro: [0, 0, 1.0], ancho: 4.2, fondo: 3, suelo: 0, altoMira: 1.4, distMax: 8, caja: [-5.6, 0.3, -5.0, 5.6, 4.2, 4.0], agua: false, tinte: "#fff0dc", nieblaPersonajes: [14, 50],
+    obstaculos: [[-4.2, -4.2, 0.5, 4.6], [-4.2, -1.2, 0.5, 4.6], [-4.2, 2, 0.5, 4.6], [4.2, -4.2, 0.5, 4.6], [4.2, -1.2, 0.5, 4.6], [4.2, 2, 0.5, 4.6], [-3.0, -2.6, 0.6, 2.4], [4.6, 0.6, 0.5, 1.2]],
+    puntos: {
+      camara: { x: 0, z: -3.6, metros: true, mira: 1, pose: "senala", claves: ["oro", "cámara", "acorazada", "reservas", "dinero", "lingotes", "guarda", "guardan"] },
+      ventanilla: { x: -2.2, z: -2.2, metros: true, mira: -1, pose: "brazos", claves: ["ventanilla", "cuenta", "depósito", "ahorros", "préstamo", "crédito", "hipoteca", "cajero"] },
+      cola: { x: 1.4, z: 1.0, metros: true, mira: -1, pose: "cruza", claves: ["cola", "esperar", "clientes", "gente", "pánico", "corrida"] },
+    },
+  },
+  salon: {
+    centro: [0, 0, 0.6], ancho: 3.6, fondo: 2.6, suelo: 0, altoMira: 1.3, distMax: 6.5, caja: [-4.6, 0.3, -4.6, 4.6, 2.7, 3.6], agua: false, tinte: "#ffe8d0", nieblaPersonajes: [12, 40],
+    obstaculos: [[-2.6, -2.6, 1.2, 1.0], [-0.9, -1.6, 0.7, 0.5], [3.4, -3.0, 1.0, 1.5], [-3.6, -4.4, 0.6, 2], [-2.3, -4.35, 0.9, 1], [-4.8, -1.2, 0.5, 2.2], [-3.9, -3.6, 0.4, 1.9]],
+    puntos: {
+      mesita: { x: -0.4, z: -0.6, metros: true, mira: -1, pose: "piensa", claves: ["factura", "facturas", "luz", "gas", "pagar", "cuentas", "alquiler", "hucha", "ahorro", "ahorros"] },
+      tele: { x: 2.4, z: -2.2, metros: true, mira: 1, pose: "senala", claves: ["noticias", "bolsa", "inflación", "precios", "ipc", "tele", "gráfico", "crisis"] },
+      cocina: { x: -2.0, z: -3.3, metros: true, mira: -1, pose: "mira", claves: ["compra", "nevera", "leche", "pan", "comida", "supermercado", "cesta"] },
+      ventana: { x: 1.6, z: -3.6, metros: true, mira: 1, pose: "mira", claves: ["ciudad", "fuera", "calle", "barrio", "vecinos"] },
+    },
+  },
   submarino: { centro: [0, 0, 1.1], ancho: 5, fondo: 2.2, suelo: 0, altoMira: 1.3, distMax: 6.4, caja: [-6.2, 0.25, -2.4, 6.2, 4.3, 7.5], agua: false, tinte: "#f4eadb", nieblaPersonajes: [7, 22], obstaculos: [[3.3, -1.1, 0.35, 4.4], [-0.7, -1.9, 0.75, 2.1], [0.7, -1.9, 0.75, 2.1], [-5.6, -1.5, 0.95, 2.4], [5.6, -1.5, 0.95, 2.4], [-4.8, 3.2, 0.3, 5]] },
   arrecife: { centro: [0, 0, 0], ancho: 6, fondo: 4, suelo: 0, altoMira: 1.4, distMax: 16, agua: true, tinte: "#cfe6f4", nieblaPersonajes: [5, 26], obstaculos: [...ROCAS_PRIMER_PLANO, [-3.9, -2.5, 1.5, 0.9], [4, -1.4, 1.1, 0.7]] },
   profundo: { centro: [0, 0, 0], ancho: 8, fondo: 5, suelo: 0, altoMira: 1.6, distMax: 18, agua: true, tinte: "#9fb6dc", nieblaPersonajes: [4, 20], obstaculos: ROCAS_PRIMER_PLANO },
