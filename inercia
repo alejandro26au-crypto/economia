@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Motor de contenido de Inercia del Consumo:  ./inercia guion 1   (ver programa/inercia.py)
+cd "$(dirname "$0")"
+if [ -x .venv/bin/python ]; then exec .venv/bin/python programa/inercia.py "$@"; fi
+exec python3 programa/inercia.py "$@"

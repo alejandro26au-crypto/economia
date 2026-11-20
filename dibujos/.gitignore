@@ -1,0 +1,13 @@
+# pesado o se genera solo: no se sube
+**/frames/
+**/stills/
+**/out/
+**/node_modules/
+**/web/lib/
+**/web/toonbase.js
+**/web/toon.js
+**/*.wav
+**/*.mp3
+**/*.mp4
+**/videos/*/sheet.py
+**/*.log

@@ -1,0 +1,361 @@
+{
+ "frases": [
+  [
+   0,
+   90,
+   "En el camino a la riqueza no puedes llevar amigos."
+  ],
+  [
+   109,
+   181,
+   "A esto se le llama el efecto cangrejo."
+  ],
+  [
+   200,
+   399,
+   "Si metes 10 cangrejos en un balde y uno intenta escapar, los demás lo jalarán hacia abajo para que muera con ellos."
+  ],
+  [
+   417,
+   572,
+   "Tu círculo actual no quiere verte prosperar porque tu éxito expone su mediocridad."
+  ],
+  [
+   589,
+   680,
+   "Corta el lastre social antes de que hundan tu barco."
+  ],
+  [
+   698,
+   712,
+   "Y sígueme."
+  ]
+ ],
+ "palabras": [
+  {
+   "p": "En",
+   "ini": 0.0,
+   "fin": 0.18
+  },
+  {
+   "p": "el",
+   "ini": 0.18,
+   "fin": 0.28
+  },
+  {
+   "p": "camino",
+   "ini": 0.28,
+   "fin": 0.56
+  },
+  {
+   "p": "a",
+   "ini": 0.56,
+   "fin": 0.76
+  },
+  {
+   "p": "la",
+   "ini": 0.76,
+   "fin": 0.84
+  },
+  {
+   "p": "riqueza",
+   "ini": 0.84,
+   "fin": 1.36
+  },
+  {
+   "p": "no",
+   "ini": 1.36,
+   "fin": 1.8
+  },
+  {
+   "p": "puedes",
+   "ini": 1.8,
+   "fin": 2.28
+  },
+  {
+   "p": "llevar",
+   "ini": 2.28,
+   "fin": 2.6
+  },
+  {
+   "p": "amigos.",
+   "ini": 2.6,
+   "fin": 3.0
+  },
+  {
+   "p": "A",
+   "ini": 3.64,
+   "fin": 3.8
+  },
+  {
+   "p": "esto",
+   "ini": 3.8,
+   "fin": 4.04
+  },
+  {
+   "p": "se",
+   "ini": 4.04,
+   "fin": 4.24
+  },
+  {
+   "p": "le",
+   "ini": 4.24,
+   "fin": 4.32
+  },
+  {
+   "p": "llama",
+   "ini": 4.32,
+   "fin": 4.64
+  },
+  {
+   "p": "el",
+   "ini": 4.64,
+   "fin": 4.98
+  },
+  {
+   "p": "efecto",
+   "ini": 4.98,
+   "fin": 5.36
+  },
+  {
+   "p": "cangrejo.",
+   "ini": 5.36,
+   "fin": 6.04
+  },
+  {
+   "p": "Si",
+   "ini": 6.66,
+   "fin": 6.76
+  },
+  {
+   "p": "metes",
+   "ini": 6.76,
+   "fin": 7.1
+  },
+  {
+   "p": "10",
+   "ini": 7.1,
+   "fin": 7.36
+  },
+  {
+   "p": "cangrejos",
+   "ini": 7.36,
+   "fin": 7.98
+  },
+  {
+   "p": "en",
+   "ini": 7.98,
+   "fin": 8.14
+  },
+  {
+   "p": "un",
+   "ini": 8.14,
+   "fin": 8.26
+  },
+  {
+   "p": "balde",
+   "ini": 8.26,
+   "fin": 8.68
+  },
+  {
+   "p": "y",
+   "ini": 8.68,
+   "fin": 9.0
+  },
+  {
+   "p": "uno",
+   "ini": 9.0,
+   "fin": 9.22
+  },
+  {
+   "p": "intenta",
+   "ini": 9.22,
+   "fin": 9.68
+  },
+  {
+   "p": "escapar,",
+   "ini": 9.68,
+   "fin": 10.14
+  },
+  {
+   "p": "los",
+   "ini": 10.58,
+   "fin": 10.66
+  },
+  {
+   "p": "demás",
+   "ini": 10.66,
+   "fin": 10.9
+  },
+  {
+   "p": "lo",
+   "ini": 10.9,
+   "fin": 11.12
+  },
+  {
+   "p": "jalarán",
+   "ini": 11.12,
+   "fin": 11.6
+  },
+  {
+   "p": "hacia",
+   "ini": 11.6,
+   "fin": 11.76
+  },
+  {
+   "p": "abajo",
+   "ini": 11.76,
+   "fin": 12.08
+  },
+  {
+   "p": "para",
+   "ini": 12.08,
+   "fin": 12.34
+  },
+  {
+   "p": "que",
+   "ini": 12.34,
+   "fin": 12.5
+  },
+  {
+   "p": "muera",
+   "ini": 12.5,
+   "fin": 12.86
+  },
+  {
+   "p": "con",
+   "ini": 12.86,
+   "fin": 13.08
+  },
+  {
+   "p": "ellos.",
+   "ini": 13.08,
+   "fin": 13.3
+  },
+  {
+   "p": "Tu",
+   "ini": 13.9,
+   "fin": 14.02
+  },
+  {
+   "p": "círculo",
+   "ini": 14.02,
+   "fin": 14.42
+  },
+  {
+   "p": "actual",
+   "ini": 14.42,
+   "fin": 14.76
+  },
+  {
+   "p": "no",
+   "ini": 14.76,
+   "fin": 15.08
+  },
+  {
+   "p": "quiere",
+   "ini": 15.08,
+   "fin": 15.42
+  },
+  {
+   "p": "verte",
+   "ini": 15.42,
+   "fin": 15.74
+  },
+  {
+   "p": "prosperar",
+   "ini": 15.74,
+   "fin": 16.42
+  },
+  {
+   "p": "porque",
+   "ini": 16.42,
+   "fin": 16.84
+  },
+  {
+   "p": "tu",
+   "ini": 16.84,
+   "fin": 17.08
+  },
+  {
+   "p": "éxito",
+   "ini": 17.08,
+   "fin": 17.54
+  },
+  {
+   "p": "expone",
+   "ini": 17.54,
+   "fin": 18.18
+  },
+  {
+   "p": "su",
+   "ini": 18.18,
+   "fin": 18.36
+  },
+  {
+   "p": "mediocridad.",
+   "ini": 18.36,
+   "fin": 19.08
+  },
+  {
+   "p": "Corta",
+   "ini": 19.62,
+   "fin": 20.04
+  },
+  {
+   "p": "el",
+   "ini": 20.04,
+   "fin": 20.16
+  },
+  {
+   "p": "lastre",
+   "ini": 20.16,
+   "fin": 20.52
+  },
+  {
+   "p": "social",
+   "ini": 20.52,
+   "fin": 20.9
+  },
+  {
+   "p": "antes",
+   "ini": 20.9,
+   "fin": 21.44
+  },
+  {
+   "p": "de",
+   "ini": 21.44,
+   "fin": 21.64
+  },
+  {
+   "p": "que",
+   "ini": 21.64,
+   "fin": 21.76
+  },
+  {
+   "p": "hundan",
+   "ini": 21.76,
+   "fin": 22.14
+  },
+  {
+   "p": "tu",
+   "ini": 22.14,
+   "fin": 22.3
+  },
+  {
+   "p": "barco.",
+   "ini": 22.3,
+   "fin": 22.68
+  },
+  {
+   "p": "Y",
+   "ini": 23.26,
+   "fin": 23.36
+  },
+  {
+   "p": "sígueme.",
+   "ini": 23.36,
+   "fin": 23.74
+  }
+ ]
+}

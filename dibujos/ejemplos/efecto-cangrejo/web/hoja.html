@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#e9e4da}</style></head>
+<body><canvas id="h" width="2100" height="1400"></canvas>
+<script type="module">
+import * as T from './toon.js';
+const h = document.getElementById('h').getContext('2d');
+h.fillStyle = '#e9e4da'; h.fillRect(0, 0, 2100, 1400);
+h.font = 'bold 40px sans-serif'; h.fillStyle = '#241726';
+const casos = [
+  { t: 'ANTES', o: { expr: 'stern' } },
+  { t: 'seria', o: { cara: 'seria' } }, { t: 'hablando', o: { cara: 'seria', abre: 0.7, f: 10 } },
+  { t: 'feliz', o: { cara: 'feliz', abre: 0.4, f: 5 } }, { t: 'risa', o: { cara: 'risa' } },
+  { t: 'chulo', o: { cara: 'chulo' } }, { t: 'enfadado', o: { cara: 'enfadado', abre: 0.3, f: 3 } }, { t: 'sorpresa', o: { cara: 'sorpresa' } },
+];
+casos.forEach((c, i) => {
+  const cv = document.createElement('canvas'); cv.width = 600; cv.height = 1000;
+  const p = new T.Pen(cv.getContext('2d'));
+  T.romanFront(p, 'profesor', { ...c.o, seed: 5, facing: 0.2 });
+  // solo de cintura para arriba, para ver bien la cara
+  h.drawImage(cv, 0, 80, 600, 560, (i % 4) * 525, Math.floor(i / 4) * 700 + 60, 525, 490);
+  h.fillText(c.t, (i % 4) * 525 + 30, Math.floor(i / 4) * 700 + 50);
+});
+window.listo = true;
+</script></body></html>

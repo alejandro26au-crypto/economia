@@ -1,0 +1,4 @@
+Librerías de terceros, guardadas aquí para no depender de descargas:
+- toon.ts: librería de personajes (Pen, cabezas, caras) de github.com/mromidev/claude-animated-shorts
+  (templates/bridge/toon.ts), licencia MIT (LICENSE-toon.txt).
+- three.module.js: three.js r160 (github.com/mrdoob/three.js), licencia MIT (aviso en la cabecera del archivo).
