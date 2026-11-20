@@ -1,6 +1,7 @@
 """Tiempos de la voz en ESPAÑOL (o inglés) para el kit de dibujos. El timing.py del kit solo entiende inglés.
 faster-whisper escucha la voz palabra a palabra y difflib empareja lo oído con el guion (como «oceano voz»).
-Uso:  python3 tiempos_es.py voice.mp3 script.txt [es|en]   -> tiempos.json (frases y palabras en s y fotogramas)"""
+Uso:  python3 tiempos_es.py voice.mp3 script.txt [es|en] [--max 60]  -> tiempos.json + web/tiempos.js
+AVISA (y sale con código 1) si la voz no coincide con el guion (palabras que faltan o sobran) o si dura más de --max s."""
 import difflib
 import json
 import re
@@ -10,7 +11,9 @@ import unicodedata
 from faster_whisper import WhisperModel
 
 voz, guion = sys.argv[1], sys.argv[2]
-idioma = sys.argv[3] if len(sys.argv) > 3 else "es"
+args = [a for a in sys.argv[3:]]
+DMAX = float(args[args.index("--max") + 1]) if "--max" in args else None
+idioma = args[0] if args and not args[0].startswith("--") else "es"
 txt = open(guion, encoding="utf-8").read().strip()
 frases = re.split(r"(?<=[.!?])\s+", txt)
 norm = lambda w: re.sub(r"[^a-z0-9ñ]", "", "".join(c for c in unicodedata.normalize("NFD", w.lower()) if unicodedata.category(c) != "Mn"))
@@ -38,3 +41,24 @@ for i, f in enumerate(frases):
 pal = [{"p": w, "f0": round((t[j] or (0, 0))[0] * 30), "f1": round((t[j] or (0, 0))[1] * 30)} for j, w in enumerate(txt.split())]
 json.dump({"frases": res, "palabras": pal}, open("tiempos.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("✓ tiempos.json (usa 'frases' para FRASES de story.js y 'palabras' para los momentos clave)")
+
+# ---------- AVISOS (Inercia): ¿la voz dice el guion EXACTO? ¿se pasa de duración? ----------
+import os
+import subprocess
+dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", voz], capture_output=True, text=True).stdout or 0)
+sm = difflib.SequenceMatcher(None, a, b, autojunk=False)
+coinc = sum(bl.size for bl in sm.get_matching_blocks()) / max(1, len(a))
+malo = False
+print(f"\nVoz: {dur:.1f} s · {len(b)} palabras oídas · coincide el {coinc:.0%} del guion")
+for op, i1, i2, j1, j2 in sm.get_opcodes():
+    if op != "equal" and (i2 - i1 > 1 or j2 - j1 > 1 or op == "delete"):
+        print(f"  ⚠ guion «{' '.join(txt.split()[i1:i2])}»  ≠  voz «{' '.join(w for w, _, _ in oidas[j1:j2])}»")
+if coinc < 0.92:
+    malo = True
+    print("  ✗ La voz NO coincide con el guion: ¿se pegó el texto exacto en ElevenLabs? Repite la toma o corrige script.txt.")
+if DMAX and dur > DMAX:
+    malo = True
+    print(f"  ✗ La voz dura {dur:.1f} s: se pasa de {DMAX:.0f} s. Sube la velocidad en ElevenLabs o recorta el guion.")
+os.makedirs("web", exist_ok=True)
+open("web/tiempos.js", "w", encoding="utf-8").write("export const PAL = " + json.dumps([[w["p"], w["f0"], w["f1"]] for w in pal], ensure_ascii=False) + ";\nexport const TOTAL_VOZ = " + str(round(dur * 30) + 15) + ";\n")
+sys.exit(1 if malo else 0)
