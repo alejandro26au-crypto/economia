@@ -56,7 +56,7 @@ _REVELA = (r"\b(resulta que|la (respuesta|raz[oó]n|verdad|clave|trampa|causa) (
 _RELLENO = r"\b(b[aá]sicamente|literalmente|realmente|o sea|digamos|en plan|simplemente|la verdad es que|un poco|bastante)\b"
 _HIPOTESIS = (r"\b(puede|podr[ií]a|quiz[aá]s?|probablemente|seg[uú]n algunos|se cree|los economistas (creen|piensan|discuten|no se ponen)|"
               r"una teor[ií]a|no est[aá] claro|se estima|alrededor de|cerca de|unos|unas)\b")
-_CONECTA = r"\b(pero|por eso|as[ií] que|entonces|y eso|eso|esto|esa|ese|en realidad|de hecho|o sea|es decir|sin embargo|y no solo)\b"
+_CONECTA = r"\b(pues|incluso|pero|por eso|as[ií] que|entonces|y eso|eso|esto|esa|ese|en realidad|de hecho|o sea|es decir|sin embargo|y no solo)\b"
 _TU = r"\b(t[uú]|tus?|te|ti|contigo|usted|su sueldo|vos)\b"
 _DINERO = r"(\d|€|\$|\b(euros?|d[oó]lares?|pesos?|c[eé]ntimos?|centavos?|precio|sueldo|salario|alquiler|hipoteca|inter[eé]s|inflaci[oó]n|deuda|ahorro|banco|tarjeta)\b)"
 _NUM = r"\d|\b(uno|una|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|quince|veinte|treinta|cuarenta|cincuenta|cien|ciento|mil|mill[oó]n|millones|mitad|doble|triple)\b"

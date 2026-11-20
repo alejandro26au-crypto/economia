@@ -1,0 +1,91 @@
+{
+  "titulo": "El truco del 99 que te engaña",
+  "modo": "short",
+  "duracion_s": 50,
+  "formula": "inercia",
+  "dato": "El efecto del dígito izquierdo: al leer un precio, damos casi todo el peso a la primera cifra (Thomas y Morwitz, 2005).",
+  "hipotesis": false,
+  "fuentes": [
+    "Anderson, E. y Simester, D. (2003). Effects of $9 Price Endings on Retail Sales: Evidence from Field Experiments. Quantitative Marketing and Economics 1(1), 93-110 (doi 10.1023/A:1023581927405). Resumen: Chicago Booth Review, «Yours for only $19.99».",
+    "Thomas, M. y Morwitz, V. (2005). Penny Wise and Pound Foolish: The Left-Digit Effect in Price Cognition. Journal of Consumer Research 32(1), 54-64.",
+    "Lacetera, N., Pope, D. y Sydnor, J. (2012). Heuristic Thinking and Limited Attention in the Car Market. American Economic Review 102(5), 2206-2236 (NBER w17030 y su resumen del NBER Digest)."
+  ],
+  "cifras": [
+    {
+      "cifra": "44 dólares",
+      "fuente": "Anderson y Simester 2003 (catálogo de ropa de mujer: 44, 49 y 54 dólares; la demanda a 49 fue significativamente mayor)"
+    },
+    {
+      "cifra": "49",
+      "fuente": "Anderson y Simester 2003"
+    },
+    {
+      "cifra": "54",
+      "fuente": "Anderson y Simester 2003"
+    },
+    {
+      "cifra": "2,99",
+      "fuente": "ejemplo de precio (Thomas y Morwitz 2005 usan 2,99 frente a 3,00)"
+    },
+    {
+      "cifra": "9,99",
+      "fuente": "ejemplo de precio terminado en 9"
+    },
+    {
+      "cifra": "22 millones",
+      "fuente": "Lacetera, Pope y Sydnor 2012: más de 22 millones de ventas de coches usados en subasta"
+    },
+    {
+      "cifra": "80.000 millas",
+      "fuente": "Lacetera et al. 2012"
+    },
+    {
+      "cifra": "150",
+      "fuente": "NBER Digest sep 2011: caídas de unos 150-200 dólares en cada umbral de 10.000 millas"
+    },
+    {
+      "cifra": "200 dólares",
+      "fuente": "NBER Digest sep 2011"
+    },
+    {
+      "cifra": "cinco dólares",
+      "fuente": "diferencia entre 44 y 49 dólares (Anderson y Simester 2003)"
+    }
+  ],
+  "voces": {
+    "narrador": "(voz de ElevenLabs en español)"
+  },
+  "carpeta": "",
+  "indicaciones": [
+    "Hook: «Mismo vestido, cinco dólares más caro…» despacio y con intriga; pausa corta; «¡y se vendió MÁS!» con sorpresa, subiendo.",
+    "Promesa: más bajo y cómplice, como un secreto; énfasis en «tu supermercado».",
+    "Recompensa 1: «44, 49 y 54» en ritmo de lista; pausa antes de «¿El que más vendió?»; «El de 49» seco, como un golpe.",
+    "Bucle 1: incrédulo, alargando «¿Más caro…»; medio segundo de pausa antes de «Algo no cuadra».",
+    "Recompensa 2: cada precio, un golpe («dos noventa y nueve. Nueve noventa y nueve.»); «dos y algo» con media sonrisa.",
+    "Bucle 2: «Y aún es peor» con énfasis; la pregunta, rápida y retadora.",
+    "Recompensa 3: «Pues pasa hasta con COCHES»; «22 millones» fuerte; «¡por una cifra!» indignado.",
+    "Clímax: el tramo más pausado; «efecto del dígito izquierdo» claro, palabra a palabra; «por eso tantos precios acaban en 9» con complicidad; cierre «y vendió más que 44» seco.",
+    "CTA: cercano, pregunta abierta, sin bajar la energía (invita a comentar y enlaza con el hook)."
+  ],
+  "auditoria_manual": {
+    "leido_en_voz_alta": true,
+    "notas": "Leído en voz alta (versión final): suena natural, frases cortas, ~57 s. Corregido a mano lo que la nota no ve: 1) «Subieron un vestido» no era exacto (el estudio comparó versiones del catálogo): ahora «Mismo vestido, cinco dólares más caro». 2) «lo más caro se vende más» generalizaba: ahora «49 vendió más que 44», que es lo que dice el estudio (sin inventar porcentaje). 3) «¿…chicles? Y eso pasa…» sonaba forzado: ahora «Pues pasa hasta con coches». Las millas se dicen tal cual (el umbral real es en millas)."
+  },
+  "_ayuda_hook": "HOOK: contradicción, dato o afirmación que choca con lo que el espectador cree saber. Primera frase corta (≤ 10 palabras en Short), sin «¿Sabías que…?» ni saludos.",
+  "hook": "Mismo vestido, cinco dólares más caro… ¡y se vendió más!",
+  "_ayuda_promesa": "PROMESA: anticipa QUÉ mecanismo, realidad o explicación va a descubrir («Al final vas a entender por qué…»), sin desvelarlo.",
+  "promesa": "Vas a entender el truco que tu supermercado usa contigo.",
+  "_ayuda_recompensa1": "RECOMPENSA 1: explicación relevante, concreta (cifra, fecha, lugar, precio) y con un ejemplo de la vida del espectador (su sueldo, su súper, su alquiler, su banco).",
+  "recompensa1": "Un catálogo de ropa probó el mismo vestido a 44, 49 y 54 dólares. ¿El que más vendió? El de 49.",
+  "_ayuda_bucle1": "BUCLE 1: abre una incógnita nueva ligada al mecanismo («Pero hay algo que no cuadra…», «¿Y quién gana con esto?») y sube la expectativa hacia la revelación.",
+  "bucle1": "¿Más caro… y se vende más? Algo no cuadra.",
+  "_ayuda_recompensa2": "RECOMPENSA 2: explicación relevante, concreta (cifra, fecha, lugar, precio) y con un ejemplo de la vida del espectador (su sueldo, su súper, su alquiler, su banco).",
+  "recompensa2": "Pero mira tu ticket: 2,99. 9,99. Para ti, 2,99 es «dos y algo».",
+  "_ayuda_bucle2": "BUCLE 2: abre una incógnita nueva ligada al mecanismo («Pero hay algo que no cuadra…», «¿Y quién gana con esto?») y sube la expectativa hacia la revelación.",
+  "bucle2": "Y aún es peor. ¿Crees que solo pasa con chicles?",
+  "_ayuda_climax": "CLÍMAX: conecta las ideas, revela el MECANISMO principal y resuelve TODAS las incógnitas abiertas.",
+  "climax": "Tu cerebro ahorra esfuerzo: lee la primera cifra y casi ignora el resto. Se llama efecto del dígito izquierdo. Ese es el truco de tu supermercado: precios que acaban en 9. Para tu cerebro, 49 es «cuarenta y algo». Por eso el vestido más caro vendió más.",
+  "_ayuda_cta": "CTA: cierre breve y natural (pregunta al espectador o frase que enlaza con el hook). Nada de «suscríbete y dale like».",
+  "cta": "Mira tu último ticket… ¿cuántos nueves cuentas?",
+  "recompensa3": "Pues pasa hasta con coches. Se estudiaron 22 millones de coches usados. Al llegar a 80.000 millas, el precio cae de golpe. ¡Entre 150 y 200 dólares, por una cifra!"
+}

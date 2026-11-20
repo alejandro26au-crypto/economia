@@ -1,0 +1,20 @@
+AUDITORÍA «El truco del 99 que te engaña» (short): 88/100 — mínimo 90
+  gancho       15/15
+  promesa      10/10
+  recompensas  12/15  ← «recompensa3» no se conecta con lo anterior («Pero…», «Por eso…», «Y eso…»): acumulación sin conexión.
+  bucles       15/15
+  climax       12/15  ← El bucle2 («Y aún es peor: este truco no vive solo e…») no se resuelve después: ninguna de sus ideas vuelve. Resuélvelo.
+  ritmo         9/15  ← 1 frase(s) de más de 16 palabras: pártelas («Cuando el cuentakilómetros pasa de 79.900 a 8…»). | 196 palabras (≈ 73 s); para 50 s apunta a 114-155.
+  cta           5/5
+  datos        10/10
+
+LOS TRES PUNTOS MÁS DÉBILES (corregir primero):
+  · ritmo: 1 frase(s) de más de 16 palabras: pártelas («Cuando el cuentakilómetros pasa de 79.900 a 8…»).
+  · recompensas: «recompensa3» no se conecta con lo anterior («Pero…», «Por eso…», «Y eso…»): acumulación sin conexión.
+  · climax: El bucle2 («Y aún es peor: este truco no vive solo e…») no se resuelve después: ninguna de sus ideas vuelve. Resuélvelo.
+  ✗ Nota 88/100 (< 90): corrige los tres puntos más débiles y vuelve a auditar.
+  ✗ [recompensas] «recompensa3» no se conecta con lo anterior («Pero…», «Por eso…», «Y eso…»): acumulación sin conexión.
+  ✗ [climax] El bucle2 («Y aún es peor: este truco no vive solo e…») no se resuelve después: ninguna de sus ideas vuelve. Resuélvelo.
+  ✗ [ritmo] 1 frase(s) de más de 16 palabras: pártelas («Cuando el cuentakilómetros pasa de 79.900 a 8…»).
+  ✗ [ritmo] 196 palabras (≈ 73 s); para 50 s apunta a 114-155.
+✗ El guion no pasa todavía (< 90 o le falta algo). Corrige y vuelve a auditar.
