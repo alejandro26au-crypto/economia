@@ -51,7 +51,7 @@ add(new THREE.PlaneGeometry(PZ.w, PZ.h), pizM, 0, PZ.y, 0.05, pizG, { cast: fals
 add(tbox(PZ.w + 0.1, PZ.h + 0.1, 0.06, 1), M.beamDark, 0, PZ.y, 0, pizG);
 for (const [w, h, x, y] of [[PZ.w + 0.24, 0.1, 0, PZ.h / 2 + 0.05], [PZ.w + 0.24, 0.1, 0, -PZ.h / 2 - 0.05], [0.1, PZ.h + 0.2, -PZ.w / 2 - 0.05, 0], [0.1, PZ.h + 0.2, PZ.w / 2 + 0.05, 0]])
   add(tbox(w, h, 0.09, 1), M.beam, x, PZ.y + y, 0.06, pizG);
-for (const s of [-1, 1]) { const l = add(tbox(0.09, 2.9, 0.09, 1), M.beam, s * 0.9, 1.35, 0.12, pizG); l.rotation.z = s * 0.06; }   // patas del caballete
+for (const s of [-1, 1]) { const l = add(tbox(0.09, 2.9, 0.09, 1), M.beam, s * (PZ.w / 2 + 0.17), 1.35, -0.02, pizG); l.rotation.z = s * 0.05; }   // patas del caballete
 const pata = add(tbox(0.08, 2.7, 0.08, 1), M.beam, 0, 1.25, -0.55, pizG); pata.rotation.x = 0.36;
 add(tbox(PZ.w + 0.1, 0.05, 0.16, 1), M.beam, 0, PZ.y - PZ.h / 2 - 0.13, 0.14, pizG);                  // repisa de tizas
 for (let i = 0; i < 3; i++) add(new THREE.CylinderGeometry(0.014, 0.014, 0.1, 6), toon({ color: ['#ffffff', '#f4e27a', '#f2a0a0'][i] }), -0.8 + i * 0.16, PZ.y - PZ.h / 2 - 0.09, 0.16, pizG).rotation.z = Math.PI / 2;
@@ -157,19 +157,23 @@ function etiqueta(g, x, y, txt, k, col = AMA, tam = 70) { // etiqueta de precio 
   trazo(g, circ(x + 26, y, 7, 0, 7, 10), k * 2 - 0.5, 4, col); escribe(g, txt, x + 52, y, tam, k * 2 - 1, col);
 }
 function ticket(g, x, y, lineas, k) { // ticket de la compra con dientes abajo
-  const w = 420, h = 110 + lineas.length * 86;
+  const w = 560, h = 120 + lineas.length * 130;
   const dientes = []; for (let i = 0; i <= 10; i++) dientes.push([x + w - i * w / 10, y + h + (i % 2 ? 16 : 0)]);
   trazo(g, [[x, y + h], [x, y], [x + w, y], [x + w, y + h], ...dientes], k * 2, 6);
-  lineas.forEach(([a, b, col], i) => { escribe(g, a, x + 30, y + 80 + i * 86, 44, k * 3 - 1 - i * 0.3, TIZA); escribe(g, b, x + w - 30 - b.length * 34, y + 80 + i * 86, 56, k * 3 - 1.2 - i * 0.3, col || TIZA); });
+  lineas.forEach(([a, b, col], i) => { if (a) escribe(g, a, x + 30, y + 110 + i * 130, 44, k * 3 - 1 - i * 0.3, TIZA); escribe(g, b, x + w / 2, y + 110 + i * 130, 92, k * 3 - 1.2 - i * 0.3, col || TIZA, true); });
 }
 function coche(g, x, y, s, k, col = TIZA) {
   trazo(g, [[x - 150 * s, y], [x - 150 * s, y - 50 * s], [x - 90 * s, y - 60 * s], [x - 50 * s, y - 120 * s], [x + 60 * s, y - 120 * s], [x + 110 * s, y - 60 * s], [x + 160 * s, y - 50 * s], [x + 160 * s, y], [x - 150 * s, y]], k * 2, 6 * s, col);
   for (const dx of [-85, 95]) trazo(g, circ(x + dx * s, y + 4 * s, 34 * s, 0, 7, 20), k * 2 - 0.8, 6 * s, col);
 }
-function cerebro(g, x, y, s, k, col = TIZA) {
-  const pts = []; for (let i = 0; i <= 60; i++) { const a = Math.PI * (1 - i / 60) * 1.0 + Math.PI * 0; const r = (150 + 18 * Math.sin(i * 1.3)) * s; pts.push([x + Math.cos(Math.PI + a) * r * 1.25, y - Math.abs(Math.sin(Math.PI + a)) * r]); }
-  trazo(g, pts, k * 2, 7 * s, col); trazo(g, [[x - 190 * s, y], [x + 190 * s, y]], k * 2 - 0.6, 7 * s, col);
-  for (let i = 0; i < 4; i++) trazo(g, circ(x - 120 * s + i * 80 * s, y - 70 * s, 30 * s, Math.PI, Math.PI * 2.3, 12), k * 2 - 1, 5 * s, col);
+function cerebro(g, x, y, s, k, col = TIZA) { // cerebro de perfil: contorno de nube con lóbulos, surco central y tronco
+  const pts = [], n = 90;
+  for (let i = 0; i <= n; i++) { const a = Math.PI * 2 * i / n, r = 1 + 0.07 * Math.sin(a * 9);
+    pts.push([x + Math.cos(a) * 210 * s * r, y + Math.sin(a) * 150 * s * r * (Math.sin(a) > 0 ? 0.8 : 1)]); }
+  trazo(g, pts, k * 2, 7 * s, col);
+  trazo(g, [[x - 10 * s, y - 145 * s], [x - 30 * s, y - 70 * s], [x + 10 * s, y - 20 * s], [x - 20 * s, y + 40 * s]], k * 2 - 0.7, 6 * s, col);
+  for (const [cx, cy, r, a0] of [[-110, -40, 50, 3.4], [100, -50, 55, 3.6], [-90, 50, 40, 0.2], [110, 40, 45, -0.2]]) trazo(g, circ(x + cx * s, y + cy * s, r * s, a0, a0 + 2.4, 14), k * 2 - 1, 5 * s, col);
+  trazo(g, [[x + 60 * s, y + 118 * s], [x + 80 * s, y + 190 * s]], k * 2 - 1, 7 * s, col);
 }
 let pizKey = '';
 function dibujaPizarra(B) {
@@ -181,7 +185,7 @@ function dibujaPizarra(B) {
       vestido(g, 330, 500, 2.0, K(0, 0.35));
       etiqueta(g, 650, 330, '44 $', K(0.2, 0.45), TIZA, 90); if (B.sube > 0) tacha(g, 650, 270, 1060, 390, B.sube);
       etiqueta(g, 650, 560, '49 $', K(0.4, 0.7), AMA, 90); flecha(g, 1180, 620, 1180, 300, K(0.45, 0.7), AMA);
-      if (B.vende > 0) { escribe(g, '+ VENTAS', 640, 800, 84, B.vende, AMA); }
+      if (B.vende > 0) { escribe(g, '¡VENDIÓ MÁS!', 900, 800, 62, B.vende, AMA, true); }
       break; }
     case 'catalogo': { // «el mismo vestido a 44, 49 y 54 dólares. ¿El que más vendió? El de 49.»
       [['44 $', 230], ['49 $', 660], ['54 $', 1090]].forEach(([t, x], i) => { vestido(g, x, 470, 1.35, K(i * 0.12, 0.3 + i * 0.12)); escribe(g, t, x, 720, 88, K(0.2 + i * 0.12, 0.4 + i * 0.12), i === 1 ? AMA : TIZA, true); });
@@ -191,25 +195,25 @@ function dibujaPizarra(B) {
       escribe(g, '49 $', 170, 300, 120, K(0, 0.3), AMA); escribe(g, '>', 610, 300, 120, K(0.25, 0.4)); escribe(g, '44 $', 820, 300, 120, K(0.35, 0.6));
       escribe(g, '?', 560, 640, 260, K(0.6, 0.9), ROJA); break; }
     case 'ticket': { // «Pero mira tu ticket: 2,99. 9,99. Para ti, 2,99 es «dos y algo».»
-      ticket(g, 120, 140, [['ARTÍCULO', '2,99', AMA], ['ARTÍCULO', '9,99', AMA]], K(0, 0.5));
+      ticket(g, 90, 200, [['', '2,99', AMA], ['', '9,99', AMA]], K(0, 0.5));
       if (B.dos > 0) { escribe(g, '2', 720, 420, 300, B.dos, AMA); escribe(g, 'Y ALGO', 900, 470, 90, B.dos * 1.5 - 0.4, TIZA); trazo(g, circ(810, 400, 140, 0, 7, 30, 170), B.dos * 1.4 - 0.2, 7, AMA); }
       break; }
     case 'coche': { // «Pasa hasta con coches… 22 millones… 80.000 millas… entre 150 y 200 dólares»
       coche(g, 360, 470, 1.6, K(0, 0.25));
-      escribe(g, '22 MILLONES', 80, 120, 80, K(0.15, 0.35), AMA);
-      trazo(g, [[760, 300], [1240, 300], [1240, 420], [760, 420], [760, 300]], K(0.3, 0.45), 6);
-      escribe(g, B.cuenta || '79.999', 790, 360, 86, K(0.35, 0.5), B.cuenta === '80.000' ? ROJA : TIZA);
-      escribe(g, 'MILLAS', 880, 480, 56, K(0.4, 0.55));
-      if (B.cae > 0) { flecha(g, 1000, 560, 1000, 800, B.cae, ROJA); escribe(g, '-150/200 $', 640, 880, 80, B.cae * 1.4 - 0.3, ROJA); }
+      escribe(g, '22 MILLONES', 660, 130, 80, K(0.15, 0.35), AMA, true);
+      trazo(g, [[740, 300], [1200, 300], [1200, 420], [740, 420], [740, 300]], K(0.3, 0.45), 6);
+      escribe(g, B.cuenta || '79.999', 770, 360, 80, K(0.35, 0.5), B.cuenta === '80.000' ? ROJA : TIZA);
+      escribe(g, 'MILLAS', 970, 480, 56, K(0.4, 0.55), TIZA, true);
+      if (B.cae > 0) { flecha(g, 970, 540, 970, 760, B.cae, ROJA); escribe(g, '-150 / 200 $', 660, 860, 78, B.cae * 1.4 - 0.3, ROJA, true); }
       break; }
     case 'cerebro': { // «Tu cerebro… lee la primera cifra… Se llama efecto del dígito izquierdo… 49 es «cuarenta y algo»»
-      cerebro(g, 660, 380, 1.4, K(0, 0.3));
-      escribe(g, '4', 470, 690, 200, K(0.25, 0.4), AMA); escribe(g, '9', 620, 690, 200, K(0.3, 0.45), 'rgba(244,244,236,0.35)');
-      flecha(g, 520, 560, 560, 420, K(0.35, 0.5), AMA);
-      escribe(g, 'DÍGITO IZQUIERDO', 660, 860, 70, K(0.5, 0.8), AMA, true);
+      cerebro(g, 400, 330, 1.0, K(0, 0.3));
+      escribe(g, '4', 780, 400, 230, K(0.25, 0.4), AMA); escribe(g, '9', 950, 400, 230, K(0.3, 0.45), 'rgba(244,244,236,0.3)');
+      flecha(g, 640, 330, 760, 360, K(0.35, 0.5), AMA);
+      escribe(g, 'DÍGITO IZQUIERDO', 660, 820, 70, K(0.5, 0.8), AMA, true);
       break; }
     case 'nueves': { // «Mira tu último ticket… ¿cuántos nueves cuentas?»
-      ticket(g, 360, 90, [['', '0,99', AMA], ['', '4,99', AMA], ['', '19,99', AMA]], K(0, 0.6));
+      ticket(g, 220, 80, [['', '0,99', AMA], ['', '4,99', AMA], ['', '19,99', AMA]], K(0, 0.6));
       escribe(g, '?', 1000, 520, 220, K(0.6, 0.9), AMA); break; }
     case 'texto': { (B.lineas || []).forEach((l, i) => escribe(g, l, 660, 200 + i * 200, 110, K(i * 0.25, 0.25 + i * 0.25), i ? TIZA : AMA, true)); break; }
   }
