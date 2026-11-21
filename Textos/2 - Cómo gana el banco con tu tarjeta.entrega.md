@@ -7,24 +7,23 @@
 **BUCLE 1** — ¿Y quién paga esa comisión de verdad?
 **RECOMPENSA 2** — Pues tú. Solo en Estados Unidos, 172.000 millones de dólares en comisiones en 2023. ¡Y acaban en tus precios!
 **BUCLE 2** — Y aún es peor. ¿Crees que pagando en efectivo te libras?
-**RECOMPENSA 3** — Pues no. La Reserva Federal de Boston lo calculó. Hogar que paga en efectivo: unos 149 dólares menos al año. Hogar con tarjeta: unos 1.133 más.
-**CLÍMAX** — Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses.
+**CLÍMAX** — Pues no. La Reserva Federal de Boston lo calculó. Hogar que paga en efectivo: unos 149 dólares menos al año. Hogar con tarjeta: unos 1.133 más. Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses.
 **CTA** — ¿Y tú, pagas con tarjeta o en efectivo?
 
-## 2. Auditoría final: 100/100 (mínimo 90)
+## 2. Auditoría final: 95/100 (mínimo 90)
 - gancho: 15/15
 - promesa: 10/10
 - recompensas: 15/15
 - bucles: 15/15
-- climax: 15/15
+- climax: 10/15 — El clímax empieza al 52% del guion (ideal 60-90 %).
 - ritmo: 15/15
 - cta: 5/5
 - datos: 10/10
 - Lectura en voz alta (Claude): Guion del usuario reescrito con la fórmula (su versión: 56/100: hook de 15 palabras, sin cifras, sin giro, 3 frases largas, 176 palabras). Se mantiene su idea central (el banco gana aunque pagues a tiempo, por las comisiones al comercio) y su cierre se convierte en pregunta. Precisión: «una parte va al banco que te dio la tarjeta» = tasa de intercambio (correcto); 172.000 millones es el total de comisiones de procesamiento en EE. UU. (Nilson), no solo lo que va al banco, por eso se dice «en comisiones»; los 149/1.133 $ son estimaciones del estudio de la Fed de Boston (se dice «lo calcularon» y «unos»). «Un centavo» en vez de «un peso» para que valga en España y Latinoamérica. Ajustes finales en voz alta: «acaban en tus precios» (los comercios fijan el mismo precio para todos y repercuten la comisión) y «un hogar… al año» (la cifra del estudio es por hogar y por año, en EE. UU.). Recortado a 143 palabras (≈ 50 s) a petición del usuario, sin quitar datos ni giros; «Por eso el banco gana contigo» para que no sea ambiguo.
 
-## 3. Guion limpio para locución (143 palabras, ≈ 53 s)
+## 3. Guion limpio para locución (145 palabras, ≈ 54 s)
 ```
-Pagas tu tarjeta siempre a tiempo. ¡Y el banco gana igual! Te explico cómo… sin cobrarte ni un centavo de intereses. Cada vez que pagas con tarjeta, la tienda paga una comisión. Y parte va a tu banco. ¿Y quién paga esa comisión de verdad? Pues tú. Solo en Estados Unidos, 172.000 millones de dólares en comisiones en 2023. ¡Y acaban en tus precios! Y aún es peor. ¿Crees que pagando en efectivo te libras? Pues no. La Reserva Federal de Boston lo calculó. Hogar que paga en efectivo: unos 149 dólares menos al año. Hogar con tarjeta: unos 1.133 más. Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses. ¿Y tú, pagas con tarjeta o en efectivo?
+Pagas tu tarjeta siempre a tiempo. ¡Y el banco gana igual! Te explico cómo… sin cobrarte ni un centavo de intereses. Cada vez que pagas con tarjeta, la tienda paga una comisión. Y parte va a tu banco. ¿Y quién paga esa comisión de verdad? Pues tú. Solo en Estados Unidos, 172.000 millones de dólares en comisiones en 2023. ¡Y acaban en tus precios! Y aún es peor. ¿Crees que pagando en efectivo te libras? Pues no. La Reserva Federal de Boston lo calculó. Hogar que paga en efectivo: unos 149 dólares menos al año. Hogar con tarjeta: unos 1.133 más. Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses. ¿Y tú, pagas con tarjeta o en efectivo?
 ```
 
 ## 4. Pausas, énfasis y ritmo
@@ -34,8 +33,7 @@ Pagas tu tarjeta siempre a tiempo. ¡Y el banco gana igual! Te explico cómo… 
 - Bucle 1: pregunta directa, mirando al espectador; medio segundo de silencio.
 - Recompensa 2: «Pues TÚ.» seco; pausa antes de «172.000 millones»; «van a tus precios» señalando al espectador.
 - Bucle 2: «Y aún es peor» con énfasis; la pregunta, retadora.
-- Recompensa 3: «Pues no.» seco; «149 dólares menos» firme; pausa; «unos 1.133 MÁS» marcando el contraste.
-- Clímax: el tramo más pausado; cada frase corta como un eslabón (banco → tienda → todos → puntos); remate lento: «aunque nunca pagues intereses».
+- Clímax: «Pues no.» seco; «149 dólares MENOS», pausa, «1.133 MÁS»; luego más despacio, cada frase un eslabón (banco → tienda → todos → puntos); remate lento: «aunque nunca pagues intereses».
 - CTA: cercano, pregunta abierta para que comenten.
 
 ## 5. Fuentes consultadas

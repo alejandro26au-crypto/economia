@@ -39,8 +39,7 @@
     "Bucle 1: pregunta directa, mirando al espectador; medio segundo de silencio.",
     "Recompensa 2: «Pues TÚ.» seco; pausa antes de «172.000 millones»; «van a tus precios» señalando al espectador.",
     "Bucle 2: «Y aún es peor» con énfasis; la pregunta, retadora.",
-    "Recompensa 3: «Pues no.» seco; «149 dólares menos» firme; pausa; «unos 1.133 MÁS» marcando el contraste.",
-    "Clímax: el tramo más pausado; cada frase corta como un eslabón (banco → tienda → todos → puntos); remate lento: «aunque nunca pagues intereses».",
+    "Clímax: «Pues no.» seco; «149 dólares MENOS», pausa, «1.133 MÁS»; luego más despacio, cada frase un eslabón (banco → tienda → todos → puntos); remate lento: «aunque nunca pagues intereses».",
     "CTA: cercano, pregunta abierta para que comenten."
   ],
   "auditoria_manual": {
@@ -60,9 +59,7 @@
   "_ayuda_bucle2": "BUCLE 2: abre una incógnita nueva ligada al mecanismo («Pero hay algo que no cuadra…», «¿Y quién gana con esto?») y sube la expectativa hacia la revelación.",
   "bucle2": "Y aún es peor. ¿Crees que pagando en efectivo te libras?",
   "_ayuda_climax": "CLÍMAX: conecta las ideas, revela el MECANISMO principal y resuelve TODAS las incógnitas abiertas.",
-  "climax": "Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses.",
+  "climax": "Pues no. La Reserva Federal de Boston lo calculó. Hogar que paga en efectivo: unos 149 dólares menos al año. Hogar con tarjeta: unos 1.133 más. Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses.",
   "_ayuda_cta": "CTA: cierre breve y natural (pregunta al espectador o frase que enlaza con el hook). Nada de «suscríbete y dale like».",
-  "cta": "¿Y tú, pagas con tarjeta o en efectivo?",
-  "recompensa3": "Pues no. La Reserva Federal de Boston lo calculó. Hogar que paga en efectivo: unos 149 dólares menos al año. Hogar con tarjeta: unos 1.133 más.",
-  "bucle3": ""
+  "cta": "¿Y tú, pagas con tarjeta o en efectivo?"
 }
