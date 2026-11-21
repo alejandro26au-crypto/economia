@@ -9,14 +9,14 @@ import sys
 txt = open(sys.argv[1], encoding="utf-8").read().strip()
 pps = float(sys.argv[2]) if len(sys.argv) > 2 else 2.7
 FPS = 30
-f, pal, frases, ini = 6, [], [], 6
+f, pal, frases, ini, i0 = 6, [], [], 6, 0
 for w in txt.split():
     dur = FPS / pps * (0.7 + 0.06 * len(re.sub(r"\W", "", w)))
     pal.append({"p": w, "f0": round(f), "f1": round(f + dur * 0.92)})
     f += dur
     if re.search(r"[.!?…]$", w):
-        frases.append([round(ini), round(f), " ".join(x["p"] for x in pal if x["f0"] >= ini)])
-        f += 9; ini = f
+        frases.append([round(ini), round(f), " ".join(x["p"] for x in pal[i0:])])
+        f += 9; ini = f; i0 = len(pal)
     elif re.search(r"[,:;]$", w):
         f += 4
 json.dump({"frases": frases, "palabras": pal, "estimado": True}, open("tiempos.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
