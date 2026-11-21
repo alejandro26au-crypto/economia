@@ -5,26 +5,26 @@
 **PROMESA** — Te explico cómo gana contigo… sin cobrarte ni un centavo de intereses.
 **RECOMPENSA 1** — Cada vez que pagas con tarjeta, la tienda paga una comisión. Y una parte va al banco que te dio la tarjeta.
 **BUCLE 1** — ¿Y quién crees que paga esa comisión?
-**RECOMPENSA 2** — Pues tú. En Estados Unidos, las tiendas pagaron 172.000 millones de dólares en comisiones en 2023. ¡Y van a tus precios!
+**RECOMPENSA 2** — Pues tú. En Estados Unidos, las tiendas pagaron 172.000 millones de dólares en comisiones en 2023. ¡Y acaban en tus precios!
 **BUCLE 2** — Y aún es peor. ¿Crees que pagando en efectivo te libras?
-**RECOMPENSA 3** — Pues no. Lo calculó la Reserva Federal de Boston. Si pagas en efectivo, pierdes unos 149 dólares al año. ¿Y quien usa tarjeta? Gana unos 1.133.
+**RECOMPENSA 3** — Pues no. Lo calculó la Reserva Federal de Boston. Un hogar que paga en efectivo pierde unos 149 dólares al año. ¿Y uno que usa tarjeta? Gana unos 1.133.
 **CLÍMAX** — Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses.
 **CTA** — ¿Y tú, pagas con tarjeta o en efectivo?
 
-## 2. Auditoría final: 100/100 (mínimo 90)
+## 2. Auditoría final: 96/100 (mínimo 90)
 - gancho: 15/15
 - promesa: 10/10
 - recompensas: 15/15
 - bucles: 15/15
 - climax: 15/15
-- ritmo: 15/15
+- ritmo: 11/15 — 157 palabras (≈ 58 s); para 50 s apunta a 114-155.
 - cta: 5/5
 - datos: 10/10
-- Lectura en voz alta (Claude): Guion del usuario reescrito con la fórmula (su versión: 56/100: hook de 15 palabras, sin cifras, sin giro, 3 frases largas, 176 palabras). Se mantiene su idea central (el banco gana aunque pagues a tiempo, por las comisiones al comercio) y su cierre se convierte en pregunta. Precisión: «una parte va al banco que te dio la tarjeta» = tasa de intercambio (correcto); 172.000 millones es el total de comisiones de procesamiento en EE. UU. (Nilson), no solo lo que va al banco, por eso se dice «en comisiones»; los 149/1.133 $ son estimaciones del estudio de la Fed de Boston (se dice «lo calcularon» y «unos»). «Un centavo» en vez de «un peso» para que valga en España y Latinoamérica.
+- Lectura en voz alta (Claude): Guion del usuario reescrito con la fórmula (su versión: 56/100: hook de 15 palabras, sin cifras, sin giro, 3 frases largas, 176 palabras). Se mantiene su idea central (el banco gana aunque pagues a tiempo, por las comisiones al comercio) y su cierre se convierte en pregunta. Precisión: «una parte va al banco que te dio la tarjeta» = tasa de intercambio (correcto); 172.000 millones es el total de comisiones de procesamiento en EE. UU. (Nilson), no solo lo que va al banco, por eso se dice «en comisiones»; los 149/1.133 $ son estimaciones del estudio de la Fed de Boston (se dice «lo calcularon» y «unos»). «Un centavo» en vez de «un peso» para que valga en España y Latinoamérica. Ajustes finales en voz alta: «acaban en tus precios» (los comercios fijan el mismo precio para todos y repercuten la comisión) y «un hogar… al año» (la cifra del estudio es por hogar y por año, en EE. UU.).
 
-## 3. Guion limpio para locución (154 palabras, ≈ 57 s)
+## 3. Guion limpio para locución (157 palabras, ≈ 58 s)
 ```
-Pagas tu tarjeta siempre a tiempo. ¡Y el banco gana igual! Te explico cómo gana contigo… sin cobrarte ni un centavo de intereses. Cada vez que pagas con tarjeta, la tienda paga una comisión. Y una parte va al banco que te dio la tarjeta. ¿Y quién crees que paga esa comisión? Pues tú. En Estados Unidos, las tiendas pagaron 172.000 millones de dólares en comisiones en 2023. ¡Y van a tus precios! Y aún es peor. ¿Crees que pagando en efectivo te libras? Pues no. Lo calculó la Reserva Federal de Boston. Si pagas en efectivo, pierdes unos 149 dólares al año. ¿Y quien usa tarjeta? Gana unos 1.133. Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses. ¿Y tú, pagas con tarjeta o en efectivo?
+Pagas tu tarjeta siempre a tiempo. ¡Y el banco gana igual! Te explico cómo gana contigo… sin cobrarte ni un centavo de intereses. Cada vez que pagas con tarjeta, la tienda paga una comisión. Y una parte va al banco que te dio la tarjeta. ¿Y quién crees que paga esa comisión? Pues tú. En Estados Unidos, las tiendas pagaron 172.000 millones de dólares en comisiones en 2023. ¡Y acaban en tus precios! Y aún es peor. ¿Crees que pagando en efectivo te libras? Pues no. Lo calculó la Reserva Federal de Boston. Un hogar que paga en efectivo pierde unos 149 dólares al año. ¿Y uno que usa tarjeta? Gana unos 1.133. Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses. ¿Y tú, pagas con tarjeta o en efectivo?
 ```
 
 ## 4. Pausas, énfasis y ritmo

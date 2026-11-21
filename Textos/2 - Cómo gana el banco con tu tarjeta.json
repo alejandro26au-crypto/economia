@@ -45,7 +45,7 @@
   ],
   "auditoria_manual": {
     "leido_en_voz_alta": true,
-    "notas": "Guion del usuario reescrito con la fórmula (su versión: 56/100: hook de 15 palabras, sin cifras, sin giro, 3 frases largas, 176 palabras). Se mantiene su idea central (el banco gana aunque pagues a tiempo, por las comisiones al comercio) y su cierre se convierte en pregunta. Precisión: «una parte va al banco que te dio la tarjeta» = tasa de intercambio (correcto); 172.000 millones es el total de comisiones de procesamiento en EE. UU. (Nilson), no solo lo que va al banco, por eso se dice «en comisiones»; los 149/1.133 $ son estimaciones del estudio de la Fed de Boston (se dice «lo calcularon» y «unos»). «Un centavo» en vez de «un peso» para que valga en España y Latinoamérica."
+    "notas": "Guion del usuario reescrito con la fórmula (su versión: 56/100: hook de 15 palabras, sin cifras, sin giro, 3 frases largas, 176 palabras). Se mantiene su idea central (el banco gana aunque pagues a tiempo, por las comisiones al comercio) y su cierre se convierte en pregunta. Precisión: «una parte va al banco que te dio la tarjeta» = tasa de intercambio (correcto); 172.000 millones es el total de comisiones de procesamiento en EE. UU. (Nilson), no solo lo que va al banco, por eso se dice «en comisiones»; los 149/1.133 $ son estimaciones del estudio de la Fed de Boston (se dice «lo calcularon» y «unos»). «Un centavo» en vez de «un peso» para que valga en España y Latinoamérica. Ajustes finales en voz alta: «acaban en tus precios» (los comercios fijan el mismo precio para todos y repercuten la comisión) y «un hogar… al año» (la cifra del estudio es por hogar y por año, en EE. UU.)."
   },
   "_ayuda_hook": "HOOK: contradicción, dato o afirmación que choca con lo que el espectador cree saber. Primera frase corta (≤ 10 palabras en Short), sin «¿Sabías que…?» ni saludos.",
   "hook": "Pagas tu tarjeta siempre a tiempo. ¡Y el banco gana igual!",
@@ -56,13 +56,13 @@
   "_ayuda_bucle1": "BUCLE 1: abre una incógnita nueva ligada al mecanismo («Pero hay algo que no cuadra…», «¿Y quién gana con esto?») y sube la expectativa hacia la revelación.",
   "bucle1": "¿Y quién crees que paga esa comisión?",
   "_ayuda_recompensa2": "RECOMPENSA 2: explicación relevante, concreta (cifra, fecha, lugar, precio) y con un ejemplo de la vida del espectador (su sueldo, su súper, su alquiler, su banco).",
-  "recompensa2": "Pues tú. En Estados Unidos, las tiendas pagaron 172.000 millones de dólares en comisiones en 2023. ¡Y van a tus precios!",
+  "recompensa2": "Pues tú. En Estados Unidos, las tiendas pagaron 172.000 millones de dólares en comisiones en 2023. ¡Y acaban en tus precios!",
   "_ayuda_bucle2": "BUCLE 2: abre una incógnita nueva ligada al mecanismo («Pero hay algo que no cuadra…», «¿Y quién gana con esto?») y sube la expectativa hacia la revelación.",
   "bucle2": "Y aún es peor. ¿Crees que pagando en efectivo te libras?",
   "_ayuda_climax": "CLÍMAX: conecta las ideas, revela el MECANISMO principal y resuelve TODAS las incógnitas abiertas.",
   "climax": "Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses.",
   "_ayuda_cta": "CTA: cierre breve y natural (pregunta al espectador o frase que enlaza con el hook). Nada de «suscríbete y dale like».",
   "cta": "¿Y tú, pagas con tarjeta o en efectivo?",
-  "recompensa3": "Pues no. Lo calculó la Reserva Federal de Boston. Si pagas en efectivo, pierdes unos 149 dólares al año. ¿Y quien usa tarjeta? Gana unos 1.133.",
+  "recompensa3": "Pues no. Lo calculó la Reserva Federal de Boston. Un hogar que paga en efectivo pierde unos 149 dólares al año. ¿Y uno que usa tarjeta? Gana unos 1.133.",
   "bucle3": ""
 }
