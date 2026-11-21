@@ -5,7 +5,7 @@ Flujo (todo automático salvo la voz):
   montaje en segundo plano → sonido con y sin música → subtítulos → 2 MP4 + ficha para publicar → medir a los 2 días.
 
 Órdenes:  ./inercia comprobar | temas | guion nuevo N "Título" [--largo] | guion N | video N | voz N [voz.mp3]
-          fotos N "30,140,…" | montar N | terminar N | publicar N | medir
+          escena N | fotos N "30,140,…" | montar N | terminar N | publicar N | medir
 """
 import datetime
 import json
@@ -214,12 +214,49 @@ def cmd_voz(args):
     print("✓ tiempos.json y web/tiempos.js listos: ata cada plano, cara y gesto a la palabra exacta en web/story.js.")
 
 
+def comprobar_escena(n, fi, v=None, parar=True):
+    """REGLA DEL USUARIO: espacios y personajes NO se repiten ni se inventan; solo salen si el guion los nombra.
+    La ficha apunta en «escena» cada lugar y cada personaje con las PALABRAS del guion que lo justifican, y aquí se
+    comprueba (1) que esas palabras están en el guion y (2) que story.js no usa ningún personaje que no esté apuntado."""
+    from formula import sin_tildes
+    guion = sin_tildes(" ".join(texto_beat(fi.get(k, "")) for k, _ in tramos(fi)))
+    esc = fi.get("escena") or {}
+    malos = []
+    if not esc.get("lugares") or not esc.get("reparto"):
+        malos.append('La ficha no tiene «escena»: {"lugares": {"tienda": ["tienda"]}, "reparto": {"clienta": ["pagas con tarjeta"]}} (cada uno con las palabras del guion que lo piden).')
+    for tipo in ("lugares", "reparto"):
+        for nombre, pals in (esc.get(tipo) or {}).items():
+            falta = [p for p in pals if sin_tildes(p) not in guion]
+            if not pals or falta:
+                malos.append(f"{tipo[:-1] if tipo == 'lugares' else 'personaje'} «{nombre}»: el guion no dice {falta or '(ninguna palabra apuntada)'}. Si el guion no lo nombra, NO sale.")
+    if v and (v / "web" / "story.js").exists():
+        usados = set(re.findall(r"romanFront\(p,\s*'(\w+)'", (v / "web" / "story.js").read_text(encoding="utf-8")))
+        for u in sorted(usados - set((esc.get("reparto") or {}).keys())):
+            malos.append(f"story.js saca a «{u}», que no está en «escena.reparto» con palabras del guion: quítalo.")
+    if malos:
+        print("✗ ESCENA (espacios y personajes solo si el guion los nombra):")
+        for m in malos:
+            print("  · " + m)
+        if parar:
+            fallo("Corrige la escena antes de seguir.")
+    else:
+        print("✓ Escena: cada lugar y cada personaje sale del guion.")
+    return not malos
+
+
+def cmd_escena(args):
+    n = num(args, "escena 1")
+    _, fi = cargar(n)
+    comprobar_escena(n, fi, RAIZ / fi["carpeta"] if fi.get("carpeta") else None)
+
+
 def cmd_fotos(args):
     """Hoja de fotos (con subtítulos) y comparación lado a lado con los romanos."""
     n = num(args, 'fotos 1 "30,140,260"')
     _, fi = cargar(n)
     v = carpeta(fi, n)
     fr = args[1] if len(args) > 1 else "30,200,400,600"
+    comprobar_escena(n, fi, v)
     corre(["bash", "rebuild.sh"], cwd=v)
     shutil.rmtree(v / "stills" / "a", ignore_errors=True); shutil.rmtree(v / "stills" / "a_sub", ignore_errors=True)
     corre(["node", "render.mjs", "stills/a", fr], cwd=v)
@@ -233,6 +270,7 @@ def cmd_montar(args):
     n = num(args, "montar 1")
     _, fi = cargar(n)
     v = carpeta(fi, n)
+    comprobar_escena(n, fi, v)
     total = int(re.search(r"TOTAL\s*=\s*(\d+)", (v / "web" / "story.js").read_text(encoding="utf-8")).group(1))
     corre(["bash", "rebuild.sh"], cwd=v)
     log = v / "out" / "render.log"
@@ -318,7 +356,7 @@ def cmd_medir(_):
 
 
 ORDENES = {"comprobar": cmd_comprobar, "temas": cmd_temas, "guion": cmd_guion, "video": cmd_video, "voz": cmd_voz,
-           "fotos": cmd_fotos, "montar": cmd_montar, "terminar": cmd_terminar, "publicar": cmd_publicar, "medir": cmd_medir}
+           "escena": cmd_escena, "fotos": cmd_fotos, "montar": cmd_montar, "terminar": cmd_terminar, "publicar": cmd_publicar, "medir": cmd_medir}
 
 if __name__ == "__main__":
     if len(sys.argv) < 2 or sys.argv[1] not in ORDENES:

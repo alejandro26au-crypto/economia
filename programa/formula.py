@@ -323,6 +323,7 @@ def ficha_vacia(titulo, modo="short"):
     fi = {"titulo": titulo, "modo": modo, "duracion_s": M["duracion"], "formula": "inercia",
           "dato": "", "hipotesis": False, "fuentes": [], "cifras": [{"cifra": "", "fuente": ""}],
           "voces": {"narrador": "(voz de ElevenLabs en español)"}, "carpeta": "",
+          "escena": {"lugares": {}, "reparto": {}},  # cada lugar/personaje → palabras del guion que lo piden
           "indicaciones": [], "auditoria_manual": {"leido_en_voz_alta": False, "notas": ""}}
     n = M["ciclos"][0] + (2 if modo == "largo" else 0)
     for i in range(1, n + 1):

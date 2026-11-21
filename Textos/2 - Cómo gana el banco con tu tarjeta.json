@@ -61,5 +61,25 @@
   "_ayuda_climax": "CLÍMAX: conecta las ideas, revela el MECANISMO principal y resuelve TODAS las incógnitas abiertas.",
   "climax": "Pues no. La Reserva Federal de Boston lo calculó. Hogar que paga en efectivo: unos 149 dólares menos al año. Hogar con tarjeta: unos 1.133 más. Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses.",
   "_ayuda_cta": "CTA: cierre breve y natural (pregunta al espectador o frase que enlaza con el hook). Nada de «suscríbete y dale like».",
-  "cta": "¿Y tú, pagas con tarjeta o en efectivo?"
+  "cta": "¿Y tú, pagas con tarjeta o en efectivo?",
+  "escena": {
+    "lugares": {
+      "tienda (dentro, con la caja y el datáfono)": [
+        "la tienda paga una comisión",
+        "pagas con tarjeta"
+      ],
+      "calle con la tienda y el banco": [
+        "el banco cobra a la tienda"
+      ]
+    },
+    "reparto": {
+      "clienta": [
+        "pagas con tarjeta",
+        "pagando en efectivo"
+      ],
+      "tendera": [
+        "la tienda paga una comisión"
+      ]
+    }
+  }
 }
