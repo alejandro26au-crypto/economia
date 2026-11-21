@@ -82,7 +82,7 @@ def dibuja(im, g, f, cfg, claves, a):
     pop = 0.86 + 0.22 * min(1, t / 3) if t < 3 else (1.08 - 0.08 * min(1, (t - 3) / 3))  # entra con rebote
     may = cfg.get("mayusculas", True)
     font = ImageFont.truetype(str(FUENTE), int(tam * pop))
-    palabras = [(w["p"].upper() if may else w["p"]).strip("«»\"") for w in g]
+    palabras = [re.sub(r"[.,;:…]+$", "", (w["p"].upper() if may else w["p"]).strip("«»\"")) for w in g]
     habla = max([i for i, w in enumerate(g) if f >= w["f0"]] or [0])
     # medir: si no cabe en el 88 % del ancho, partir en dos líneas
     d0 = ImageDraw.Draw(im)

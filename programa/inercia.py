@@ -151,6 +151,9 @@ def cmd_guion(args):
         print(f"  {k:12s} {p:2d}/{m}" + ("" if not ms else "  ← " + " | ".join(ms)))
     for a in avisos:
         print("  ⚠ " + a)
+    if fallos and fi.get("prueba"):
+        print("  ⚠ FICHA DE PRUEBA DEL MOTOR («prueba»: true): se escribe el guion aunque no pase (solo para probar el motor).")
+        fallos = []
     if fallos:
         print("\nLOS TRES PUNTOS MÁS DÉBILES (corregir primero):")
         for k, ms in tres_mas_debiles(desg):
@@ -271,7 +274,8 @@ def cmd_montar(args):
     _, fi = cargar(n)
     v = carpeta(fi, n)
     comprobar_escena(n, fi, v)
-    total = int(re.search(r"TOTAL\s*=\s*(\d+)", (v / "web" / "story.js").read_text(encoding="utf-8")).group(1))
+    corre(["bash", "rebuild.sh"], cwd=v)
+    total = json.loads(subprocess.run(["node", str(HERR / "cortes.mjs")], cwd=v, capture_output=True, text=True, check=True).stdout.strip().splitlines()[-1])["TOTAL"]
     corre(["bash", "rebuild.sh"], cwd=v)
     log = v / "out" / "render.log"
     (v / "out").mkdir(exist_ok=True)

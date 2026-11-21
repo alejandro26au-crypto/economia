@@ -19,10 +19,12 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
 - HECHO (21 nov 2026): plantilla `dibujos/plantilla/` (técnicas del submarino + profesor con gestos + pizarra de tiza +
   terraza de ejemplo), subtítulos, tiempos estimados, avisos de voz, comparación con los romanos, `dibujos/LEEME.md`.
   3 fotos de prueba con subtítulos junto a los romanos: `dibujos/plantilla/hoja_prueba.jpg`.
-- PRIMER SHORT: «Cómo gana el banco con tu tarjeta» (`Textos/2 - …`), en 8 pasos exactos, 95/100. Vídeo en
-  `dibujos/videos/2-como-gana-el-banco-con-tu-tarjeta/` (tienda con datáfono + pizarra), hoja `hoja_aprobacion.jpg`. ESPERANDO: aprobado
-  y haga la voz; y el «aprobado» a la hoja de prueba de la plantilla.
-- Sin probar aún con voz real: `./inercia voz`, `montar`, `terminar` (se prueban con el primer short).
+- REGLA (usuario, 21 nov 2026): espacios y personajes SOLO si el guion los nombra; nada de reutilizar lo guardado.
+  `./inercia escena N` lo comprueba con `escena.lugares`/`escena.reparto` de la ficha. El profesor = narrador, solo si se pide.
+- Vídeo 2 «Cómo gana el banco con tu tarjeta» (`Textos/2 - …`, 8 pasos, 95/100): PAUSADO hasta tener el motor completo.
+  Decorado a medida hecho (dentro de la tienda + calle con el banco); falta quitar al profesor (no lo nombra el guion).
+- MOTOR (21 nov 2026): plantilla genérica con `_piezas.js`, sonido genérico (`herramientas/sonido.py`), comprobación de
+  escena, prueba completa con voz de espeak (`Textos/0 - Prueba del motor`, `dibujos/videos/0-prueba-del-motor/`).
 - Al terminar cada short: pedir a los 2 días la captura de YouTube Studio (Participación) (`./inercia medir`).
 
 ## Proceso de un short (todo automático salvo la voz)

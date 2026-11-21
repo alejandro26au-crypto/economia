@@ -1,0 +1,31 @@
+{
+  "titulo": "Prueba del motor",
+  "modo": "short",
+  "duracion_s": 10,
+  "formula": "inercia",
+  "prueba": true,
+  "hook": "Tu tienda paga una comisión.",
+  "promesa": "Te explico cuál.",
+  "recompensa1": "Cada pago con tarjeta cuesta dinero a la tienda.",
+  "bucle1": "¿Y quién lo paga?",
+  "recompensa2": "Tú, en el precio.",
+  "bucle2": "¿Y el banco?",
+  "climax": "El banco cobra la comisión.",
+  "cta": "¿Pagas con tarjeta?",
+  "fuentes": [
+    "prueba"
+  ],
+  "escena": {
+    "lugares": {
+      "tienda": [
+        "tienda"
+      ]
+    },
+    "reparto": {
+      "clienta": [
+        "pagas con tarjeta"
+      ]
+    }
+  },
+  "carpeta": "dibujos/videos/0-prueba-del-motor"
+}

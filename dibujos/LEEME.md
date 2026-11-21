@@ -12,27 +12,36 @@ en `kit/vendor/`. Viene del repo del océano (rama `claude/fervent-archimedes-c1
   (−14 LUFS y revisión sin congelados ni negros; `FRAMES=frames_sub` para usar los fotogramas con subtítulos),
   `fuentes/` (Inter Black, licencia OFL).
 - `plantilla/`: punto de partida de cada vídeo (ver abajo). `videos/<N-titulo>/`: un vídeo cada uno (`./inercia video N`).
-- `ejemplos/submarino/`: SOLO de consulta (de dónde salen las técnicas). `ejemplos/efecto-cangrejo/`: el profesor y su
-  pizarra en el aula (primer short del canal).
+- `ejemplos/` (SOLO de consulta, NO se copian): `submarino/` (de dónde salen las técnicas), `efecto-cangrejo/` (el profesor y
+  su pizarra en el aula), `truco-del-99/` (terraza, profesor con gestos y pizarra: primera prueba de la plantilla).
 
-## La plantilla (técnicas del submarino, NO el submarino)
-- `web/_head.js` (motor) + `web/_world.js` (DECORADO A MEDIDA) + `web/_tail.js` (tarjetas y postproceso) + `web/_frame.js`
-  (luces por plano, tarjetas con `fixedYaw`, transparencia y modo aditivo). `bash rebuild.sh` los junta en `main.js`
-  y junta el reparto (`toon.js`). Ejecutarlo tras cada cambio.
-- `web/_world.js` de ejemplo: la terraza del profesor (villa, valle con pueblo, cipreses, nubes del kit, luz de día de
-  los romanos) y **la pizarra de tiza** con sus trazos reutilizables: `trazo`, `escribe`, `flecha`, `tacha`, `etiqueta`
-  (precio), `ticket`, `vestido`, `coche`, `cerebro`, `monigote` (del cangrejo). Cada frase = un `tema` en
-  `dibujaPizarra`, y SOLO dibuja lo que dice el guion.
-- `web/story.js`: planos que empiezan en una PALABRA (`en('palabra', n)` o `en('más caro', 2)` sobre `web/tiempos.js`),
-  luces por plano (día, tarde, nublado, dorada), `camFromKeys` con golpes (KICKS), **zoom de golpe en cifras**
-  (ZOOMS), **barrido rápido entre planos**, efectos 2D (destello, estrellas, polvo), y el **profesor** con los gestos
-  del kit: CLAVES (4-5 cambios de brazos), CARAS que cambian en la palabra clave, asentir, negar, pisotón, risa, `idle`.
-- `web/roman.js`: OUTFITS (el `profesor`: traje, corbata y gafas doradas; mismo cuerpo y cara del kit) y poses
-  (hang, point, up, wave, hip, belly, temple, lift, reach, cheek, cross, thumb, open, beat, shh, hold, mouth, cheer).
-- `carta.mjs`: prueba de personajes sueltos: `node carta.mjs carta.png '[["profesor",{"R":"point","expr":"grin"}]]'`.
-- `audio.py`: música por tramos y efectos en cortes y golpes (el del submarino: reescribir la tabla de cada vídeo).
-- `subtitulos.json` (opcional, en la carpeta del vídeo): activar/desactivar, modo palabra o grupos, altura, tramos sin
-  subtítulo y palabras clave en amarillo (ver la cabecera de `herramientas/subtitulos.py`).
+## La plantilla (técnicas del submarino, NO el submarino; SIN personajes ni lugares de serie)
+- `web/_head.js` (motor) + `web/_piezas.js` (KIT de piezas) + `web/_world.js` (DECORADO A MEDIDA) + `web/_tail.js`
+  (tarjetas y postproceso) + `web/_frame.js` (luces por plano, tarjetas con `fixedYaw`, transparencia, modo aditivo).
+  `bash rebuild.sh` los junta en `main.js` y junta el reparto (`toon.js`). Ejecutarlo tras cada cambio.
+- `web/_piezas.js`: `casa`, `cipres`, `pino`, `paisaje` (hierba, colinas, montañas y nubes del kit), `letrero` (una palabra
+  QUE DIGA EL GUION), `estante` (tienda con productos y etiquetas de precio), `crearPizarra` (SOLO si el guion habla de
+  una clase o una pizarra) y trazos a mano (`trazo`, `escribe`, `flecha`, `tacha`, `etiqueta`, `ticket`, `tarjetaT`,
+  `bancoT`, `billeteT`, `tiendaT`, `coche`, `cerebro`, `vestido`). Lo nuevo que sirva para más vídeos se añade aquí.
+- `web/story.js`: ya funciona solo con la voz: un plano por frase, ZOOM DE GOLPE automático en cada cifra, golpes de
+  cámara en los «!», BARRIDO entre planos, luces por plano (día, tarde, nublado, dorada, dentro). Cada vídeo lo cambia:
+  planos agrupados y atados a palabras (`en('palabra', n)`, `en('pues no')`), cámaras a medida, `actorsAt` (reparto),
+  `fxAt` (efectos 2D: destellos, estrellas, polvo, monedas, billetes…), `worldAt` (lo que cambia en el decorado) y
+  `SONIDOS` (efectos en su fotograma).
+- `audio.py` → `herramientas/sonido.py`: música por tramos (acorde y carácter según la luz de cada plano, silencio antes
+  de cada remate) y efectos (corte, golpe, remate, moneda, caja, billete, estrellas) sacados de story.js.
+- `web/roman.js`: OUTFITS (mismo cuerpo y cara del kit; solo cambia la ropa) y poses. Ropa de hoy: `tshirt`, `apron`,
+  `pants`, `sleeve`, `suit`, `tie`, `glasses`… Ejemplos: `clienta`, `tendera` (vídeo 2), `profesor` (cangrejo).
+- `carta.mjs`: prueba de personajes sueltos: `node carta.mjs carta.png '[["clienta",{"R":"reach","expr":"grin"}]]'`.
+- `subtitulos.json` (opcional): activar/desactivar, modo palabra o grupos, altura (`y`), tramos sin subtítulo, claves.
+
+## REGLA DEL USUARIO: espacios y personajes SOLO si el guion los nombra (21 nov 2026)
+- Nada de reutilizar lo guardado (terraza, profesor, pizarra…) si el guion no lo pide. Cada vídeo, su mundo.
+- La ficha apunta `escena.lugares` y `escena.reparto` con las PALABRAS del guion que los justifican;
+  `./inercia escena N` lo comprueba (y `fotos`/`montar` no siguen si falla, ni si story.js saca a alguien no apuntado).
+- El profesor del canal es el NARRADOR: solo sale si el usuario o el guion lo piden (hablar a cámara al espectador).
+- Lo que dice la voz PASA en el decorado (la tarjeta en el datáfono, las monedas que van al banco, las etiquetas que
+  suben), no escrito en una pizarra. Textos en pantalla: solo palabras del guion (letreros) y los subtítulos.
 
 ## Hacer un vídeo
 1. `./inercia video N` (copia la plantilla, pone el guion y tiempos estimados).
