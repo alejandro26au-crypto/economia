@@ -221,7 +221,7 @@ def cmd_fotos(args):
     v = carpeta(fi, n)
     fr = args[1] if len(args) > 1 else "30,200,400,600"
     corre(["bash", "rebuild.sh"], cwd=v)
-    shutil.rmtree(v / "stills" / "a", ignore_errors=True)
+    shutil.rmtree(v / "stills" / "a", ignore_errors=True); shutil.rmtree(v / "stills" / "a_sub", ignore_errors=True)
     corre(["node", "render.mjs", "stills/a", fr], cwd=v)
     corre([sys.executable, str(HERR / "subtitulos.py"), "stills/a", "stills/a_sub"], cwd=v)
     corre([sys.executable, str(HERR / "comparar.py"), "stills/a_sub", "stills/hoja.jpg"], cwd=v)

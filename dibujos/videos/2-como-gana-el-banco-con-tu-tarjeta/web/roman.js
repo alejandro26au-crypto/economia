@@ -25,6 +25,9 @@ export const OUTFITS = {
   workA: { tunic: "#8a5d3b", skin: "#f5c9a0", cap: "#c2733a", apron: "#d8c9a6" },
   workB: { tunic: "#3f6a6f", skin: "#ecd0b6", cap: "#5b4a8a", moustache: "#4a3020" },
   // PROFESOR DE ECONOMÍA (Benthara, ensayo): mismo cuerpo y cara; traje, camisa, corbata y gafas
+  // VÍDEO 2: la clienta que paga y la tendera de la tienda (mismo cuerpo y cara del kit; ropa de hoy)
+  clienta: { tunic: "#c25a7a", sleeve: "#b04e6c", skin: "#e8b48a", hair: "#2b211c", pants: "#2f4170", shoes: "#2a2224", tshirt: true },
+  tendera: { tunic: "#f1f1ec", sleeve: "#e2e2dc", skin: "#f5c9a0", hair: "#7a5432", pants: "#3a3f4a", shoes: "#1e1a1a", tshirt: true, apron: "#3f6b5a" },
   profesor: { tunic: "#2e3444", skin: SKIN, hair: "#3b2a20", suit: true, pants: "#1f2330", shoes: "#151217", shirt: "#ffffff", tie: "#e0a92e", glasses: "#e0a92e", moustache: "#3b2a20", rico: true },
 };
 
