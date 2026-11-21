@@ -16,13 +16,11 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
   fórmula de guiones con auditoría (`programa/formula.py`, modo Short y largo) y orden `./inercia`.
 - HECHO: guion de ejemplo REAL «El truco del 99 que te engaña» (`Textos/1 - …`): primera versión 88/100 (no pasaba),
   corregida → 96/100, más auditoría a mano en voz alta (3 fallos de precisión corregidos).
-- PENDIENTE (en este orden):
-  1) plantilla nueva `dibujos/plantilla/` con las técnicas del submarino (main.js en piezas + rebuild.sh, luces por
-     plano, zoom de golpe en cifras, barridos, efectos 2D, carta.mjs) + el profesor con sus gestos + la pizarra;
-  2) subtítulos (`dibujos/herramientas/subtitulos.py`), `tiempos_estimados.py`, `comparar.py` (lado a lado con los romanos),
-     y `tiempos_es.py` que avise si la voz no coincide o se pasa de duración;
-  3) 3 fotos de prueba de la plantilla con subtítulos junto a una de los romanos → esperar el «aprobado»;
-  4) `dibujos/LEEME.md` para Inercia; 5) subir; proponer 3 temas para el primer short.
+- HECHO (21 nov 2026): plantilla `dibujos/plantilla/` (técnicas del submarino + profesor con gestos + pizarra de tiza +
+  terraza de ejemplo), subtítulos, tiempos estimados, avisos de voz, comparación con los romanos, `dibujos/LEEME.md`.
+  3 fotos de prueba con subtítulos junto a los romanos: `dibujos/plantilla/hoja_prueba.jpg`.
+- ESPERANDO: el «aprobado» del usuario a la hoja de prueba, y que elija uno de los 3 temas propuestos para el primer short.
+- Sin probar aún con voz real: `./inercia voz`, `montar`, `terminar` (se prueban con el primer short).
 - Al terminar cada short: pedir a los 2 días la captura de YouTube Studio (Participación) (`./inercia medir`).
 
 ## Proceso de un short (todo automático salvo la voz)
