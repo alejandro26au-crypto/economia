@@ -19,7 +19,8 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
 - HECHO (21 nov 2026): plantilla `dibujos/plantilla/` (técnicas del submarino + profesor con gestos + pizarra de tiza +
   terraza de ejemplo), subtítulos, tiempos estimados, avisos de voz, comparación con los romanos, `dibujos/LEEME.md`.
   3 fotos de prueba con subtítulos junto a los romanos: `dibujos/plantilla/hoja_prueba.jpg`.
-- PRIMER SHORT: guion del usuario «Cómo gana el banco con tu tarjeta» (`Textos/2 - …`), 56 → 96/100. ESPERANDO: que lo apruebe
+- PRIMER SHORT: «Cómo gana el banco con tu tarjeta» (`Textos/2 - …`), en 8 pasos exactos, 95/100. Vídeo en
+  `dibujos/videos/2-como-gana-el-banco-con-tu-tarjeta/` (tienda con datáfono + pizarra), hoja `hoja_aprobacion.jpg`. ESPERANDO: aprobado
   y haga la voz; y el «aprobado» a la hoja de prueba de la plantilla.
 - Sin probar aún con voz real: `./inercia voz`, `montar`, `terminar` (se prueban con el primer short).
 - Al terminar cada short: pedir a los 2 días la captura de YouTube Studio (Participación) (`./inercia medir`).
