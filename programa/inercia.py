@@ -340,14 +340,23 @@ Datos reales:
 - Miniatura del Short: (fotograma)
 
 ## Hora recomendada
-(según el público: España 18:00-20:00 / Latinoamérica 19:00-21:00 hora local; ver docs)
+Público de España y Latinoamérica: publicar entre las 18:00 y las 19:00 de España (12:00-13:00 de México, 14:00-15:00 de
+Argentina): llega a España por la tarde y a América a mediodía. Martes a jueves suelen ir mejor que el fin de semana.
+(Se ajusta con los datos del canal en docs/RESULTADOS.md cuando haya 3-5 vídeos medidos.)
+
+## Subtítulos para YouTube
+Subir out/subtitulos.srt (Subtítulos → Español → Subir archivo → Con tiempos).
 
 ## Fuentes
 """ + "\n".join(f"- {x}" for x in fi.get("fuentes", [])) + "\n", encoding="utf-8")
         print(f"✓ Plantilla de {f.relative_to(RAIZ)}: rellénala y envíala en bloques para copiar.")
     fi["publicado"] = fi.get("publicado") or datetime.date.today().isoformat()
     guardar(ruta, fi)
-    print(f"Apuntado: publicado el {fi['publicado']}. A los 2 días, pedir la captura de YouTube Studio (Participación).")
+    res = RAIZ / "docs" / "RESULTADOS.md"
+    if res.exists() and not fi.get("prueba") and fi.get("titulo") and fi["titulo"] not in res.read_text(encoding="utf-8"):
+        with res.open("a", encoding="utf-8") as fh:
+            fh.write(f"| {fi['publicado']} | {fi['titulo']} | | | | | | | |\n")
+    print(f"Apuntado: publicado el {fi['publicado']} (fila en docs/RESULTADOS.md). A los 2 días, pedir la captura de YouTube Studio (Participación).")
 
 
 def cmd_medir(_):
