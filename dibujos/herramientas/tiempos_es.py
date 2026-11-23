@@ -38,7 +38,18 @@ for i, f in enumerate(frases):
         continue
     res.append([round(ts[0][0] * 30), round(ts[-1][1] * 30), f])
     print(f"{ts[0][0]:6.2f}-{ts[-1][1]:6.2f}  f{round(ts[0][0] * 30)}-{round(ts[-1][1] * 30)}  {f}  ({len(ts)}/{len(f.split())})")
-pal = [{"p": w, "f0": round((t[j] or (0, 0))[0] * 30), "f1": round((t[j] or (0, 0))[1] * 30)} for j, w in enumerate(txt.split())]
+# palabras que la voz no dejó reconocer: su tiempo se rellena entre las vecinas (así no desaparecen de los subtítulos)
+for j in range(len(t)):
+    if t[j] is None:
+        a0 = next((t[k][1] for k in range(j - 1, -1, -1) if t[k]), 0.0)
+        k1 = next((k for k in range(j + 1, len(t)) if t[k]), None)
+        b0 = t[k1][0] if k1 is not None else a0 + 0.4
+        hueco = [k for k in range(j, k1 if k1 is not None else len(t)) if t[k] is None]
+        paso = max(0.12, (b0 - a0) / max(1, len(hueco)))
+        for i_, k in enumerate(hueco):
+            t[k] = (a0 + i_ * paso, a0 + (i_ + 1) * paso)
+        print(f"  · sin reconocer, tiempo rellenado: {' '.join(txt.split()[k] for k in hueco)}")
+pal = [{"p": w, "f0": round(t[j][0] * 30), "f1": round(t[j][1] * 30)} for j, w in enumerate(txt.split())]
 json.dump({"frases": res, "palabras": pal}, open("tiempos.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("✓ tiempos.json (usa 'frases' para FRASES de story.js y 'palabras' para los momentos clave)")
 
@@ -60,5 +71,10 @@ if DMAX and dur > DMAX:
     malo = True
     print(f"  ✗ La voz dura {dur:.1f} s: se pasa de {DMAX:.0f} s. Sube la velocidad en ElevenLabs o recorta el guion.")
 os.makedirs("web", exist_ok=True)
-open("web/tiempos.js", "w", encoding="utf-8").write("export const PAL = " + json.dumps([[w["p"], w["f0"], w["f1"]] for w in pal], ensure_ascii=False) + ";\nexport const TOTAL_VOZ = " + str(round(dur * 30) + 15) + ";\n")
+# web/tiempos.js: lo de Inercia (PAL, TOTAL_VOZ) + lo de Citrino (FRASES, DURACION) para story.js y audio.py
+open("web/tiempos.js", "w", encoding="utf-8").write(
+    "// Escrito por tiempos_es.py desde la voz real (30 fps). FRASES = [f0, f1, texto] · PAL = [palabra, f0, f1]\n"
+    + "export const FRASES = " + json.dumps(res, ensure_ascii=False) + ";\n"
+    + "export const PAL = " + json.dumps([[w["p"], w["f0"], w["f1"]] for w in pal], ensure_ascii=False) + ";\n"
+    + "export const TOTAL_VOZ = " + str(round(dur * 30) + 15) + ";\nexport const DURACION = TOTAL_VOZ; // fotogramas\n")
 sys.exit(1 if malo else 0)

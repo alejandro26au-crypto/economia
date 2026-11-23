@@ -4,7 +4,7 @@ Flujo (todo automático salvo la voz):
   temas → guion (fórmula + auditoría ≥ 90) → voz del usuario → tiempos → decorado a medida → hoja de fotos aprobada →
   montaje en segundo plano → sonido con y sin música → subtítulos → 2 MP4 + ficha para publicar → medir a los 2 días.
 
-Órdenes:  ./inercia comprobar | temas | guion nuevo N "Título" [--largo] | guion N | video N | voz N [voz.mp3]
+Órdenes:  ./inercia instalar | comprobar | temas | guion nuevo N "Título" [--largo] | guion N | video N | voz N [voz.mp3]
           escena N | fotos N "30,140,…" | montar N | terminar N | publicar N | medir
 """
 import datetime
@@ -84,6 +84,11 @@ def corre(cmd, cwd=None, check=True):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
+def cmd_instalar(_):
+    """Deja el entorno listo (tras un reinicio de la nube o en un ordenador nuevo)."""
+    corre(["bash", str(HERR / "instalar.sh")], check=False)
+
+
 def cmd_comprobar(_):
     def linea(ok, txt):
         print(("  ✓ " if ok else "  ✗ ") + txt)
@@ -277,11 +282,10 @@ def cmd_montar(args):
     corre(["bash", "rebuild.sh"], cwd=v)
     total = json.loads(subprocess.run(["node", str(HERR / "cortes.mjs")], cwd=v, capture_output=True, text=True, check=True).stdout.strip().splitlines()[-1])["TOTAL"]
     corre(["bash", "rebuild.sh"], cwd=v)
-    log = v / "out" / "render.log"
     (v / "out").mkdir(exist_ok=True)
-    p = subprocess.Popen(f"RESUME=1 nohup node render.mjs frames 0-{total - 1} > {log} 2>&1 &", cwd=v, shell=True)
-    p.wait()
-    print(f"✓ Montaje en segundo plano: {total} fotogramas (~{total * 2 / 60:.0f} min). Progreso: ls {v.relative_to(RAIZ)}/frames | wc -l")
+    # montaje EN PARALELO y reanudable (montar.sh, de Citrino): si se corta, se vuelve a lanzar igual
+    subprocess.Popen(f"nohup bash {HERR / 'montar.sh'} 0-{total - 1} > out/render.log 2>&1 &", cwd=v, shell=True).wait()
+    print(f"✓ Montaje en paralelo en segundo plano: {total} fotogramas. Progreso: ls {v.relative_to(RAIZ)}/frames | wc -l · registro: out/render.log")
 
 
 def cmd_terminar(args):
@@ -359,7 +363,7 @@ def cmd_medir(_):
         print("Nada pendiente de medir.")
 
 
-ORDENES = {"comprobar": cmd_comprobar, "temas": cmd_temas, "guion": cmd_guion, "video": cmd_video, "voz": cmd_voz,
+ORDENES = {"instalar": cmd_instalar, "comprobar": cmd_comprobar, "temas": cmd_temas, "guion": cmd_guion, "video": cmd_video, "voz": cmd_voz,
            "escena": cmd_escena, "fotos": cmd_fotos, "montar": cmd_montar, "terminar": cmd_terminar, "publicar": cmd_publicar, "medir": cmd_medir}
 
 if __name__ == "__main__":
