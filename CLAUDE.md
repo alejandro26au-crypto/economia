@@ -28,7 +28,9 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
   escena, prueba completa con voz de espeak (`Textos/0 - Prueba del motor`, `dibujos/videos/0-prueba-del-motor/`).
 - MOTOR (23 nov 2026): traído lo mejor de Citrino/océano (instalar.sh, montaje en paralelo reanudable, subtítulos CapCut +
   .srt, insertos de datos `plantilla/web/insertos.js`, `docs/RESULTADOS.md`); −14 LUFS en dos pasadas; palabras sin
-  reconocer con tiempo rellenado. PRUEBA COMPLETA (voz de espeak, NO la del usuario): voz → montar → terminar → 2 MP4 OK.
+  reconocer con tiempo rellenado. PRUEBA COMPLETA (voz de espeak, NO la del usuario): voz → escena → fotos → montar en
+  paralelo → terminar (2 MP4 a −14 LUFS, sin congelados ni negros, hoja final, .srt) → publicar: TODO OK. MOTOR LISTO.
+  Siguiente: retomar el vídeo 2 (quitar al profesor, subtítulos nuevos, hoja de 4-6 fotos → «aprobado» → voz del usuario).
 - Al terminar cada short: pedir a los 2 días la captura de YouTube Studio (Participación) (`./inercia medir`) y apuntarla
   en `docs/RESULTADOS.md` (segundo de abandono → etapa del guion → lección).
 

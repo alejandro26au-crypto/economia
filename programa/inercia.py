@@ -362,6 +362,9 @@ Subir out/subtitulos.srt (Subtítulos → Español → Subir archivo → Con tie
 ## Fuentes
 """ + "\n".join(f"- {x}" for x in fi.get("fuentes", [])) + "\n", encoding="utf-8")
         print(f"✓ Plantilla de {f.relative_to(RAIZ)}: rellénala y envíala en bloques para copiar.")
+    if fi.get("prueba"):
+        print("Ficha de prueba del motor: no se apunta como publicada.")
+        return
     fi["publicado"] = fi.get("publicado") or datetime.date.today().isoformat()
     guardar(ruta, fi)
     res = RAIZ / "docs" / "RESULTADOS.md"
