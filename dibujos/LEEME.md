@@ -10,7 +10,8 @@ en `kit/vendor/`. Viene del repo del océano (rama `claude/fervent-archimedes-c1
   `tiempos_estimados.py` (antes de la voz), `subtitulos.py` (subtítulos quemados), `comparar.py` (hoja junto a los
   romanos), `mix.py` (música y efectos al 50 % de la voz), `boca.py`, `gestos.js`, `preparar.sh`, `terminar.sh`
   (−14 LUFS y revisión sin congelados ni negros; `FRAMES=frames_sub` para usar los fotogramas con subtítulos),
-  `fuentes/` (Inter Black, licencia OFL).
+  `fuentes/` (Inter Black, licencia OFL), `montar.sh` (montaje en paralelo y reanudable), `instalar.sh` (entorno listo
+  tras un reinicio), `subtitulos_srt.py` (`.srt` para YouTube), `sonido.py` + `cortes.mjs` (música y efectos por tramos).
 - `plantilla/`: punto de partida de cada vídeo (ver abajo). `videos/<N-titulo>/`: un vídeo cada uno (`./inercia video N`).
 - `ejemplos/` (SOLO de consulta, NO se copian): `submarino/` (de dónde salen las técnicas), `efecto-cangrejo/` (el profesor y
   su pizarra en el aula), `truco-del-99/` (terraza, profesor con gestos y pizarra: primera prueba de la plantilla).
@@ -33,6 +34,8 @@ en `kit/vendor/`. Viene del repo del océano (rama `claude/fervent-archimedes-c1
 - `web/roman.js`: OUTFITS (mismo cuerpo y cara del kit; solo cambia la ropa) y poses. Ropa de hoy: `tshirt`, `apron`,
   `pants`, `sleeve`, `suit`, `tie`, `glasses`… Ejemplos: `clienta`, `tendera` (vídeo 2), `profesor` (cangrejo).
 - `carta.mjs`: prueba de personajes sueltos: `node carta.mjs carta.png '[["clienta",{"R":"reach","expr":"grin"}]]'`.
+- `web/insertos.js` (de Zingo/Citrino, en el estilo del kit): termómetro, manómetro, contador, reloj, comparativa, barra y
+  capas, que se dibujan en una tarjeta de efecto mientras la voz canta la cifra (solo cifras que dice el guion).
 - `subtitulos.json` (opcional): activar/desactivar, modo palabra o grupos, altura (`y`), tramos sin subtítulo, claves.
 
 ## REGLA DEL USUARIO: espacios y personajes SOLO si el guion los nombra (21 nov 2026)
