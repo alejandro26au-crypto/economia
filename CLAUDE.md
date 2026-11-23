@@ -82,6 +82,14 @@ resuelve todo) · CTA breve y natural.
 - Revisar YO cada imagen antes de enviarla y decir qué falla; nada en pantalla que no diga el guion.
 - Entregar con y sin música + ficha para publicar.
 
+## AHORRO (usuario, 23 nov 2026): no repetir pasos sin necesidad
+- `terminar` codifica la imagen UNA vez y le pega los dos sonidos (con y sin música); revisión de imagen y hoja final, una vez.
+- `montar` reutiliza los fotogramas hechos con el código actual y rehace solo los desfasados o los que falten (en paralelo).
+- Subtítulos: los fotogramas sin texto se enlazan, no se copian. La voz se analiza una vez por toma (`./inercia voz`).
+- Yo: probar con 1-3 fotos sueltas pequeñas antes de una hoja; volver a renderizar SOLO los fotogramas que cambian;
+  no volver a mirar imágenes que no han cambiado; no montar el vídeo entero hasta el «aprobado» de la hoja; tiradas de
+  prueba cortas (clip de 5-15 s) para probar el motor. vidIQ: nunca sin decir el coste y esperar el «sí».
+
 ## Herramientas
 - `./inercia instalar | comprobar | temas | guion | video | voz | fotos | montar | terminar | publicar | medir`.
 - Doblaje con varias voces: `programa/doblaje.py`. Replicar un viral: `docs/replicar-viral.md`.

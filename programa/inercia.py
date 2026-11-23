@@ -283,6 +283,19 @@ def cmd_montar(args):
     total = json.loads(subprocess.run(["node", str(HERR / "cortes.mjs")], cwd=v, capture_output=True, text=True, check=True).stdout.strip().splitlines()[-1])["TOTAL"]
     corre(["bash", "rebuild.sh"], cwd=v)
     (v / "out").mkdir(exist_ok=True)
+    # AHORRO: si el código del vídeo no cambió, se reanuda (solo los fotogramas que falten); si cambió después de montar,
+    # se borran solo los fotogramas más viejos que el código (si no, saldrían planos desfasados)
+    fr = sorted((v / "frames").glob("f*.jpg")) if (v / "frames").exists() else []
+    if fr:
+        hechos = {"main.js", "toon.js", "toonbase.js", "gestos.js"}  # los genera rebuild.sh: no cuentan como cambio
+        codigo = max(p.stat().st_mtime for p in [*(v / "web").glob("*.js"), v / "tiempos.json"] if p.exists() and p.name not in hechos)
+        viejos = [p for p in fr if p.stat().st_mtime < codigo]
+        if viejos:
+            for p in viejos:
+                p.unlink()
+            print(f"  · {len(viejos)} fotogramas eran de una versión anterior del vídeo: se rehacen. Los demás se reutilizan.")
+        else:
+            print(f"  · {len(fr)} fotogramas ya hechos con el código actual: se reutilizan (solo se monta lo que falte).")
     # montaje EN PARALELO y reanudable (montar.sh, de Citrino): si se corta, se vuelve a lanzar igual
     subprocess.Popen(f"nohup bash {HERR / 'montar.sh'} 0-{total - 1} > out/render.log 2>&1 &", cwd=v, shell=True).wait()
     print(f"✓ Montaje en paralelo en segundo plano: {total} fotogramas. Progreso: ls {v.relative_to(RAIZ)}/frames | wc -l · registro: out/render.log")
@@ -303,8 +316,7 @@ def cmd_terminar(args):
         corre([sys.executable, str(HERR / "subtitulos.py"), "frames", "frames_sub"], cwd=v)
         frames = "frames_sub"
     env = f"FRAMES={frames} "
-    corre(env + f'bash {HERR / "terminar.sh"} "{titulo}"', cwd=v)
-    corre(env + f'bash {HERR / "terminar.sh"} "{titulo}" out/mix_sin_musica.wav', cwd=v)
+    corre(env + f'bash {HERR / "terminar.sh"} "{titulo}"', cwd=v)   # una sola codificación de imagen para los dos MP4
     print(f"✓ Dos MP4 en {v.relative_to(RAIZ)}/out/. REVISA out/hoja_final.jpg antes de enviar. Después:  ./inercia publicar {n}")
 
 

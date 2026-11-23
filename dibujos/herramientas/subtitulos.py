@@ -23,6 +23,7 @@ Ajustes opcionales en subtitulos.json (en la carpeta del vídeo):
 """
 import json
 import re
+import os
 import shutil
 import sys
 import unicodedata
@@ -142,6 +143,16 @@ def dibuja(im, g, f, cfg, claves, a):
     return base.convert("RGB")
 
 
+def enlaza(a, b):
+    """AHORRO: los fotogramas sin texto no se copian: se enlazan (instantáneo, sin ocupar disco)."""
+    if b.exists() or b.is_symlink():
+        b.unlink()
+    try:
+        os.link(a, b)
+    except OSError:
+        shutil.copy(a, b)
+
+
 def main():
     src, dst = Path(sys.argv[1]), Path(sys.argv[2])
     cfg = json.loads(Path("subtitulos.json").read_text(encoding="utf-8")) if Path("subtitulos.json").exists() else {}
@@ -161,7 +172,7 @@ def main():
         f = int(p.stem[1:])
         g = next(((a, b, gg) for a, b, gg in tr if a <= f <= b), None)
         if g is None or any(x <= f <= y for x, y in apagar):
-            shutil.copy(p, dst / p.name)
+            enlaza(p, dst / p.name)
             continue
         im = dibuja(Image.open(p).convert("RGB"), g[2], f, cfg, claves, g[0])
         im.save(dst / p.name, quality=95)
