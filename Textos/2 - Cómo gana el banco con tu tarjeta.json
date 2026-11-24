@@ -10,7 +10,20 @@
     "Schuh, S., Shy, O. y Stavins, J. (2010). Who Gains and Who Loses from Credit Card Payments? Theory and Calibrations. Federal Reserve Bank of Boston, Public Policy Discussion Paper 10-3 (versión revisada, ago. 2010): cada hogar que paga en efectivo transfiere 149 $ al año a los que usan tarjeta; cada hogar con tarjeta recibe 1.133 $. https://www.bostonfed.org/publications/public-policy-discussion-paper/2010/who-gains-and-who-loses-from-credit-card-payments-theory-and-calibrations.aspx",
     "Reglamento (UE) 2015/751 (EUR-Lex) y Banco de España: en la UE la tasa de intercambio de las tarjetas de particulares está limitada al 0,3 % (crédito) y 0,2 % (débito). Para la descripción: en Europa la comisión es menor, pero el mecanismo es el mismo."
   ],
-  "cifras": [],
+  "cifras": [
+    {
+      "cifra": "172.000 millones de dólares",
+      "fuente": "Nilson Report 2023: 172.050 millones de dólares"
+    },
+    {
+      "cifra": "2023",
+      "fuente": "Nilson Report 2023"
+    },
+    {
+      "cifra": "149 dólares",
+      "fuente": "Schuh, Shy y Stavins 2010 (Fed de Boston), versión revisada"
+    }
+  ],
   "voces": {
     "narrador": "(voz de ElevenLabs en español)"
   },
@@ -27,40 +40,41 @@
   ],
   "auditoria_manual": {
     "leido_en_voz_alta": true,
-    "notas": "Guion escrito por el usuario (24 nov 2026), organizado en las 8 etapas sin cambiar el texto. La versión anterior queda en «_version_anterior»."
+    "notas": "24 nov 2026: guion del usuario (8 etapas, 61/100, 85 s) subido a ≥90 sin cambiar su idea ni su orden: hook corto, promesa clara, cifra de Nilson en la recompensa 1, cifra de la Fed de Boston en el clímax (dicha como estimación), frases partidas y CTA con pregunta. Precisión: 172.000 millones = comisiones que pagaron los comercios de EE. UU. en 2023 (Nilson), no ganancia del banco; 149 $ = transferencia estimada de cada hogar que paga en efectivo (Schuh, Shy y Stavins, 2010). «Cuotas de manejo y anualidades»: sin cifra porque varían por banco y país (no se inventa)."
   },
   "_ayuda_hook": "HOOK: contradicción, dato o afirmación que choca con lo que el espectador cree saber. Primera frase corta (≤ 10 palabras en Short), sin «¿Sabías que…?» ni saludos.",
-  "hook": "Los bancos pueden ganar dinero contigo incluso si nunca pagas un solo peso de intereses.",
+  "hook": "¡El banco gana contigo… aunque nunca pagues intereses!",
   "_ayuda_promesa": "PROMESA: anticipa QUÉ mecanismo, realidad o explicación va a descubrir («Al final vas a entender por qué…»), sin desvelarlo.",
-  "promesa": "Y lo más curioso es que una de las formas de ganar dinero ocurre cada vez que utilizas tu tarjeta de crédito.",
+  "promesa": "Al final vas a entender cómo lo hace con tu tarjeta.",
   "_ayuda_recompensa1": "RECOMPENSA 1: explicación relevante, concreta (cifra, fecha, lugar, precio) y con un ejemplo de la vida del espectador (su sueldo, su súper, su alquiler, su banco).",
-  "recompensa1": "Cuando compras con tarjeta, el comercio normalmente paga una comisión por procesar el pago. Ese dinero se reparte entre los participantes de la operación, y una parte puede llegar al banco que emitió tu tarjeta.",
+  "recompensa1": "Cuando compras con tarjeta, la tienda paga una comisión. Y una parte llega a tu banco. ¡Solo en Estados Unidos, 172.000 millones de dólares en comisiones en 2023!",
   "_ayuda_bucle1": "BUCLE 1: abre una incógnita nueva ligada al mecanismo («Pero hay algo que no cuadra…», «¿Y quién gana con esto?») y sube la expectativa hacia la revelación.",
-  "bucle1": "Pero esa no es la única forma en que el banco gana dinero contigo. De hecho, aunque nunca te atrases en un pago, todavía existen otras fuentes de ingresos.",
+  "bucle1": "Pero esa no es la única forma. Aunque pagues a tiempo, hay más.",
   "_ayuda_recompensa2": "RECOMPENSA 2: explicación relevante, concreta (cifra, fecha, lugar, precio) y con un ejemplo de la vida del espectador (su sueldo, su súper, su alquiler, su banco).",
-  "recompensa2": "Están las cuotas de manejo, las anualidades de algunos productos y, por supuesto, los intereses de quienes no pagan el total de su deuda.",
+  "recompensa2": "Y eso incluye las cuotas de manejo. Las anualidades. ¡Y los intereses de quien no paga el total!",
   "_ayuda_bucle2": "BUCLE 2: abre una incógnita nueva ligada al mecanismo («Pero hay algo que no cuadra…», «¿Y quién gana con esto?») y sube la expectativa hacia la revelación.",
-  "bucle2": "Pero hay algo que cambia por completo la forma de entender este negocio. Incluso si eres de los clientes que nunca pagan intereses y siempre liquidan sus facturas a tiempo, puedes seguir siendo rentable para el banco.",
+  "bucle2": "Pero aquí viene lo más raro. Pagando siempre a tiempo… sigues siendo rentable para tu banco.",
   "_ayuda_climax": "CLÍMAX: conecta las ideas, revela el MECANISMO principal y resuelve TODAS las incógnitas abiertas.",
-  "climax": "Porque el negocio no depende exclusivamente de que te endeudes. Cada vez que utilizas tu tarjeta, el banco puede recibir ingresos a través de las comisiones asociadas a las compras y otros cargos del producto. En otras palabras, puedes utilizar responsablemente tu crédito, no pagar intereses y aun así generar ganancias para tu banco.",
+  "climax": "Porque el negocio no depende solo de tu deuda. Esas comisiones la tienda las mete en sus precios. Y las pagamos todos. La Reserva Federal de Boston lo estimó. Un hogar que paga en efectivo pierde unos 149 dólares al año. Usas bien tu crédito… y aun así, tu banco gana.",
   "_ayuda_cta": "CTA: cierre breve y natural (pregunta al espectador o frase que enlaza con el hook). Nada de «suscríbete y dale like».",
-  "cta": "Síguenos y descubre el negocio detrás de las cosas que haces todos los días.",
+  "cta": "¿Y tú, pagas con tarjeta o en efectivo?",
   "escena": {
     "lugares": {
       "tienda (dentro, con la caja y el datáfono)": [
         "cuando compras con tarjeta",
-        "el comercio normalmente paga una comision"
+        "la tienda paga una comision"
       ],
       "calle con la tienda y el banco": [
-        "una parte puede llegar al banco que emitio tu tarjeta"
+        "una parte llega a tu banco"
       ]
     },
     "reparto": {
       "clienta": [
-        "cuando compras con tarjeta"
+        "cuando compras con tarjeta",
+        "paga en efectivo"
       ],
       "tendera": [
-        "el comercio normalmente paga una comision"
+        "la tienda paga una comision"
       ]
     }
   },
@@ -91,5 +105,15 @@
         "fuente": "Schuh, Shy y Stavins 2010 (Fed de Boston), versión revisada"
       }
     ]
+  },
+  "_version_usuario_24nov": {
+    "hook": "Los bancos pueden ganar dinero contigo incluso si nunca pagas un solo peso de intereses.",
+    "promesa": "Y lo más curioso es que una de las formas de ganar dinero ocurre cada vez que utilizas tu tarjeta de crédito.",
+    "recompensa1": "Cuando compras con tarjeta, el comercio normalmente paga una comisión por procesar el pago. Ese dinero se reparte entre los participantes de la operación, y una parte puede llegar al banco que emitió tu tarjeta.",
+    "bucle1": "Pero esa no es la única forma en que el banco gana dinero contigo. De hecho, aunque nunca te atrases en un pago, todavía existen otras fuentes de ingresos.",
+    "recompensa2": "Están las cuotas de manejo, las anualidades de algunos productos y, por supuesto, los intereses de quienes no pagan el total de su deuda.",
+    "bucle2": "Pero hay algo que cambia por completo la forma de entender este negocio. Incluso si eres de los clientes que nunca pagan intereses y siempre liquidan sus facturas a tiempo, puedes seguir siendo rentable para el banco.",
+    "climax": "Porque el negocio no depende exclusivamente de que te endeudes. Cada vez que utilizas tu tarjeta, el banco puede recibir ingresos a través de las comisiones asociadas a las compras y otros cargos del producto. En otras palabras, puedes utilizar responsablemente tu crédito, no pagar intereses y aun así generar ganancias para tu banco.",
+    "cta": "Síguenos y descubre el negocio detrás de las cosas que haces todos los días."
   }
 }
