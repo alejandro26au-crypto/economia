@@ -33,7 +33,8 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
   paralelo → terminar (2 MP4 a −14 LUFS, sin congelados ni negros, hoja final, .srt) → publicar: TODO OK. MOTOR LISTO.
   Siguiente: retomar el vídeo 2 (quitar al profesor, subtítulos nuevos, hoja de 4-6 fotos → «aprobado» → voz del usuario).
 - PRODUCCIÓN MÁS RÁPIDA (24 nov 2026): orden guion→voz→planos, cámaras automáticas (`encuadre.js`), chequeo sin
-  renderizar (`./inercia chequeo N`, también dentro de fotos/montar), instalación en el script del entorno. Pendiente
+  renderizar (`./inercia chequeo N`, también dentro de fotos/montar), entorno de nube «economia» (personal) que ejecuta
+  `dibujos/herramientas/instalar.sh` al arrancar: elegirlo en el menú de entornos para las sesiones de este canal. Pendiente
   (cuando el usuario lo pida): fotos de prueba a mitad de tamaño, 24 fps, montaje que rehaga solo los planos cambiados.
 - Al terminar cada short: pedir a los 2 días la captura de YouTube Studio (Participación) (`./inercia medir`) y apuntarla
   en `docs/RESULTADOS.md` (segundo de abandono → etapa del guion → lección).
