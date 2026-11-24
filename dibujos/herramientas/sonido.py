@@ -87,7 +87,8 @@ def ding(f=1320, dur=0.6):
     n = int(dur * SR); t = np.arange(n) / SR
     return ((np.sin(2 * np.pi * f * t) + 0.5 * np.sin(2 * np.pi * f * 2.76 * t)) * np.exp(-t * 6)).astype(np.float32)
 def moneda():
-    return ding(2600, 0.25) * 0.7 + np.pad(ding(3300, 0.2), (int(0.04 * SR), 0))[: int(0.25 * SR)] * 0.5
+    a = ding(2600, 0.25); b = np.pad(ding(3300, 0.2), (int(0.04 * SR), 0)); b = np.pad(b, (0, max(0, len(a) - len(b))))[: len(a)]
+    return a * 0.7 + b * 0.5
 def papel():
     n = int(0.3 * SR); x = rng.standard_normal(n).astype(np.float32); return hp(x, 2500) * env(n, 0.01, 0.08)
 def estrellas():

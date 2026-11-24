@@ -129,7 +129,7 @@ export const actorsAt = (f, T) => {
   out.push({ key: 'cli' + JSON.stringify(oc), draw: (p) => T.romanFront(p, 'clienta', oc), x: cp[0], y: 0, z: cp[2], s: SP * 0.96, order: 3 });
   const ot = card('tendera', 11, f, CLAVES_T, CARAS_T, { facing: 0.4, look: 0.5 });
   const tp = fuera(S) ? TEN_F : TEN;
-  out.push({ key: 'ten' + JSON.stringify(ot), draw: (p) => T.romanFront(p, 'tendera', ot), x: tp[0], y: 0, z: tp[2], s: SP * 0.95, order: 3 });
+  if (S.id !== 'cuotas') out.push({ key: 'ten' + JSON.stringify(ot), draw: (p) => T.romanFront(p, 'tendera', ot), x: tp[0], y: 0, z: tp[2], s: SP * 0.95, order: 3 });
   return out;
 };
 
@@ -171,7 +171,15 @@ export const fxAt = (f, T) => {
   const b0 = en('149');
   if (f >= b0 && f < A.cadena) { const t = q(Math.min(1, (f - b0) / 40), 2); out.push(FX('bil' + t, billete, [CLI[0] + 0.2 + t * 1.2, 1.2 + t * 1.6, CLI[2] + 0.2], 0.35, { roll: t * 2 })); }
   // destello en «¡…intereses!» y polvo en el pisotón de «las pagamos todos»
-  const v = en('intereses'); if (f >= v && f < v + 12) { const t = q((f - v) / 12, 2); out.push(FX('burst' + t, (p) => { p.g.translate(0, -120); T.fxBurst(p, t, '#fff3b0', 12, 40, 240); }, [OJOS[0], 0.6, OJOS[2] - 0.3], 1.2, { add: true })); }
   const c = en('pagamos'); if (f >= c && f < c + 20) { const k = q((f - c) / 20, 2); out.push(FX('dust' + k, (p) => T.fxDust(p, k), [CLI[0], 0, CLI[2] + 0.2], 0.9, { alpha: 0.8 })); }
   return out;
 };
+
+// ---------- sonido: lo lee herramientas/sonido.py (cortes = «whoosh», golpes = «impacto», monedas, billete, caja) ----------
+export const SONIDOS = [
+  ...SHOTS.slice(1).map((s) => ({ f: s.a, tipo: 'corte' })),
+  ...ZOOMS.map(([f]) => ({ f, tipo: 'golpe' })), ...KICKS.map((k) => ({ f: k.f, tipo: 'remate' })),
+  { f: en('tarjeta'), tipo: 'caja' }, { f: en('comision'), tipo: 'moneda' }, { f: en('llega'), tipo: 'moneda' },
+  ...['cuotas', 'anualidades'].map((w) => ({ f: en(w), tipo: 'moneda' })), { f: en('intereses', 2), tipo: 'moneda' },
+  { f: en('172'), tipo: 'caja' }, { f: en('149'), tipo: 'billete' }, { f: en('usas bien') + 10, tipo: 'moneda' }, { f: en('gana', 2), tipo: 'moneda' },
+];
