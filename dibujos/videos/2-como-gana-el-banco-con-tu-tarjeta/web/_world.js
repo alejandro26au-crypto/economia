@@ -1,7 +1,7 @@
 // ---------- world: VÍDEO 2 «Cómo gana el banco con tu tarjeta» — DECORADO A MEDIDA DEL GUION ----------
 // Lo que nombra el guion: la TIENDA (donde pagas con tarjeta), tu BANCO, los PRECIOS, la tarjeta y el efectivo.
 // A) DENTRO DE LA TIENDA (x≈0): baldosas, estanterías con productos y etiquetas de precio, la CAJA con el datáfono,
-//    la tarjeta, billetes y monedas, y la PIZARRA DE PRECIOS de la tienda colgada en la pared (dibuja cada frase).
+//    la tarjeta, billetes y monedas, y más baldas con tarros, cestas, cajas y plantas.
 // B) LA CALLE (x≈60): la fachada de la tienda con toldo y, enfrente, el BANCO con columnas; adoquines, farolas, árboles.
 const DECK = 0;
 const M = {
@@ -16,7 +16,6 @@ const M = {
   shelf: toon({ color: '#e9e2d2' }), green: toon({ color: '#3f6b5a' }), red: toon({ color: '#b8282b' }), dark: toon({ color: '#2b2f36' }),
 };
 const world = new THREE.Group(); scene.add(world);
-const clouds = [];
 // ---- suelo de baldosas de la tienda (ajedrezado pintado, con grano de piedra) ----
 const baldosa = (() => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); const r = P.rng(31);
   for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { g.fillStyle = (i + j) % 2 ? '#e8dcc4' : '#b8573e'; g.fillRect(i * 64, j * 64, 64, 64);
@@ -37,22 +36,40 @@ add(tbox(RW * 2, 0.9, 0.06, 1.2), M.beam, 0, 0.45, RB + 0.03, world, { cast: fal
 add(tbox(0.06, 0.9, RF - RB, 1.2), M.beam, RW - 0.03, 0.45, (RF + RB) / 2, world, { cast: false });
 // lámparas colgantes de latón
 for (const x of [-2.6, 0.6, 3.4]) { add(new THREE.CylinderGeometry(0.01, 0.01, 1.0, 4), M.iron, x, RH - 0.5, 0.4, world); add(new THREE.ConeGeometry(0.28, 0.24, 18, 1, true), M.gold, x, RH - 1.05, 0.4, world); add(new THREE.SphereGeometry(0.08, 10, 8), toon({ color: '#fff4c8', emissive: new THREE.Color('#ffe9a0'), emissiveIntensity: 1 }), x, RH - 1.14, 0.4, world); }
-// estanterías con productos: cajas, botes, botellas y latas de colores, cada balda con sus etiquetas de precio
 const productos = ['#c8392e', '#2f6fa8', '#e8b830', '#3f8a4a', '#d9832f', '#7b5ac9', '#f4f1ea', '#c25a7a'];
-const estante = (x, z, rot, seed) => { const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rot; world.add(g); const r = P.rng(seed);
-  add(tbox(1.9, 2.4, 0.06, 1), M.shelf, 0, 1.2, -0.25, g); for (const sx of [-0.95, 0.95]) add(tbox(0.06, 2.4, 0.5, 1), M.shelf, sx, 1.2, 0, g); add(tbox(1.96, 0.08, 0.52, 1), M.shelf, 0, 2.42, 0, g); 
-  for (let b = 0; b < 4; b++) { const y = 0.3 + b * 0.55; add(tbox(1.86, 0.04, 0.5, 1), M.beam, 0, y, 0.02, g);
-    let px = -0.85; while (px < 0.8) { const tipo = r(), col = productos[(r() * 8) | 0], w = 0.12 + r() * 0.1;
-      if (tipo < 0.4) add(tbox(w, 0.22 + r() * 0.12, 0.2, 1), toon({ color: col }), px + w / 2, y + 0.15, 0.05, g);
-      else if (tipo < 0.7) { add(new THREE.CylinderGeometry(w * 0.4, w * 0.4, 0.2, 12), toon({ color: col }), px + w / 2, y + 0.12, 0.05, g); add(new THREE.CylinderGeometry(w * 0.41, w * 0.41, 0.04, 12), toon({ color: '#f4f1ea' }), px + w / 2, y + 0.12, 0.05, g); }
-      else { add(new THREE.CylinderGeometry(0.035, 0.055, 0.3, 10), toon({ color: col }), px + 0.06, y + 0.17, 0.05, g); add(new THREE.CylinderGeometry(0.02, 0.02, 0.06, 6), toon({ color: '#2b2430' }), px + 0.06, y + 0.35, 0.05, g); }
-      px += w + 0.03; }
-    for (let k = 0; k < 3; k++) add(box(0.14, 0.06, 0.01), toon({ color: k % 2 ? '#f2d23a' : '#ffffff' }), -0.6 + k * 0.6, y - 0.03, 0.28, g, { cast: false }); }
-  return g; };
-estante(-3.6, RB + 0.35, 0, 5); estante(-1.5, RB + 0.35, 0, 8); estante(0.6, RB + 0.35, 0, 9); estante(-RW + 0.35, 4.2, Math.PI / 2, 6); estante(RW - 0.35, 3.6, -Math.PI / 2, 7);
+// estanterías con productos y etiquetas de precio (pieza del kit: _piezas.js)
+const ESTANTES = [estante(world, -3.6, RB + 0.35, 0, 5), estante(world, -1.5, RB + 0.35, 0, 8), estante(world, 0.6, RB + 0.35, 0, 9), estante(world, -RW + 0.35, 4.2, Math.PI / 2, 6), estante(world, RW - 0.35, 3.6, -Math.PI / 2, 7)];
 // fruta en cajas junto a la ventana
 for (let i = 0; i < 3; i++) { const x = -4.6, z = -0.2 + i * 0.7; add(tbox(0.55, 0.5, 0.6, 1), M.plank, x, 0.25, z, world); const col = ['#f08a24', '#c8302a', '#f2d23a'][i]; const r = P.rng(40 + i);
   for (let k = 0; k < 9; k++) add(new THREE.SphereGeometry(0.075, 10, 8), toon({ color: col }), x - 0.17 + (k % 3) * 0.17, 0.55 + r() * 0.04, z - 0.18 + Math.floor(k / 3) * 0.18, world); }
+// MÁS VIDA EN LA TIENDA (nivel camarote/romanos: muchos objetos pintados, centro libre)
+// vigas de madera en el techo y techo de yeso
+add(tbox(RW * 2, 0.12, RF - RB, 2.2), yeso, 0, RH + 0.06, (RF + RB) / 2, world, { cast: false });
+for (let i = 0; i < 5; i++) add(tbox(RW * 2, 0.22, 0.2, 1), M.beamDark, 0, RH - 0.11, RB + 0.6 + i * 1.8, world);
+// baldas de pared detrás de la caja: tarros de cristal, panes y botellas
+const rp = P.rng(52);
+for (const [y, n] of [[1.75, 9], [2.35, 8]]) { add(tbox(2.6, 0.06, 0.32, 1), M.beam, 3.6, y, RB + 0.18, world);
+  for (let k = 0; k < 2; k++) add(tbox(0.04, 0.22, 0.28, 1), M.iron, 2.5 + k * 2.2, y - 0.12, RB + 0.18, world);
+  for (let i = 0; i < n; i++) { const x = 2.45 + i * (2.3 / n), t = rp(), col = productos[(rp() * 8) | 0];
+    if (t < 0.4) { add(new THREE.CylinderGeometry(0.08, 0.08, 0.22, 12), M.glass, x, y + 0.14, RB + 0.18, world); add(new THREE.CylinderGeometry(0.085, 0.085, 0.05, 12), toon({ color: col }), x, y + 0.27, RB + 0.18, world); }
+    else if (t < 0.7) { const pan = add(new THREE.CapsuleGeometry(0.06, 0.18, 4, 8), toon({ color: '#d9a35a' }), x, y + 0.1, RB + 0.18, world); pan.rotation.z = Math.PI / 2; }
+    else { add(new THREE.CylinderGeometry(0.04, 0.06, 0.3, 10), toon({ color: col }), x, y + 0.18, RB + 0.18, world); add(new THREE.CylinderGeometry(0.022, 0.022, 0.07, 6), M.dark, x, y + 0.37, RB + 0.18, world); } } }
+// nevera de bebidas con puerta de cristal (luz fría contra la cálida de las lámparas)
+{ const nv = new THREE.Group(); nv.position.set(RW - 0.45, 0, 0.6); nv.rotation.y = -Math.PI / 2; world.add(nv);
+  add(tbox(1.3, 2.1, 0.7, 1), toon({ color: '#d8dde2' }), 0, 1.05, 0, nv);
+  add(box(1.1, 1.75, 0.02), toon({ color: '#cfeefc', emissive: new THREE.Color('#8fd6ff'), emissiveIntensity: 0.55 }), 0, 1.1, 0.36, nv, { cast: false });
+  const rn = P.rng(71); for (let b = 0; b < 4; b++) for (let i = 0; i < 7; i++) { const col = productos[(rn() * 8) | 0];
+    add(new THREE.CylinderGeometry(0.045, 0.045, 0.26, 10), toon({ color: col }), -0.45 + i * 0.15, 0.42 + b * 0.42, 0.25, nv); }
+  add(tbox(1.3, 0.3, 0.72, 1), toon({ color: '#c8392e' }), 0, 2.2, 0, nv); add(box(0.05, 0.6, 0.05), M.iron, 0.48, 1.1, 0.38, nv); }
+// cestas de la compra apiladas junto a la entrada, cajas de cartón y plantas en macetas
+for (let i = 0; i < 4; i++) { const g = new THREE.Group(); g.position.set(-1.0, 0.05 + i * 0.12, 3.6); world.add(g);
+  add(new THREE.CylinderGeometry(0.3, 0.24, 0.22, 4, 1, true), toon({ color: '#c8302a', side: THREE.DoubleSide }), 0, 0.11, 0, g).rotation.y = Math.PI / 4; }
+const carton = toon({ color: '#c49a64' });
+for (const [x, y, z, w, h, r] of [[-4.7, 0.25, 3.2, 0.7, 0.5, 0.2], [-4.6, 0.72, 3.25, 0.55, 0.44, -0.1], [-4.0, 0.22, 3.6, 0.5, 0.44, 0.5]]) add(tbox(w, h, w * 0.8, 1), carton, x, y, z, world).rotation.y = r;
+for (const [x, z] of [[-4.9, -1.6], [-4.9, 2.9], [4.8, 4.9]]) { add(new THREE.CylinderGeometry(0.22, 0.17, 0.42, 12), toon({ color: '#b5603c' }), x, 0.21, z, world);
+  for (let k = 0; k < 5; k++) { const h = add(new THREE.SphereGeometry(0.26, 10, 8), M.bush, x + Math.cos(k * 1.3) * 0.12, 0.62 + k * 0.1, z + Math.sin(k * 1.3) * 0.12, world); h.scale.set(1, 1.3, 1); } }
+// alfombrilla de la entrada y el pasillo libre en el centro
+add(box(1.6, 0.012, 1.0), toon({ color: '#6a3a2a' }), 1.6, 0.006, 4.6, world, { cast: false });
 // LA CAJA: mostrador con cinta, caja registradora, el DATÁFONO, la tarjeta dorada, un billete y monedas
 const mesa = new THREE.Group(); mesa.position.set(3.1, 0, -0.9); mesa.rotation.y = -0.5; world.add(mesa);
 add(tbox(2.2, 0.95, 0.75, 1), M.beam, 0, 0.475, 0, mesa); add(tbox(2.3, 0.06, 0.85, 1), M.marbleTop, 0, 0.98, 0, mesa);
@@ -69,6 +86,11 @@ add(box(0.04, 0.008, 0.03), toon({ color: '#c9c4bd' }), 0.53, 1.025, 0.27, mesa,
 add(box(0.2, 0.004, 0.1), toon({ color: '#8fcf8f' }), 0.1, 1.015, 0.25, mesa).rotation.y = -0.3;
 for (let i = 0; i < 4; i++) add(new THREE.CylinderGeometry(0.025, 0.025, 0.01, 12), M.gold, -0.1 + i * 0.05, 1.015 + (i % 2) * 0.01, 0.3, mesa);
 mesa.userData.lona = new THREE.Object3D();
+{ const ce = new THREE.Group(); ce.position.set(-0.7, 1.02, 0.1); mesa.add(ce); add(new THREE.CylinderGeometry(0.24, 0.19, 0.2, 4, 1, true), toon({ color: '#c8302a', side: THREE.DoubleSide }), 0, 0.1, 0, ce).rotation.y = Math.PI / 4;
+  add(new THREE.TorusGeometry(0.16, 0.015, 6, 16, Math.PI), M.iron, 0, 0.2, 0, ce);
+  for (const [x, z, c] of [[-0.06, 0.03, '#f08a24'], [0.07, -0.04, '#3f8a4a'], [0.0, 0.07, '#e8b830']]) add(new THREE.SphereGeometry(0.06, 10, 8), toon({ color: c }), x, 0.2, z, ce); }
+{ const bo = add(tbox(0.26, 0.34, 0.16, 1), carton, -0.15, 1.18, -0.15, mesa); const pan = add(new THREE.CapsuleGeometry(0.045, 0.3, 4, 8), toon({ color: '#d9a35a' }), -0.12, 1.42, -0.15, mesa); pan.rotation.z = 0.3; }
+add(new THREE.CylinderGeometry(0.035, 0.035, 0.08, 12), M.marbleTop, 0.3, 1.36, -0.25, mesa).rotation.z = Math.PI / 2;
 
 // ---- B) LA CALLE: la tienda y, enfrente, el banco (x ≈ 60) ----
 const CX = 60, calle = new THREE.Group(); calle.position.set(CX, 0, 0); world.add(calle);
@@ -92,10 +114,6 @@ add(tbox(9.4, 0.7, 1.1, 2), M.marbleTop, 0, 6.55, 0.4, bk);
 add(tbox(1.6, 2.8, 0.1, 1), toon({ color: '#b08a4a' }), 0, 2.0, 0.02, bk, { cast: false });
 add(new THREE.CylinderGeometry(0.35, 0.35, 0.06, 20), M.gold, 0, 7.6, 0.95, bk).rotation.x = Math.PI / 2;
 // letreros con la palabra que dice el guion: «BANCO» y «TIENDA» (pintados como el resto: tinta y colores planos)
-const letrero = (txt, w, h, fondo, tinta) => { const c = document.createElement('canvas'); c.width = 1024; c.height = Math.round(1024 * h / w); const g = c.getContext('2d');
-  g.fillStyle = fondo; g.fillRect(0, 0, c.width, c.height); g.strokeStyle = '#241726'; g.lineWidth = 18; g.strokeRect(9, 9, c.width - 18, c.height - 18);
-  g.font = `bold ${c.height * 0.62}px "DejaVu Serif", serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = tinta; g.fillText(txt, c.width / 2, c.height * 0.54);
-  return toon({ map: P.tex(c) }); };
 add(new THREE.PlaneGeometry(5.2, 0.9), letrero('BANCO', 5.2, 0.9, '#ece2cf', '#3a2a1e'), 0, 6.55, 0.97, bk, { cast: false });
 add(new THREE.PlaneGeometry(4.2, 0.8), letrero('TIENDA', 4.2, 0.8, '#2f6fa8', '#f3e7cc'), 0, 4.2, 0.03, tf, { cast: false });
 // farolas, árboles, casas al fondo de la calle, colinas, montañas y nubes (kit)
@@ -122,7 +140,7 @@ for (let i = 0; i < 14; i++) { const a = rt() * Math.PI * 2, d = 520 + rt() * 20
 
 // ---------- lo que pasa en el decorado con la voz ----------
 // etiquetas de precio de las baldas que SUBEN (crecen y se ponen rojas) en «¡Y acaban en tus precios!»
-const etiquetas = []; world.traverse((o) => { if (o.isMesh && o.geometry.type === 'BoxGeometry' && o.geometry.parameters.width === 0.14 && o.geometry.parameters.height === 0.06) etiquetas.push(o); });
+const etiquetas = ESTANTES.flatMap((g) => g.userData.etiquetas);
 const rojaM = toon({ color: '#e0442e' });
 // la montaña de sacos de dinero delante del BANCO (los 172.000 millones en comisiones): crece con la voz
 const sacos = []; { const r = P.rng(77); for (let i = 0; i < 26; i++) { const g = new THREE.Group(); const a = r() * 6.28, d = r() * 1.6;

@@ -1,1 +1,1 @@
-{"activos": true, "modo": "grupos", "y": 0.82, "clave": ["banco", "tarjeta", "efectivo", "comisión", "intereses", "puntos"]}
+{"activos": true, "clave": ["banco", "tarjeta", "efectivo", "comisión", "intereses", "puntos"]}

@@ -2,12 +2,12 @@
 // Se dibujan en una tarjeta de efecto (lienzo 600x1000) mientras la voz canta la cifra. Solo si el guion la dice.
 // Todas reciben (p, o) con p = Pen del kit y o = { v (valor actual), k (0-1 entrada con rebote), ...opciones }.
 //   termometro: { min, max, unidad, etiqueta } · manometro: { min, max, unidad, etiqueta } · contador: { texto?, unidad, etiqueta, color }
-//   reloj: { horas (decimal), texto? } · comparativa: { items: [{ etiqueta, valor, color }], unidad, etiqueta, t (0-1 crecen) }
+//   reloj: { horas (decimal), texto? } · comparativa: { items: [{ etiqueta, valor, color, pre?, t? (cada barra a su ritmo) }], unidad, etiqueta, t (0-1 crecen) }
 //   barra: { min, max, unidad, etiqueta } · capas: { capas: [{ color, etiqueta }], t }
 // En story.js: inserto('termometro', f, f0, f1, { de: 20, a: -2, unidad: '°', min: -10, max: 30 }) → { v, k } para pasar aquí.
 const INK = '#241726';
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
-const fmt = (v, dec = 0) => v.toFixed(dec).replace('-', '−');
+const fmt = (v, dec = 0) => v.toFixed(dec).replace('-', '−').replace(/^(−?)(\d+)/, (_, s, n) => s + n.replace(/\B(?=(\d{3})+(?!\d))/g, '.'));   // 1.133 (miles con punto)
 const mixc = (a, b, t) => { const h = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16)); const A = h(a), B = h(b); return `rgb(${A.map((x, i) => Math.round(x + (B[i] - x) * t)).join(',')})`; };
 const rr = (g, x, y, w, h, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
 const fillInk = (g, col, lw = 9) => { g.fillStyle = col; g.fill(); if (lw) { g.lineWidth = lw; g.strokeStyle = INK; g.lineJoin = 'round'; g.stroke(); } };
@@ -68,9 +68,9 @@ export function reloj(p, o) {
 export function comparativa(p, o) {
   const g = p.g; g.save(); panel(g, 580, 620, o.k);
   const items = o.items || [], n = items.length, mx = Math.max(...items.map((i) => i.valor)) || 1, t = o.t ?? 1;
-  items.forEach((it, j) => { const x = n > 1 ? -190 + j * 380 / (n - 1) : 0, h = 340 * it.valor / mx * t;
+  items.forEach((it, j) => { const tj = t * (it.t ?? 1), x = n > 1 ? -140 + j * 280 / (n - 1) : 0, h = Math.max(28, 340 * it.valor / mx * tj); if (tj <= 0) return;
     rr(g, x - 60, 200 - h, 120, h + 1, 16); fillInk(g, it.color || '#4d9bff', 8);
-    txt(g, fmt(it.valor * t, o.dec) + (it.unidad ?? o.unidad ?? ''), x, 200 - h - 40, 50); txt(g, it.etiqueta || '', x, 250, 36, '#3a3040'); });
+    txt(g, (it.pre || '') + fmt(it.valor * tj, o.dec) + (it.unidad ?? o.unidad ?? ''), x, 200 - h - 40, 50); txt(g, it.etiqueta || '', x, 250, 36, '#3a3040'); });
   if (o.etiqueta) txt(g, o.etiqueta, 0, -270, 38, '#5a5060');
   g.restore();
 }

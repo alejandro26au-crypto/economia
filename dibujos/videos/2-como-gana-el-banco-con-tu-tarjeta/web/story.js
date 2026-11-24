@@ -6,6 +6,7 @@ import { M, clamp, lerp, ramp, camFromKeys, idle, blinkAt, q } from './motion.js
 import { brazosEn } from './gestos.js';
 import { PAL, TOTAL_VOZ } from './tiempos.js';
 import { BOCA } from './boca.js';
+import { INSERTOS } from './insertos.js';
 export const FPS = 30, TOTAL = TOTAL_VOZ;
 
 const norm = (w) => w.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9ñ]/g, '');
@@ -40,31 +41,31 @@ export const lightFor = (S) => ({ ...LIGHTS[S.light] });
 
 // ---------- posiciones (dentro: la caja en (3.1, -0.9); fuera: la calle en x = 60) ----------
 const SP = 0.82;
-const PROF = [0.9, 0, -1.0], CLI = [2.35, 0, -0.15], TEN = [4.55, 0, -1.35], DAT = [3.4, 1.05, -0.65];
-const PROF_F = [60.5, 0, 0.6], CLI_F = [57.0, 0, -3.6];
-const OJOS = [PROF[0], 1.33, PROF[2]], TIENDA_F = [56, 1.6, -5.9], BANCO_F = [63.5, 2.0, 6.8];
+const CLI = [2.35, 0, -0.15], TEN = [4.95, 0, -0.95], DAT = [3.4, 1.05, -0.65];
+const CLI_F = [58.4, 0, -2.9], TEN_F = [57.1, 0, -4.3];
+const OJOS = [CLI[0], 1.27, CLI[2]], TIENDA_F = [56, 1.6, -5.9], BANCO_F = [63.5, 2.0, 6.8];
 
 // ---------- cámaras (personajes de cuerpo entero o de rodillas arriba; cara grande solo en el gancho) ----------
 const CAMS = {
-  gancho: [{ f: 0, pos: [3.9, 1.35, 0.35], look: DAT, fov: 34 },                                    // la tarjeta en el datáfono: «Pagas tu tarjeta…»
-    { f: en('banco') - 4, pos: [3.7, 1.4, 0.6], look: [3.2, 1.1, -0.8], fov: 40 },
-    { f: en('banco') - 3, pos: [1.0, 1.38, 0.3], look: OJOS, fov: 36 },                                // ÚNICO primer plano: «¡Y el banco gana IGUAL!»
-    { f: A.promesa - 1, pos: [1.0, 1.38, 0.15], look: OJOS, fov: 33 }],
+  gancho: [{ f: 0, pos: [0.63, 1.65, 1.93], look: DAT, fov: 46 },                                    // la tarjeta en el datáfono: «Pagas tu tarjeta…»
+    { f: en('banco') - 4, pos: [1.5, 1.5, 0.9], look: DAT, fov: 38 },
+    { f: en('banco') - 3, pos: [2.05, 1.3, 1.25], look: OJOS, fov: 36 },                               // ÚNICO primer plano: «¡Y el banco gana IGUAL!» (la clienta)
+    { f: A.promesa - 1, pos: [2.1, 1.3, 1.05], look: OJOS, fov: 33 }],
   promesa: [{ f: A.promesa, pos: [62.5, 1.7, 3.6], look: [56.5, 2.0, -5.5], fov: 52 },                     // la calle: primero la tienda…
     { f: en('centavo'), pos: [58.5, 1.7, -3.0], look: [63.5, 2.8, 7], fov: 54 }, { f: A.comision - 1, pos: [58.8, 1.7, -3.3], look: [63.5, 2.9, 7], fov: 52 }],   // …y el banco enfrente
-  comision: [{ f: A.comision, pos: [1.4, 1.6, 3.4], look: [2.6, 1.0, -0.8], fov: 44 },                     // la caja: la clienta paga, la tendera cobra
-    { f: en('comision'), pos: [2.0, 1.55, 2.6], look: [3.0, 1.05, -0.8], fov: 42, ease: 'easeOut' }, { f: A.quien - 1, pos: [2.1, 1.55, 2.4], look: [3.0, 1.05, -0.8], fov: 41 }],
-  quien: [{ f: A.quien, pos: [-1.6, 0.85, 2.0], look: [1.0, 1.4, -1.0], fov: 44, roll: -3 }, { f: A.tu - 1, pos: [-1.3, 0.9, 1.8], look: [1.0, 1.4, -1.0], fov: 42, roll: -2 }],
-  tu: [{ f: A.tu, pos: [2.0, 1.4, 2.6], look: [2.3, 1.1, -0.2], fov: 44 },                                   // «Pues tú»: la clienta
+  comision: [{ f: A.comision, pos: [0.2, 1.8, 2.4], look: [3.4, 1.0, -0.8], fov: 48 },                     // la caja: la clienta paga, la tendera cobra
+    { f: en('comision'), pos: [0.8, 1.65, 1.7], look: [3.4, 1.05, -0.8], fov: 44, ease: 'easeOut' }, { f: A.quien - 1, pos: [0.9, 1.65, 1.6], look: [3.4, 1.05, -0.8], fov: 43 }],
+  quien: [{ f: A.quien, pos: [0.3, 0.75, 2.6], look: [3.4, 1.35, -0.8], fov: 48, roll: -3 }, { f: A.tu - 1, pos: [0.55, 0.8, 2.3], look: [3.4, 1.35, -0.8], fov: 46, roll: -2 }],   // contrapicado: la clienta y la tendera en la caja
+  tu: [{ f: A.tu, pos: [2.0, 1.4, 2.6], look: [2.3, 1.1, -0.2], fov: 44 }, { f: en('solo') - 2, pos: [2.05, 1.4, 2.3], look: [2.35, 1.1, -0.2], fov: 42 },                                   // «Pues tú»: la clienta
     { f: en('172'), pos: [-0.6, 1.5, 3.4], look: [-0.6, 1.2, -2.0], fov: 46, ease: 'easeOut' },            // las estanterías: los precios
     { f: A.peor - 1, pos: [-0.8, 1.45, 2.8], look: [-0.8, 1.25, -2.0], fov: 42 }],
   peor: [{ f: A.peor, pos: [4.6, 1.7, 1.6], look: [3.2, 1.0, -0.9], fov: 42 }, { f: A.efectivo - 1, pos: [4.2, 1.6, 1.1], look: [3.2, 1.05, -0.8], fov: 38 }],
-  efectivo: [{ f: A.efectivo, pos: [1.6, 1.5, 3.9], look: [1.7, 1.1, -0.6], fov: 46 },                    // la clienta (efectivo) y el profesor (tarjeta)
-    { f: A.cadena - 1, pos: [1.6, 1.5, 3.4], look: [1.7, 1.1, -0.6], fov: 44 }],
+  efectivo: [{ f: A.efectivo, pos: [0.4, 1.55, 2.3], look: [3.2, 1.1, -0.7], fov: 46 },                    // la clienta en la caja: efectivo frente a tarjeta
+    { f: A.cadena - 1, pos: [0.7, 1.55, 2.0], look: [3.2, 1.1, -0.7], fov: 44 }],
   cadena: [{ f: A.cadena, pos: [62.5, 1.8, 3.8], look: [56.5, 1.8, -5.5], fov: 50 },                     // la tienda: las monedas salen…
     { f: en('banco cobra') + 25, pos: [58.5, 1.8, -3.2], look: [63.5, 2.8, 7], fov: 54, ease: 'easeOut' },   // …y entran en el banco
-    { f: en('puntos'), pos: [61.6, 1.6, -2.6], look: [60.4, 1.2, 0.6], fov: 44 }, { f: A.cta - 1, pos: [61.4, 1.6, -2.4], look: [60.4, 1.22, 0.6], fov: 42 }],
-  cta: [{ f: A.cta, pos: [1.2, 1.35, 2.4], look: [0.9, 1.15, -1.0], fov: 42 }, { f: TOTAL - 1, pos: [1.1, 1.35, 2.0], look: [0.9, 1.18, -1.0], fov: 40 }],
+    { f: en('puntos'), pos: [60.2, 1.5, 0.9], look: [57.9, 1.1, -3.4], fov: 46 }, { f: A.cta - 1, pos: [59.9, 1.5, 0.6], look: [57.9, 1.12, -3.4], fov: 44 }],   // los puntos vuelven a la clienta
+  cta: [{ f: A.cta, pos: [0.5, 1.5, 2.1], look: [3.0, 1.1, -0.6], fov: 46 }, { f: TOTAL - 1, pos: [0.8, 1.48, 1.8], look: [3.0, 1.12, -0.6], fov: 43 }],
 };
 const KICKS = [{ f: en('igual'), a: 0.03 }, { f: en('172'), a: 0.03 }, { f: en('peor'), a: 0.03 }, { f: en('149'), a: 0.03 }, { f: en('1133'), a: 0.03 }];
 const ZOOMS = [[en('igual'), 0.12], [en('172'), 0.14], [en('149'), 0.14], [en('1133'), 0.14], [en('intereses', 2), 0.1]];
@@ -83,6 +84,7 @@ export const camAt = (f) => {
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 export const dofAt = (f) => {
   const S = shotAt(f), C = camAt(f);
+  if (insertoAt(f)) return { focus: D_INS, cinf: 6 };
   if (S.id === 'gancho') return f < en('banco') - 3 ? { focus: dist(C.pos, DAT), cinf: 9 } : { focus: dist(C.pos, OJOS), cinf: 9 };
   if (S.id === 'peor') return { focus: dist(C.pos, DAT), cinf: 6 };
   if (S.id === 'quien' || S.id === 'cta') return { focus: dist(C.pos, OJOS), cinf: 7 };
@@ -97,16 +99,16 @@ export const worldAt = (f) => ({
   sacos: f >= A.cadena ? 1 : tr(f, en('172'), en('2023') + 10),
 });
 
-// ---------- reparto: gestos del kit (caras fijas que cambian en la palabra clave, idle, impulso) ----------
-const CLAVES_P = [{ f: 0, L: 'hang', R: 'hang' }, { f: en('igual'), L: 'hip', R: 'open' }, { f: A.quien, L: 'cross', R: 'cheek' },
-  { f: A.tu, L: 'hang', R: 'point' }, { f: en('1133'), L: 'hip', R: 'hold' }, { f: A.cadena, L: 'hip', R: 'beat' }, { f: A.cta, L: 'hip', R: 'thumb' }];
-const CARAS_P = [[0, 'neutral'], [en('igual'), 'stern'], [A.promesa, 'cejas'], [A.quien, 'cejas'], [A.tu, 'stern'], [en('peor'), 'stern'],
-  [en('pues no'), 'stubborn'], [en('1133'), 'grin'], [A.cadena, 'neutral'], [en('contigo'), 'laugh'], [A.cta, 'grin']];
-const CLAVES_C = [{ f: 0, L: 'hang', R: 'reach' }, { f: en('banco', 2) + 10, L: 'hang', R: 'hang' }, { f: en('precios') - 6, L: 'cheek', R: 'hang' },
-  { f: A.efectivo, L: 'hang', R: 'hold' }, { f: en('menos'), L: 'temple', R: 'hang' }];
-const CARAS_C = [[0, 'neutral'], [A.tu, 'cejas'], [en('precios'), 'nervous'], [A.efectivo, 'neutral'], [en('menos'), 'nervous']];
+// ---------- reparto: SOLO la clienta y la tendera (las nombra el guion). Gestos del kit: caras fijas que cambian en la palabra clave ----------
+const CLAVES_C = [{ f: 0, L: 'hang', R: 'reach' }, { f: en('igual'), L: 'hip', R: 'open' }, { f: A.quien, L: 'cross', R: 'cheek' }, { f: A.tu, L: 'hang', R: 'point' },
+  { f: en('precios') - 6, L: 'cheek', R: 'hang' }, { f: A.efectivo, L: 'hang', R: 'hold' }, { f: en('menos'), L: 'temple', R: 'hang' }, { f: en('1133'), L: 'hip', R: 'hold' },
+  { f: A.cadena, L: 'hip', R: 'beat' }, { f: A.cta, L: 'hip', R: 'thumb' }];
+const CARAS_C = [[0, 'neutral'], [en('igual'), 'stern'], [A.promesa, 'cejas'], [A.quien, 'cejas'], [A.tu, 'stern'], [en('precios'), 'nervous'], [en('peor'), 'stern'],
+  [en('pues no'), 'stubborn'], [en('menos'), 'nervous'], [en('1133'), 'grin'], [A.cadena, 'neutral'], [en('contigo'), 'laugh'], [A.cta, 'grin']];
+const CLAVES_T = [{ f: 0, L: 'hang', R: 'belly' }, { f: en('comision'), L: 'hip', R: 'wave' }, { f: en('sube'), L: 'hip', R: 'point' }];
+const CARAS_T = [[0, 'grin'], [en('comision'), 'neutral'], [en('sube'), 'grin']];
 const caraEn = (L, f) => { let c = 'neutral'; for (const [fk, k] of L) if (f >= fk) c = k; return c; };
-const ASIENTE = ['igual', 'centavo', 'pues tú', '172', 'precios', 'peor', '149', '1133', 'contigo'].map((w) => en(w));
+const ASIENTE = ['igual', 'centavo', 'pues tú', '172', 'peor', '1133', 'contigo'].map((w) => en(w));
 const asiente = (f) => { let h = 0; for (const g of ASIENTE) { const t = (f - (g - 3)) / 30; if (t >= 0 && t < 0.6) h += -6 * (1 - M.spring(t, 2.2, 6)) * Math.sign(Math.sin(t * Math.PI * 2.2) + 1e-6) * (t < 0.08 ? -0.4 : 1); } return h; };
 const niega = (f) => { const a = en('pues no') + 6; return f >= a && f <= a + 29 ? 7 * Math.sin(((f - a) / 29) * Math.PI * 3) * (1 - (f - a) / 40) : 0; };   // «Pues no»
 const piso = (f) => { const a = en('precios'); return f >= a && f < a + 4 ? 0.02 : 0; };                                                           // pisotón
@@ -117,18 +119,15 @@ const card = (who, seed, f, claves, caras, extra = {}) => {
 };
 export const actorsAt = (f, T) => {
   const S = shotAt(f), out = [], rs = risa(f);
-  const fuerte = (BOCA[f] ?? 0) > 0.8;
-  const op = card('profesor', 5, f, CLAVES_P, CARAS_P);
-  if (fuerte && !/laugh|grin/.test(op.expr)) op.expr = 'relief_open';
-  op.headTilt = q(op.headTilt + niega(f) + asiente(f), 1); op.tilt = q(op.tilt + rs.tilt, 1); op.bob = q(op.bob + piso(f) + rs.bob, 3);
-  op.facing = S.id === 'quien' ? -0.25 : S.id === 'gancho' ? 0 : 0.3; op.look = op.facing ? 0.5 : 0;
-  const pp = fuera(S) ? PROF_F : PROF;
-  out.push({ key: 'profe' + JSON.stringify(op), draw: (p) => T.romanFront(p, 'profesor', op), x: pp[0], y: 0, z: pp[2], s: SP, order: 3 });
-  const oc = card('clienta', 8, f, CLAVES_C, CARAS_C, { facing: -0.5, look: -0.6 });
+  const oc = card('clienta', 8, f, CLAVES_C, CARAS_C);
+  if ((BOCA[f] ?? 0) > 0.8 && !/laugh|grin/.test(oc.expr)) oc.expr = 'relief_open';
+  oc.headTilt = q(oc.headTilt + niega(f) + asiente(f), 1); oc.tilt = q(oc.tilt + rs.tilt, 1); oc.bob = q(oc.bob + piso(f) + rs.bob, 3);
+  oc.facing = S.id === 'gancho' && f >= en('banco') - 3 ? 0 : fuera(S) ? 0.35 : -0.5; oc.look = oc.facing ? oc.facing * 1.2 : 0;
   const cp = fuera(S) ? CLI_F : CLI;
   out.push({ key: 'cli' + JSON.stringify(oc), draw: (p) => T.romanFront(p, 'clienta', oc), x: cp[0], y: 0, z: cp[2], s: SP * 0.96, order: 3 });
-  if (!fuera(S)) { const ot = card('tendera', 11, f, [{ f: 0, L: 'hang', R: 'belly' }, { f: en('comision'), L: 'hip', R: 'wave' }], [[0, 'grin'], [en('comision'), 'neutral']], { facing: 0.4, look: 0.5 });
-    out.push({ key: 'ten' + JSON.stringify(ot), draw: (p) => T.romanFront(p, 'tendera', ot), x: TEN[0], y: 0, z: TEN[2], s: SP * 0.95, order: 3 }); }
+  const ot = card('tendera', 11, f, CLAVES_T, CARAS_T, { facing: 0.4, look: 0.5 });
+  const tp = fuera(S) ? TEN_F : TEN;
+  out.push({ key: 'ten' + JSON.stringify(ot), draw: (p) => T.romanFront(p, 'tendera', ot), x: tp[0], y: 0, z: tp[2], s: SP * 0.95, order: 3 });
   return out;
 };
 
@@ -137,8 +136,27 @@ const FX = (key, draw, pos, s = 1, o = {}) => ({ key, draw, x: pos[0], y: pos[1]
 const moneda = (p) => { p.ell(300, 500, 70, 70, '#e2b544', 10); p.ell(300, 500, 46, 46, '#f2d36a', 6); };
 const billete = (p) => { p.poly([[170, 440], [430, 440], [430, 570], [170, 570]], '#8fcf8f', 10); p.ell(300, 505, 38, 38, '#bfe8bf', 6); };
 const lerp3 = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+// INSERTOS DE DATOS (solo cifras que dice el guion): una tarjeta delante de la cámara mientras la voz canta la cifra
+const miles = (v) => String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const INS = () => [
+  { a: en('172'), b: en('2023') + 24, tipo: 'contador', s: 0.6, up: 0.12, o: (t) => ({ texto: miles(172000 * M.easeOut(t)), etiqueta: 'millones de dólares', color: '#ffd23a' }) },
+  { a: en('149'), b: A.cadena - 4, tipo: 'comparativa', s: 0.46, up: 0.42, o: (t, f) => ({ unidad: ' $', items: [
+      { etiqueta: 'efectivo', valor: 149, pre: '−', color: '#7fc77f', t: clamp((f - en('149')) / 18) },
+      { etiqueta: 'tarjeta', valor: 1133, pre: '+', color: '#ffd23a', t: clamp((f - en('1133')) / 22) }], etiqueta: 'al año' }) },
+];
+const insertoAt = (f) => { for (const I of INS()) if (f >= I.a - 2 && f <= I.b) return I; return null; };
+const D_INS = 2.2;
+const fxInserto = (f) => {
+  const I = insertoAt(f); if (!I) return null;
+  const C = camAt(f), dx = C.look[0] - C.pos[0], dy = C.look[1] - C.pos[1], dz = C.look[2] - C.pos[2], L = Math.hypot(dx, dy, dz);
+  const s = I.s, c = C.pos.map((v, i) => v + [dx, dy, dz][i] / L * D_INS);
+  const ent = clamp((f - I.a + 2) / 8), sal = clamp((I.b - f) / 5), k = q(M.spring(ent, 2.4, 7) * (sal < 1 ? M.smooth(sal) : 1), 2);
+  const o = { ...I.o(clamp((f - I.a) / 30), f), k: Math.max(0.01, k) };
+  return FX('ins' + I.tipo + JSON.stringify(o), (p) => INSERTOS[I.tipo](p, o), [c[0], c[1] - 2.25 * s * 0.5 + I.up, c[2]], s, { noInk: false, order: 6 });
+};
 export const fxAt = (f, T) => {
   const out = [];
+  { const ins = fxInserto(f); if (ins) out.push(ins); }
   // la comisión: monedas que salen del datáfono y se van por la ventana (dentro) — «la tienda paga una comisión. Y parte va a tu banco»
   const c0 = en('comision');
   if (f >= c0 && f < A.quien) for (let i = 0; i < 6; i++) { const t = q(((f - c0) / 40 + i / 6) % 1, 2);
@@ -151,7 +169,7 @@ export const fxAt = (f, T) => {
   const b0 = en('149');
   if (f >= b0 && f < A.cadena) { const t = q(Math.min(1, (f - b0) / 40), 2); out.push(FX('bil' + t, billete, [CLI[0] + 0.2 + t * 1.2, 1.2 + t * 1.6, CLI[2] + 0.2], 0.35, { roll: t * 2 })); }
   // los puntos: estrellas para quien paga con tarjeta — «unos 1.133 más» / «vuelve en puntos»
-  for (const [s0, pos] of [[en('1133'), [PROF[0], 1.6, PROF[2] + 0.2]], [en('puntos'), [PROF_F[0], 1.6, PROF_F[2] + 0.2]]]) if (f >= s0 && f < s0 + 30) { const t = q((f - s0) / 30, 2); out.push(FX('st' + s0 + t, (p) => T.fxStars(p, t), pos, 0.9)); }
+  for (const [s0, pos] of [[en('1133'), [CLI[0], 0.1, CLI[2] + 0.2]], [en('puntos'), [CLI_F[0], 0.1, CLI_F[2] + 0.2]]]) if (f >= s0 && f < s0 + 30) { const t = q((f - s0) / 30, 2); out.push(FX('st' + s0 + t, (p) => T.fxStars(p, t), pos, 0.9)); }
   // destello en «¡IGUAL!»
   const v = en('igual'); if (f >= v && f < v + 12) { const t = q((f - v) / 12, 2); out.push(FX('burst' + t, (p) => { p.g.translate(0, -120); T.fxBurst(p, t, '#fff3b0', 12, 40, 240); }, [OJOS[0], 0.6, OJOS[2] - 0.3], 1.2, { add: true })); }
   const c = en('precios'); if (f >= c && f < c + 20) { const k = q((f - c) / 20, 2); out.push(FX('dust' + k, (p) => T.fxDust(p, k), [CLI[0], 0, CLI[2] + 0.2], 0.9, { alpha: 0.8 })); }
