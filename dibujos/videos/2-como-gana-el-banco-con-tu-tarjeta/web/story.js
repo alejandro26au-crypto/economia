@@ -1,4 +1,4 @@
-// VÍDEO 2: «Cómo gana el banco con tu tarjeta» — planos atados a cada PALABRA (web/tiempos.js; estimados hasta la voz).
+// VÍDEO 2: «Cómo gana el banco con tu tarjeta» — planos atados a cada PALABRA de la voz real (web/tiempos.js).
 // SIN pizarra (el guion no la nombra): lo que dice la voz PASA en el decorado — la clienta paga con tarjeta en el datáfono,
 // las monedas de la comisión vuelan de la tienda al banco, las etiquetas de precio suben, los sacos de dinero crecen
 // delante del banco, el billete del efectivo se va volando y las estrellas de puntos van a quien paga con tarjeta.
@@ -17,15 +17,16 @@ export const en = (w, n = 1) => {
   console.log('ERR palabra no encontrada: ' + w); return 0;
 };
 
-// ---------- planos ----------
-const A = { gancho: 0, promesa: en('te explico'), comision: en('cada'), quien: en('y quién'), tu: en('pues tú'), peor: en('y aún'),
-  efectivo: en('pues no'), cadena: en('ese es'), cta: en('y tú') };
+// ---------- planos (cada uno empieza en una palabra del guion) ----------
+const A = { gancho: 0, promesa: en('al final'), comision: en('cuando'), cifra: en('solo'), forma: en('pero esa'), cuotas: en('y eso incluye'),
+  raro: en('pero aqui'), precios: en('porque'), fed: en('la reserva'), cadena: en('usas bien'), cta: en('y tu') };
 export const SHOTS = [
-  { id: 'gancho', light: 'dentro' }, { id: 'promesa', light: 'calle' }, { id: 'comision', light: 'dentro' }, { id: 'quien', light: 'dentro' },
-  { id: 'tu', light: 'dentro' }, { id: 'peor', light: 'nube' }, { id: 'efectivo', light: 'dentro' }, { id: 'cadena', light: 'dorada' }, { id: 'cta', light: 'dentro' },
+  { id: 'gancho', light: 'dentro' }, { id: 'promesa', light: 'calle' }, { id: 'comision', light: 'dentro' }, { id: 'cifra', light: 'dentro' },
+  { id: 'forma', light: 'nube' }, { id: 'cuotas', light: 'calle' }, { id: 'raro', light: 'dentro' }, { id: 'precios', light: 'dentro' },
+  { id: 'fed', light: 'dentro' }, { id: 'cadena', light: 'dorada' }, { id: 'cta', light: 'dentro' },
 ].map((s, i, L) => ({ ...s, a: A[s.id], b: i + 1 < L.length ? A[L[i + 1].id] - 1 : TOTAL - 1 }));
 export const shotAt = (f) => SHOTS.find((s) => f >= s.a && f <= s.b) || SHOTS[SHOTS.length - 1];
-const fuera = (S) => S.id === 'promesa' || S.id === 'cadena';
+const fuera = (S) => S.id === 'promesa' || S.id === 'cuotas' || S.id === 'cadena';
 
 // ---------- luces: la de día de los romanos; dentro, el sol alto por la ventana ----------
 const DIA = { az: 140, el: 46, sky: '#c4d6f2', ground: '#8a8262', hemi: 1.15, sun: '#fff1dc', sunI: 2.5, fog: '#cadcf0', fogNear: 70, fogFar: 900,
@@ -43,32 +44,34 @@ export const lightFor = (S) => ({ ...LIGHTS[S.light] });
 const SP = 0.82;
 const CLI = [2.35, 0, -0.15], TEN = [4.95, 0, -0.95], DAT = [3.4, 1.05, -0.65];
 const CLI_F = [58.4, 0, -2.9], TEN_F = [57.1, 0, -4.3];
-const OJOS = [CLI[0], 1.27, CLI[2]], TIENDA_F = [56, 1.6, -5.9], BANCO_F = [63.5, 2.0, 6.8];
+const OJOS = [CLI[0], 1.27, CLI[2]], BANCO_F = [63.5, 1.6, 6.2];
+const CAJA = [3.4, 1.05, -0.8], ESTANTES = [-0.6, 1.2, -2.0];
 
-// ---------- cámaras (personajes de cuerpo entero o de rodillas arriba; cara grande solo en el gancho) ----------
+// ---------- cámaras (cuerpo entero o de rodillas arriba; cara a pantalla completa solo en el gancho) ----------
 const CAMS = {
-  gancho: [{ f: 0, pos: [-0.25, 1.75, 2.75], look: DAT, fov: 46 },                                    // la tarjeta en el datáfono: «Pagas tu tarjeta…»
-    { f: en('banco') - 4, pos: [1.5, 1.5, 0.9], look: DAT, fov: 38 },
-    { f: en('banco') - 3, pos: [2.05, 1.3, 1.25], look: OJOS, fov: 36 },                               // ÚNICO primer plano: «¡Y el banco gana IGUAL!» (la clienta)
+  gancho: [{ f: 0, pos: [-0.25, 1.75, 2.75], look: DAT, fov: 46 },                                    // la clienta paga con tarjeta en el datáfono
+    { f: en('aunque') - 4, pos: [1.5, 1.5, 0.9], look: DAT, fov: 38 },
+    { f: en('aunque') - 3, pos: [2.05, 1.3, 1.25], look: OJOS, fov: 36 },                              // ÚNICO primer plano: «…aunque nunca pagues intereses!»
     { f: A.promesa - 1, pos: [2.1, 1.3, 1.05], look: OJOS, fov: 33 }],
-  promesa: [{ f: A.promesa, pos: [62.5, 1.7, 3.6], look: [56.5, 2.0, -5.5], fov: 52 },                     // la calle: primero la tienda…
-    { f: en('centavo'), pos: [58.5, 1.7, -3.0], look: [63.5, 2.8, 7], fov: 54 }, { f: A.comision - 1, pos: [58.8, 1.7, -3.3], look: [63.5, 2.9, 7], fov: 52 }],   // …y el banco enfrente
-  comision: [{ f: A.comision, pos: [-0.6, 1.85, 3.2], look: [3.4, 1.0, -0.8], fov: 48 },                     // la caja: la clienta paga, la tendera cobra
-    { f: en('comision'), pos: [-0.1, 1.75, 2.6], look: [3.4, 1.05, -0.8], fov: 44, ease: 'easeOut' }, { f: A.quien - 1, pos: [0.0, 1.75, 2.5], look: [3.4, 1.05, -0.8], fov: 43 }],
-  quien: [{ f: A.quien, pos: [0.3, 0.75, 2.6], look: [3.4, 1.35, -0.8], fov: 48, roll: -3 }, { f: A.tu - 1, pos: [0.55, 0.8, 2.3], look: [3.4, 1.35, -0.8], fov: 46, roll: -2 }],   // contrapicado: la clienta y la tendera en la caja
-  tu: [{ f: A.tu, pos: [2.0, 1.4, 2.6], look: [2.3, 1.1, -0.2], fov: 44 }, { f: en('solo') - 2, pos: [2.05, 1.4, 2.3], look: [2.35, 1.1, -0.2], fov: 42 },                                   // «Pues tú»: la clienta
-    { f: en('172'), pos: [-0.6, 1.5, 3.4], look: [-0.6, 1.2, -2.0], fov: 46, ease: 'easeOut' },            // las estanterías: los precios
-    { f: A.peor - 1, pos: [-0.8, 1.45, 2.8], look: [-0.8, 1.25, -2.0], fov: 42 }],
-  peor: [{ f: A.peor, pos: [4.6, 1.7, 1.6], look: [3.2, 1.0, -0.9], fov: 42 }, { f: A.efectivo - 1, pos: [4.2, 1.6, 1.1], look: [3.2, 1.05, -0.8], fov: 38 }],
-  efectivo: [{ f: A.efectivo, pos: [-0.3, 1.6, 2.9], look: [3.2, 1.1, -0.7], fov: 46 },                    // la clienta en la caja: efectivo frente a tarjeta
-    { f: A.cadena - 1, pos: [0.0, 1.6, 2.6], look: [3.2, 1.1, -0.7], fov: 44 }],
+  promesa: [{ f: A.promesa, pos: [62.5, 1.7, 3.6], look: [56.5, 2.0, -5.5], fov: 52 },                     // la calle: la tienda…
+    { f: en('tarjeta'), pos: [58.5, 1.7, -3.0], look: [63.5, 2.8, 7], fov: 54 }, { f: A.comision - 1, pos: [58.8, 1.7, -3.3], look: [63.5, 2.9, 7], fov: 52 }],   // …y el banco enfrente
+  comision: [{ f: A.comision, pos: [-0.6, 1.85, 3.2], look: CAJA, fov: 48 },                                // la caja: la clienta paga, la tendera cobra
+    { f: en('comision'), pos: [-0.1, 1.75, 2.6], look: CAJA, fov: 44, ease: 'easeOut' }, { f: A.cifra - 1, pos: [0.0, 1.75, 2.5], look: CAJA, fov: 43 }],
+  cifra: [{ f: A.cifra, pos: [-0.6, 1.5, 3.4], look: ESTANTES, fov: 46 }, { f: A.forma - 1, pos: [-0.8, 1.45, 2.8], look: [-0.8, 1.25, -2.0], fov: 42 }],   // las estanterías
+  forma: [{ f: A.forma, pos: [1.0, 1.45, 2.2], look: [2.7, 1.1, -0.5], fov: 44 }, { f: A.cuotas - 1, pos: [1.3, 1.42, 1.8], look: [2.7, 1.1, -0.5], fov: 40 }],
+  cuotas: [{ f: A.cuotas, pos: [55.8, 1.6, -4.4], look: [60.3, 1.7, -0.4], fov: 56 },                          // detrás de la clienta: lo que paga se va al banco
+    { f: A.raro - 1, pos: [55.8, 1.6, -4.4], look: [59.8, 1.6, -1.1], fov: 52 }],
+  raro: [{ f: A.raro, pos: [0.3, 0.75, 2.6], look: [3.4, 1.35, -0.8], fov: 48, roll: -3 }, { f: A.precios - 1, pos: [0.55, 0.8, 2.3], look: [3.4, 1.35, -0.8], fov: 46, roll: -2 }],   // contrapicado
+  precios: [{ f: A.precios, pos: [-0.6, 1.5, 3.2], look: ESTANTES, fov: 46 }, { f: en('pagamos') - 2, pos: [-0.9, 1.45, 2.6], look: [-0.9, 1.25, -2.0], fov: 42 },   // las etiquetas suben
+    { f: en('pagamos') + 8, pos: [-0.3, 1.6, 2.9], look: [3.2, 1.1, -0.7], fov: 46, ease: 'easeOut' }, { f: A.fed - 1, pos: [-0.1, 1.6, 2.7], look: [3.2, 1.1, -0.7], fov: 45 }],
+  fed: [{ f: A.fed, pos: [-0.3, 1.6, 2.9], look: [3.2, 1.1, -0.7], fov: 46 }, { f: A.cadena - 1, pos: [0.0, 1.6, 2.6], look: [3.2, 1.1, -0.7], fov: 44 }],   // el efectivo
   cadena: [{ f: A.cadena, pos: [62.5, 1.8, 3.8], look: [56.5, 1.8, -5.5], fov: 50 },                     // la tienda: las monedas salen…
-    { f: en('banco cobra') + 25, pos: [58.5, 1.8, -3.2], look: [63.5, 2.8, 7], fov: 54, ease: 'easeOut' },   // …y entran en el banco
-    { f: en('puntos'), pos: [60.2, 1.5, 0.9], look: [57.9, 1.1, -3.4], fov: 46 }, { f: A.cta - 1, pos: [59.9, 1.5, 0.6], look: [57.9, 1.12, -3.4], fov: 44 }],   // los puntos vuelven a la clienta
+    { f: en('aun asi'), pos: [58.5, 1.8, -3.2], look: [63.5, 2.8, 7], fov: 54, ease: 'easeOut' }, { f: A.cta - 1, pos: [58.8, 1.8, -3.4], look: [63.5, 2.9, 7], fov: 52 }],   // …y entran en el banco
   cta: [{ f: A.cta, pos: [-0.2, 1.6, 2.8], look: [3.0, 1.1, -0.6], fov: 46 }, { f: TOTAL - 1, pos: [0.3, 1.55, 2.3], look: [3.0, 1.12, -0.6], fov: 43 }],
 };
-const KICKS = [{ f: en('igual'), a: 0.03 }, { f: en('172'), a: 0.03 }, { f: en('peor'), a: 0.03 }, { f: en('149'), a: 0.03 }, { f: en('1133'), a: 0.03 }];
-const ZOOMS = [[en('igual'), 0.12], [en('172'), 0.14], [en('149'), 0.14], [en('1133'), 0.14], [en('intereses', 2), 0.1]];
+const FL = en('intereses');
+const KICKS = [{ f: en('intereses'), a: 0.03 }, { f: en('172'), a: 0.03 }, { f: en('raro'), a: 0.03 }, { f: en('149'), a: 0.03 }, { f: en('gana', 2), a: 0.03 }];
+const ZOOMS = [[en('intereses'), 0.12], [en('172'), 0.14], [en('149'), 0.14], [en('rentable'), 0.1]];
 export const camAt = (f) => {
   const S = shotAt(f);
   const c = camFromKeys(CAMS[S.id], f, { creep: 0.0008, kicks: KICKS });
@@ -77,7 +80,7 @@ export const camAt = (f) => {
     if (de < 4 && S.b !== TOTAL - 1) w = Math.pow((4 - de) / 4, 2) * AMP; else if (ds < 4 && S.a !== 0) w = -Math.pow((4 - ds) / 4, 2) * AMP;
     if (w) { const dx = c.look[0] - c.pos[0], dz = c.look[2] - c.pos[2], L = Math.hypot(dx, dz) || 1, D = Math.hypot(dx, c.look[1] - c.pos[1], dz);
       c.look = [c.look[0] - dz / L * w * D, c.look[1], c.look[2] + dx / L * w * D]; c.roll = (c.roll || 0) + w * 10; } }
-  c.flash = f >= en('igual') && f < en('igual') + 3 ? 0.18 * (1 - (f - en('igual')) / 3) : 0;
+  c.flash = f >= FL && f < FL + 3 ? 0.18 * (1 - (f - FL) / 3) : 0;
   c.shadowAt = fuera(S) ? [60, 1, 0] : [2, 1, -0.8];
   return c;
 };
@@ -85,9 +88,9 @@ const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 export const dofAt = (f) => {
   const S = shotAt(f), C = camAt(f);
   if (insertoAt(f)) return { focus: D_INS, cinf: 6 };
-  if (S.id === 'gancho') return f < en('banco') - 3 ? { focus: dist(C.pos, DAT), cinf: 9 } : { focus: dist(C.pos, OJOS), cinf: 9 };
-  if (S.id === 'peor') return { focus: dist(C.pos, DAT), cinf: 6 };
-  if (S.id === 'quien' || S.id === 'cta') return { focus: dist(C.pos, OJOS), cinf: 7 };
+  if (S.id === 'gancho') return f < en('aunque') - 3 ? { focus: dist(C.pos, DAT), cinf: 9 } : { focus: dist(C.pos, OJOS), cinf: 9 };
+  if (S.id === 'forma' || S.id === 'raro' || S.id === 'cta') return { focus: dist(C.pos, OJOS), cinf: 6 };
+  if (S.id === 'cuotas') return { focus: dist(C.pos, CLI_F), cinf: 3 };
   if (fuera(S)) return { focus: dist(C.pos, C.look), cinf: 2 };
   return { focus: dist(C.pos, C.look), cinf: 4 };
 };
@@ -95,34 +98,33 @@ export const dofAt = (f) => {
 // ---------- el decorado reacciona a la voz ----------
 const tr = (f, a, b) => q(clamp((f - a) / Math.max(1, b - a)), 2);
 export const worldAt = (f) => ({
-  precios: f < A.peor ? tr(f, en('acaban'), en('precios') + 10) : 0,   // «¡Y acaban en tus precios!»: las etiquetas suben
-  sacos: f >= A.cadena ? 1 : tr(f, en('172'), en('2023') + 10),
+  precios: f >= A.precios ? tr(f, en('mete'), en('precios') + 10) : 0,   // «la tienda las mete en sus precios»: las etiquetas suben
+  sacos: tr(f, en('172'), en('2023') + 10),                               // los sacos de las comisiones delante del banco
 });
 
 // ---------- reparto: SOLO la clienta y la tendera (las nombra el guion). Gestos del kit: caras fijas que cambian en la palabra clave ----------
-const CLAVES_C = [{ f: 0, L: 'hang', R: 'reach' }, { f: en('igual'), L: 'hip', R: 'open' }, { f: A.quien, L: 'cross', R: 'cheek' }, { f: A.tu, L: 'hang', R: 'point' },
-  { f: en('precios') - 6, L: 'cheek', R: 'hang' }, { f: A.efectivo, L: 'hang', R: 'hold' }, { f: en('menos'), L: 'temple', R: 'hang' }, { f: en('1133'), L: 'hip', R: 'hold' },
+const CLAVES_C = [{ f: 0, L: 'hang', R: 'reach' }, { f: en('aunque'), L: 'hip', R: 'open' }, { f: A.forma, L: 'cross', R: 'cheek' }, { f: en('cuotas'), L: 'hang', R: 'hold' },
+  { f: A.raro, L: 'hip', R: 'point' }, { f: en('pagamos') - 6, L: 'cheek', R: 'hang' }, { f: A.fed, L: 'hang', R: 'hold' }, { f: en('pierde'), L: 'temple', R: 'hang' },
   { f: A.cadena, L: 'hip', R: 'beat' }, { f: A.cta, L: 'hip', R: 'thumb' }];
-const CARAS_C = [[0, 'neutral'], [en('igual'), 'stern'], [A.promesa, 'cejas'], [A.quien, 'cejas'], [A.tu, 'stern'], [en('precios'), 'nervous'], [en('peor'), 'stern'],
-  [en('pues no'), 'stubborn'], [en('menos'), 'nervous'], [en('1133'), 'grin'], [A.cadena, 'neutral'], [en('contigo'), 'laugh'], [A.cta, 'grin']];
-const CLAVES_T = [{ f: 0, L: 'hang', R: 'belly' }, { f: en('comision'), L: 'hip', R: 'wave' }, { f: en('sube'), L: 'hip', R: 'point' }];
-const CARAS_T = [[0, 'grin'], [en('comision'), 'neutral'], [en('sube'), 'grin']];
+const CARAS_C = [[0, 'neutral'], [en('aunque'), 'stern'], [A.promesa, 'cejas'], [A.forma, 'cejas'], [en('cuotas'), 'nervous'], [A.raro, 'stern'],
+  [en('pagamos'), 'nervous'], [A.fed, 'neutral'], [en('pierde'), 'nervous'], [A.cadena, 'stubborn'], [en('gana', 2), 'stern'], [A.cta, 'grin']];
+const CLAVES_T = [{ f: 0, L: 'hang', R: 'belly' }, { f: en('comision'), L: 'hip', R: 'wave' }, { f: en('mete'), L: 'hip', R: 'point' }];
+const CARAS_T = [[0, 'grin'], [en('comision'), 'neutral'], [en('mete'), 'grin']];
 const caraEn = (L, f) => { let c = 'neutral'; for (const [fk, k] of L) if (f >= fk) c = k; return c; };
-const ASIENTE = ['igual', 'centavo', 'pues tú', '172', 'peor', '1133', 'contigo'].map((w) => en(w));
+const ASIENTE = ['intereses', 'llega', '172', 'mas', 'raro', 'todos', '149', 'gana'].map((w) => en(w));
 const asiente = (f) => { let h = 0; for (const g of ASIENTE) { const t = (f - (g - 3)) / 30; if (t >= 0 && t < 0.6) h += -6 * (1 - M.spring(t, 2.2, 6)) * Math.sign(Math.sin(t * Math.PI * 2.2) + 1e-6) * (t < 0.08 ? -0.4 : 1); } return h; };
-const niega = (f) => { const a = en('pues no') + 6; return f >= a && f <= a + 29 ? 7 * Math.sin(((f - a) / 29) * Math.PI * 3) * (1 - (f - a) / 40) : 0; };   // «Pues no»
-const piso = (f) => { const a = en('precios'); return f >= a && f < a + 4 ? 0.02 : 0; };                                                           // pisotón
-const risa = (f) => { const a = en('contigo'); return f >= a && f < a + 34 ? { tilt: -4 + 3 * Math.sin(f * 0.55), bob: Math.abs(Math.sin(f * 0.55)) * 0.022 } : { tilt: 0, bob: 0 }; };
+const niega = (f) => { const a = en('rentable') + 4; return f >= a && f <= a + 29 ? 7 * Math.sin(((f - a) / 29) * Math.PI * 3) * (1 - (f - a) / 40) : 0; };   // «sigues siendo rentable…»
+const piso = (f) => { const a = en('pagamos'); return f >= a && f < a + 4 ? 0.02 : 0; };                                                          // pisotón
 const card = (who, seed, f, claves, caras, extra = {}) => {
   const id = idle(f, seed), br = brazosEn(f, claves, 10);
   return { ...br, expr: caraEn(caras, f), seed, blink: blinkAt(f, seed), tilt: q(id.tilt, 1), headTilt: q(id.headTilt, 1), bob: q(id.bob, 3), ...extra };
 };
 export const actorsAt = (f, T) => {
-  const S = shotAt(f), out = [], rs = risa(f);
+  const S = shotAt(f), out = [];
   const oc = card('clienta', 8, f, CLAVES_C, CARAS_C);
-  if ((BOCA[f] ?? 0) > 0.8 && !/laugh|grin/.test(oc.expr)) oc.expr = 'relief_open';
-  oc.headTilt = q(oc.headTilt + niega(f) + asiente(f), 1); oc.tilt = q(oc.tilt + rs.tilt, 1); oc.bob = q(oc.bob + piso(f) + rs.bob, 3);
-  oc.facing = S.id === 'gancho' && f >= en('banco') - 3 ? 0 : fuera(S) ? 0.35 : -0.5; oc.look = oc.facing ? oc.facing * 1.2 : 0;
+  if ((BOCA[f] ?? 0) > 0.8 && S.id !== 'gancho' && !/laugh|grin|stern/.test(oc.expr)) oc.expr = 'relief_open';
+  oc.headTilt = q(oc.headTilt + niega(f) + asiente(f), 1); oc.bob = q(oc.bob + piso(f), 3);
+  oc.facing = S.id === 'gancho' && f >= en('aunque') - 3 ? 0 : S.id === 'cuotas' ? 0.6 : fuera(S) ? 0.35 : -0.5; oc.look = oc.facing ? oc.facing * 1.2 : 0;
   const cp = fuera(S) ? CLI_F : CLI;
   out.push({ key: 'cli' + JSON.stringify(oc), draw: (p) => T.romanFront(p, 'clienta', oc), x: cp[0], y: 0, z: cp[2], s: SP * 0.96, order: 3 });
   const ot = card('tendera', 11, f, CLAVES_T, CARAS_T, { facing: 0.4, look: 0.5 });
@@ -140,9 +142,7 @@ const lerp3 = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
 const miles = (v) => String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 const INS = () => [
   { a: en('172'), b: en('2023') + 24, tipo: 'contador', s: 0.6, up: 0.12, o: (t) => ({ texto: miles(172000 * M.easeOut(t)), etiqueta: 'millones de dólares', color: '#ffd23a' }) },
-  { a: en('149'), b: A.cadena - 4, tipo: 'comparativa', s: 0.46, up: 0.42, o: (t, f) => ({ unidad: ' $', items: [
-      { etiqueta: 'efectivo', valor: 149, pre: '−', color: '#7fc77f', t: clamp((f - en('149')) / 18) },
-      { etiqueta: 'tarjeta', valor: 1133, pre: '+', color: '#ffd23a', t: clamp((f - en('1133')) / 22) }], etiqueta: 'al año' }) },
+  { a: en('149'), b: A.cadena - 4, tipo: 'contador', s: 0.5, up: 0.5, o: (t) => ({ texto: '−' + miles(149 * M.easeOut(clamp(t * 1.6))), etiqueta: 'dólares al año', color: '#ff6a4a' }) },
 ];
 const insertoAt = (f) => { for (const I of INS()) if (f >= I.a - 2 && f <= I.b) return I; return null; };
 const D_INS = 2.2;
@@ -152,27 +152,26 @@ const fxInserto = (f) => {
   const s = I.s, c = C.pos.map((v, i) => v + [dx, dy, dz][i] / L * D_INS);
   const ent = clamp((f - I.a + 2) / 8), sal = clamp((I.b - f) / 5), k = q(M.spring(ent, 2.4, 7) * (sal < 1 ? M.smooth(sal) : 1), 2);
   const o = { ...I.o(clamp((f - I.a) / 30), f), k: Math.max(0.01, k) };
-  return FX('ins' + I.tipo + JSON.stringify(o), (p) => INSERTOS[I.tipo](p, o), [c[0], c[1] - 2.25 * s * 0.5 + I.up, c[2]], s, { noInk: false, order: 6 });
+  return FX('ins' + I.a + JSON.stringify(o), (p) => INSERTOS[I.tipo](p, o), [c[0], c[1] - 2.25 * s * 0.5 + I.up, c[2]], s, { noInk: false, order: 6 });
 };
+const S_ = (f) => shotAt(f).id;
+const vuelo = (out, id, f, f0, f1, de, a, n, alto, s) => { if (f < f0 || f > f1) return;
+  for (let i = 0; i < n; i++) { const t = q(((f - f0) / 40 + i / n) % 1, 2); out.push(FX(id + i + t, moneda, lerp3(de, a, t).map((v, k) => k === 1 ? v + Math.sin(t * Math.PI) * alto : v), s)); } };
 export const fxAt = (f, T) => {
   const out = [];
   { const ins = fxInserto(f); if (ins) out.push(ins); }
-  // la comisión: monedas que salen del datáfono y se van por la ventana (dentro) — «la tienda paga una comisión. Y parte va a tu banco»
-  const c0 = en('comision');
-  if (f >= c0 && f < A.quien) for (let i = 0; i < 6; i++) { const t = q(((f - c0) / 40 + i / 6) % 1, 2);
-    out.push(FX('mon' + i + t, moneda, lerp3([DAT[0], 1.1, DAT[2]], [-5.4, 2.4, 0.9], t).map((v, k) => k === 1 ? v + Math.sin(t * Math.PI) * 0.8 : v), 0.4)); }
-  // fuera: las monedas salen de la tienda y entran en el banco — «El banco cobra a la tienda»
-  const c1 = en('banco cobra');
-  if (S_(f) === 'cadena' && f >= c1) for (let i = 0; i < 10; i++) { const t = q(((f - c1) / 45 + i / 10) % 1, 2);
-    out.push(FX('monf' + i + t, moneda, lerp3([57, 1.4, -5.2], [63.5, 1.6, 6.2], t).map((v, k) => k === 1 ? v + Math.sin(t * Math.PI) * 2.2 : v), 0.9)); }
-  // el efectivo: el billete se le va volando a la clienta — «unos 149 dólares menos al año»
+  // «la tienda paga una comisión. Y una parte llega a tu banco»: monedas del datáfono que se van por la ventana
+  vuelo(out, 'mon', f, en('comision'), A.cifra - 1, [DAT[0], 1.1, DAT[2]], [-5.4, 2.4, 0.9], 6, 0.8, 0.4);
+  // «cuotas de manejo… anualidades… intereses»: de la clienta al banco, una tanda en cada palabra
+  if (S_(f) === 'cuotas') for (const w of [en('cuotas'), en('anualidades'), en('intereses', 2)]) if (f >= w && f < w + 34) { const t = q((f - w) / 34, 2);
+    for (let i = 0; i < 4; i++) { const ti = clamp(t * 1.3 - i * 0.1); if (ti > 0 && ti < 1) out.push(FX('cu' + w + i + ti, moneda, lerp3([CLI_F[0] + 0.2, 1.1, CLI_F[2] + 0.3], BANCO_F, ti).map((v, k) => k === 1 ? v + Math.sin(ti * Math.PI) * 2.0 : v), 0.8)); } }
+  // «Usas bien tu crédito… y aun así, tu banco gana»: las monedas salen de la tienda y entran en el banco
+  if (S_(f) === 'cadena') vuelo(out, 'monf', f, A.cadena, A.cta - 1, [57, 1.4, -5.2], BANCO_F, 10, 2.2, 0.9);
+  // «un hogar que paga en efectivo pierde unos 149 dólares al año»: el billete se le va volando a la clienta
   const b0 = en('149');
   if (f >= b0 && f < A.cadena) { const t = q(Math.min(1, (f - b0) / 40), 2); out.push(FX('bil' + t, billete, [CLI[0] + 0.2 + t * 1.2, 1.2 + t * 1.6, CLI[2] + 0.2], 0.35, { roll: t * 2 })); }
-  // los puntos: estrellas para quien paga con tarjeta — «unos 1.133 más» / «vuelve en puntos»
-  for (const [s0, pos] of [[en('1133'), [CLI[0], 0.1, CLI[2] + 0.2]], [en('puntos'), [CLI_F[0], 0.1, CLI_F[2] + 0.2]]]) if (f >= s0 && f < s0 + 30) { const t = q((f - s0) / 30, 2); out.push(FX('st' + s0 + t, (p) => T.fxStars(p, t), pos, 0.9)); }
-  // destello en «¡IGUAL!»
-  const v = en('igual'); if (f >= v && f < v + 12) { const t = q((f - v) / 12, 2); out.push(FX('burst' + t, (p) => { p.g.translate(0, -120); T.fxBurst(p, t, '#fff3b0', 12, 40, 240); }, [OJOS[0], 0.6, OJOS[2] - 0.3], 1.2, { add: true })); }
-  const c = en('precios'); if (f >= c && f < c + 20) { const k = q((f - c) / 20, 2); out.push(FX('dust' + k, (p) => T.fxDust(p, k), [CLI[0], 0, CLI[2] + 0.2], 0.9, { alpha: 0.8 })); }
+  // destello en «¡…intereses!» y polvo en el pisotón de «las pagamos todos»
+  const v = en('intereses'); if (f >= v && f < v + 12) { const t = q((f - v) / 12, 2); out.push(FX('burst' + t, (p) => { p.g.translate(0, -120); T.fxBurst(p, t, '#fff3b0', 12, 40, 240); }, [OJOS[0], 0.6, OJOS[2] - 0.3], 1.2, { add: true })); }
+  const c = en('pagamos'); if (f >= c && f < c + 20) { const k = q((f - c) / 20, 2); out.push(FX('dust' + k, (p) => T.fxDust(p, k), [CLI[0], 0, CLI[2] + 0.2], 0.9, { alpha: 0.8 })); }
   return out;
 };
-const S_ = (f) => shotAt(f).id;
