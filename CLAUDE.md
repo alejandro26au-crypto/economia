@@ -22,8 +22,9 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
   3 fotos de prueba con subtítulos junto a los romanos: `dibujos/plantilla/hoja_prueba.jpg`.
 - REGLA (usuario, 21 nov 2026): espacios y personajes SOLO si el guion los nombra; nada de reutilizar lo guardado.
   `./inercia escena N` lo comprueba con `escena.lugares`/`escena.reparto` de la ficha. El profesor = narrador, solo si se pide.
-- Vídeo 2 «Cómo gana el banco con tu tarjeta» (`Textos/2 - …`, 8 pasos, 95/100): PAUSADO hasta tener el motor completo.
-  Decorado a medida hecho (dentro de la tienda + calle con el banco); falta quitar al profesor (no lo nombra el guion).
+- Vídeo 2 «Cómo gana el banco con tu tarjeta» TERMINADO (24 nov 2026): guion del usuario subido a 96/100, voz del usuario
+  (59,9 s), solo clienta y tendera, insertos 172.000 y 149, 2 MP4 a −14 LUFS + .srt + publicar.md, entregado.
+  PENDIENTE: el 26 nov pedir la captura de YouTube Studio (Participación) → `docs/RESULTADOS.md`.
 - MOTOR (21 nov 2026): plantilla genérica con `_piezas.js`, sonido genérico (`herramientas/sonido.py`), comprobación de
   escena, prueba completa con voz de espeak (`Textos/0 - Prueba del motor`, `dibujos/videos/0-prueba-del-motor/`).
 - MOTOR (23 nov 2026): traído lo mejor de Citrino/océano (instalar.sh, montaje en paralelo reanudable, subtítulos CapCut +
