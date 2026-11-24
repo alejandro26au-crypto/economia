@@ -10,24 +10,7 @@
     "Schuh, S., Shy, O. y Stavins, J. (2010). Who Gains and Who Loses from Credit Card Payments? Theory and Calibrations. Federal Reserve Bank of Boston, Public Policy Discussion Paper 10-3 (versión revisada, ago. 2010): cada hogar que paga en efectivo transfiere 149 $ al año a los que usan tarjeta; cada hogar con tarjeta recibe 1.133 $. https://www.bostonfed.org/publications/public-policy-discussion-paper/2010/who-gains-and-who-loses-from-credit-card-payments-theory-and-calibrations.aspx",
     "Reglamento (UE) 2015/751 (EUR-Lex) y Banco de España: en la UE la tasa de intercambio de las tarjetas de particulares está limitada al 0,3 % (crédito) y 0,2 % (débito). Para la descripción: en Europa la comisión es menor, pero el mecanismo es el mismo."
   ],
-  "cifras": [
-    {
-      "cifra": "172.000 millones de dólares",
-      "fuente": "Nilson Report 2023: 172.050 millones de dólares"
-    },
-    {
-      "cifra": "2023",
-      "fuente": "Nilson Report 2023"
-    },
-    {
-      "cifra": "149 dólares",
-      "fuente": "Schuh, Shy y Stavins 2010 (Fed de Boston), versión revisada"
-    },
-    {
-      "cifra": "1.133",
-      "fuente": "Schuh, Shy y Stavins 2010 (Fed de Boston), versión revisada"
-    }
-  ],
+  "cifras": [],
   "voces": {
     "narrador": "(voz de ElevenLabs en español)"
   },
@@ -44,42 +27,69 @@
   ],
   "auditoria_manual": {
     "leido_en_voz_alta": true,
-    "notas": "Guion del usuario reescrito con la fórmula (su versión: 56/100: hook de 15 palabras, sin cifras, sin giro, 3 frases largas, 176 palabras). Se mantiene su idea central (el banco gana aunque pagues a tiempo, por las comisiones al comercio) y su cierre se convierte en pregunta. Precisión: «una parte va al banco que te dio la tarjeta» = tasa de intercambio (correcto); 172.000 millones es el total de comisiones de procesamiento en EE. UU. (Nilson), no solo lo que va al banco, por eso se dice «en comisiones»; los 149/1.133 $ son estimaciones del estudio de la Fed de Boston (se dice «lo calcularon» y «unos»). «Un centavo» en vez de «un peso» para que valga en España y Latinoamérica. Ajustes finales en voz alta: «acaban en tus precios» (los comercios fijan el mismo precio para todos y repercuten la comisión) y «un hogar… al año» (la cifra del estudio es por hogar y por año, en EE. UU.). Recortado a 143 palabras (≈ 50 s) a petición del usuario, sin quitar datos ni giros; «Por eso el banco gana contigo» para que no sea ambiguo."
+    "notas": "Guion escrito por el usuario (24 nov 2026), organizado en las 8 etapas sin cambiar el texto. La versión anterior queda en «_version_anterior»."
   },
   "_ayuda_hook": "HOOK: contradicción, dato o afirmación que choca con lo que el espectador cree saber. Primera frase corta (≤ 10 palabras en Short), sin «¿Sabías que…?» ni saludos.",
-  "hook": "Pagas tu tarjeta siempre a tiempo. ¡Y el banco gana igual!",
+  "hook": "Los bancos pueden ganar dinero contigo incluso si nunca pagas un solo peso de intereses.",
   "_ayuda_promesa": "PROMESA: anticipa QUÉ mecanismo, realidad o explicación va a descubrir («Al final vas a entender por qué…»), sin desvelarlo.",
-  "promesa": "Te explico cómo… sin cobrarte ni un centavo de intereses.",
+  "promesa": "Y lo más curioso es que una de las formas de ganar dinero ocurre cada vez que utilizas tu tarjeta de crédito.",
   "_ayuda_recompensa1": "RECOMPENSA 1: explicación relevante, concreta (cifra, fecha, lugar, precio) y con un ejemplo de la vida del espectador (su sueldo, su súper, su alquiler, su banco).",
-  "recompensa1": "Cada vez que pagas con tarjeta, la tienda paga una comisión. Y parte va a tu banco.",
+  "recompensa1": "Cuando compras con tarjeta, el comercio normalmente paga una comisión por procesar el pago. Ese dinero se reparte entre los participantes de la operación, y una parte puede llegar al banco que emitió tu tarjeta.",
   "_ayuda_bucle1": "BUCLE 1: abre una incógnita nueva ligada al mecanismo («Pero hay algo que no cuadra…», «¿Y quién gana con esto?») y sube la expectativa hacia la revelación.",
-  "bucle1": "¿Y quién paga esa comisión de verdad?",
+  "bucle1": "Pero esa no es la única forma en que el banco gana dinero contigo. De hecho, aunque nunca te atrases en un pago, todavía existen otras fuentes de ingresos.",
   "_ayuda_recompensa2": "RECOMPENSA 2: explicación relevante, concreta (cifra, fecha, lugar, precio) y con un ejemplo de la vida del espectador (su sueldo, su súper, su alquiler, su banco).",
-  "recompensa2": "Pues tú. Solo en Estados Unidos, 172.000 millones de dólares en comisiones en 2023. ¡Y acaban en tus precios!",
+  "recompensa2": "Están las cuotas de manejo, las anualidades de algunos productos y, por supuesto, los intereses de quienes no pagan el total de su deuda.",
   "_ayuda_bucle2": "BUCLE 2: abre una incógnita nueva ligada al mecanismo («Pero hay algo que no cuadra…», «¿Y quién gana con esto?») y sube la expectativa hacia la revelación.",
-  "bucle2": "Y aún es peor. ¿Crees que pagando en efectivo te libras?",
+  "bucle2": "Pero hay algo que cambia por completo la forma de entender este negocio. Incluso si eres de los clientes que nunca pagan intereses y siempre liquidan sus facturas a tiempo, puedes seguir siendo rentable para el banco.",
   "_ayuda_climax": "CLÍMAX: conecta las ideas, revela el MECANISMO principal y resuelve TODAS las incógnitas abiertas.",
-  "climax": "Pues no. La Reserva Federal de Boston lo calculó. Hogar que paga en efectivo: unos 149 dólares menos al año. Hogar con tarjeta: unos 1.133 más. Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses.",
+  "climax": "Porque el negocio no depende exclusivamente de que te endeudes. Cada vez que utilizas tu tarjeta, el banco puede recibir ingresos a través de las comisiones asociadas a las compras y otros cargos del producto. En otras palabras, puedes utilizar responsablemente tu crédito, no pagar intereses y aun así generar ganancias para tu banco.",
   "_ayuda_cta": "CTA: cierre breve y natural (pregunta al espectador o frase que enlaza con el hook). Nada de «suscríbete y dale like».",
-  "cta": "¿Y tú, pagas con tarjeta o en efectivo?",
+  "cta": "Síguenos y descubre el negocio detrás de las cosas que haces todos los días.",
   "escena": {
     "lugares": {
       "tienda (dentro, con la caja y el datáfono)": [
-        "la tienda paga una comisión",
-        "pagas con tarjeta"
+        "cuando compras con tarjeta",
+        "el comercio normalmente paga una comision"
       ],
       "calle con la tienda y el banco": [
-        "el banco cobra a la tienda"
+        "una parte puede llegar al banco que emitio tu tarjeta"
       ]
     },
     "reparto": {
       "clienta": [
-        "pagas con tarjeta",
-        "pagando en efectivo"
+        "cuando compras con tarjeta"
       ],
       "tendera": [
-        "la tienda paga una comisión"
+        "el comercio normalmente paga una comision"
       ]
     }
+  },
+  "_version_anterior": {
+    "hook": "Pagas tu tarjeta siempre a tiempo. ¡Y el banco gana igual!",
+    "promesa": "Te explico cómo… sin cobrarte ni un centavo de intereses.",
+    "recompensa1": "Cada vez que pagas con tarjeta, la tienda paga una comisión. Y parte va a tu banco.",
+    "bucle1": "¿Y quién paga esa comisión de verdad?",
+    "recompensa2": "Pues tú. Solo en Estados Unidos, 172.000 millones de dólares en comisiones en 2023. ¡Y acaban en tus precios!",
+    "bucle2": "Y aún es peor. ¿Crees que pagando en efectivo te libras?",
+    "climax": "Pues no. La Reserva Federal de Boston lo calculó. Hogar que paga en efectivo: unos 149 dólares menos al año. Hogar con tarjeta: unos 1.133 más. Ese es el negocio. El banco cobra a la tienda. La tienda sube los precios a todos. Y parte vuelve en puntos a quien usa tarjeta. Por eso el banco gana contigo… aunque nunca pagues intereses.",
+    "cta": "¿Y tú, pagas con tarjeta o en efectivo?",
+    "cifras": [
+      {
+        "cifra": "172.000 millones de dólares",
+        "fuente": "Nilson Report 2023: 172.050 millones de dólares"
+      },
+      {
+        "cifra": "2023",
+        "fuente": "Nilson Report 2023"
+      },
+      {
+        "cifra": "149 dólares",
+        "fuente": "Schuh, Shy y Stavins 2010 (Fed de Boston), versión revisada"
+      },
+      {
+        "cifra": "1.133",
+        "fuente": "Schuh, Shy y Stavins 2010 (Fed de Boston), versión revisada"
+      }
+    ]
   }
 }
