@@ -34,6 +34,8 @@ en `kit/vendor/`. Viene del repo del océano (rama `claude/fervent-archimedes-c1
 - `web/roman.js`: OUTFITS (mismo cuerpo y cara del kit; solo cambia la ropa) y poses. Ropa de hoy: `tshirt`, `apron`,
   `pants`, `sleeve`, `suit`, `tie`, `glasses`… Ejemplos: `clienta`, `tendera` (vídeo 2), `profesor` (cangrejo).
 - `carta.mjs`: prueba de personajes sueltos: `node carta.mjs carta.png '[["clienta",{"R":"reach","expr":"grin"}]]'`.
+- `web/encuadre.js`: CÁMARAS AUTOMÁTICAS (persona, plano.dos/cuerpo/cara/detras/contra/general, acerca, gira) y
+  `herramientas/chequeo.mjs` (`./inercia chequeo N`): revisión de encuadres sin renderizar.
 - `web/insertos.js` (de Zingo/Citrino, en el estilo del kit): termómetro, manómetro, contador, reloj, comparativa, barra y
   capas, que se dibujan en una tarjeta de efecto mientras la voz canta la cifra (solo cifras que dice el guion).
 - `subtitulos.json` (opcional): activar/desactivar, modo palabra o grupos, altura (`y`), tramos sin subtítulo, claves.
@@ -46,15 +48,22 @@ en `kit/vendor/`. Viene del repo del océano (rama `claude/fervent-archimedes-c1
 - Lo que dice la voz PASA en el decorado (la tarjeta en el datáfono, las monedas que van al banco, las etiquetas que
   suben), no escrito en una pizarra. Textos en pantalla: solo palabras del guion (letreros) y los subtítulos.
 
-## Hacer un vídeo
-1. `./inercia video N` (copia la plantilla, pone el guion y tiempos estimados).
-2. Decorado A MEDIDA en `web/_world.js`, ropa en `web/roman.js`, planos/pizarra/gestos en `web/story.js` → `bash rebuild.sh`.
-3. Voz: `./inercia voz N` → tiempos reales; los planos se recolocan solos (se buscan por palabra).
-4. Fotos: `./inercia fotos N "f1,f2,…"` → `stills/hoja.jpg` (con subtítulos y los romanos al lado). REVISAR cada
-   imagen: textos cortados, personaje fuera de plano, cámara metida en algo, subtítulo sobre una cara, algo que no diga
-   el guion. Corregir y enseñar. Esperar el «aprobado».
-5. `./inercia montar N` (segundo plano) → `./inercia terminar N` → revisar `out/hoja_final.jpg` → enviar los 2 MP4.
-6. `./inercia publicar N` → `publicar.md`.
+## Hacer un vídeo (ORDEN FIJO: guion cerrado → voz → planos; nunca planos antes de la voz)
+1. Guion aprobado (≥ 90) y CERRADO. Si el guion cambia, se espera a la voz nueva antes de tocar planos.
+2. `./inercia video N` (copia la plantilla). Ya se puede hacer el DECORADO (`web/_world.js`) y la ropa (`web/roman.js`):
+   no dependen de la voz.
+3. Voz del usuario: `./inercia voz N` → tiempos reales. SOLO ENTONCES los planos en `web/story.js`, atados a palabras
+   que están en `web/tiempos.js`, con CÁMARAS AUTOMÁTICAS (`web/encuadre.js`: `plano.dos`, `plano.cuerpo`, `plano.cara`,
+   `plano.detras`, `plano.contra`, `plano.general`, `acerca`, `gira`) y `SONIDOS` exportado → `bash rebuild.sh`.
+4. `./inercia chequeo N` (segundos, SIN renderizar): ✗ palabras que no están en la voz, sin SONIDOS; ⚠ cabeza cortada,
+   persona cortada por un lado, pegada a la cámara (también en el barrido entre planos), más de 2 planos de cara,
+   destello delante de la cámara, cuadro de cifras o subtítulo sobre una cara. Corregir hasta que salga limpio.
+   (`fotos` y `montar` lo pasan solos y paran si hay ✗.) No ve el decorado: una pared que tapa solo se ve en las fotos.
+5. Fotos: `./inercia fotos N "f1,f2,…"` → `stills/hoja.jpg` (con subtítulos y los romanos al lado). REVISAR cada
+   imagen: decorado tapando a alguien, textos cortados, algo que no diga el guion. Corregir y enseñar. Esperar el «aprobado».
+6. `./inercia montar N` (segundo plano) → `./inercia terminar N` → revisar `out/hoja_final.jpg` Y el resto del vídeo
+   (la hoja final solo enseña el principio) → enviar los 2 MP4.
+7. `./inercia publicar N` → `publicar.md` (rellenarlo entero).
 
 ## Reglas (del usuario)
 - Calidad = romanos, lado a lado. Decorado A MEDIDA; solo se reutiliza algo si el guion lo menciona.

@@ -32,6 +32,9 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
   reconocer con tiempo rellenado. PRUEBA COMPLETA (voz de espeak, NO la del usuario): voz → escena → fotos → montar en
   paralelo → terminar (2 MP4 a −14 LUFS, sin congelados ni negros, hoja final, .srt) → publicar: TODO OK. MOTOR LISTO.
   Siguiente: retomar el vídeo 2 (quitar al profesor, subtítulos nuevos, hoja de 4-6 fotos → «aprobado» → voz del usuario).
+- PRODUCCIÓN MÁS RÁPIDA (24 nov 2026): orden guion→voz→planos, cámaras automáticas (`encuadre.js`), chequeo sin
+  renderizar (`./inercia chequeo N`, también dentro de fotos/montar), instalación en el script del entorno. Pendiente
+  (cuando el usuario lo pida): fotos de prueba a mitad de tamaño, 24 fps, montaje que rehaga solo los planos cambiados.
 - Al terminar cada short: pedir a los 2 días la captura de YouTube Studio (Participación) (`./inercia medir`) y apuntarla
   en `docs/RESULTADOS.md` (segundo de abandono → etapa del guion → lección).
 
@@ -43,10 +46,14 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
    audito leyendo en voz alta (precisión, naturalidad, que cada cifra diga exactamente lo que dice la fuente).
    Entrega al usuario: 1) guion estructurado, 2) auditoría con nota, 3) guion limpio en bloque para copiar,
    4) pausas, énfasis y ritmo, 5) fuentes (`Textos/N - Título.entrega.md`).
-3. **Vídeo:** `./inercia video N` crea `dibujos/videos/N-titulo/` desde la plantilla, con tiempos estimados.
-   Decorado A MEDIDA (`web/_world.js`), ropa (`web/roman.js`), planos/gestos/pizarra atados a palabras (`web/story.js`).
+3. **Vídeo:** ORDEN FIJO (usuario, 24 nov 2026): guion CERRADO → voz → planos. `./inercia video N` crea
+   `dibujos/videos/N-titulo/`; antes de la voz SOLO decorado A MEDIDA (`web/_world.js`) y ropa (`web/roman.js`).
 4. **Voz:** el usuario la hace en ElevenLabs con el texto EXACTO y la deja en «Pon aquí tu voz/» → `./inercia voz N`
-   (tiempos de cada palabra en español; avisa si no coincide con el guion o se pasa de duración).
+   (tiempos de cada palabra en español; avisa si no coincide con el guion o se pasa de duración). SOLO ENTONCES los
+   planos en `web/story.js` (palabras de `web/tiempos.js`) con CÁMARAS AUTOMÁTICAS (`web/encuadre.js`: `plano.dos`,
+   `plano.cuerpo`, `plano.cara`, `plano.detras`…; nada de coordenadas a mano) y `SONIDOS` → `./inercia chequeo N`
+   (segundos, sin renderizar: palabras, sonidos, cabezas cortadas, gente pegada a la cámara, subtítulo/cifras sobre caras)
+   hasta que salga limpio. Después, 1-3 fotos sueltas para ver lo que el chequeo no ve (el decorado tapando a alguien).
 5. **Fotos:** `./inercia fotos N "f1,f2,…"` → hoja de 4-6 fotos con subtítulos al lado de una de los romanos.
    REVISARLA yo y decir qué falla → enseñarla → esperar el «aprobado» antes de montar.
 6. **Montaje:** `./inercia montar N` (segundo plano, ~2 s/fotograma) → `./inercia terminar N` (música y efectos por
@@ -94,7 +101,8 @@ resuelve todo) · CTA breve y natural.
   prueba cortas (clip de 5-15 s) para probar el motor. vidIQ: nunca sin decir el coste y esperar el «sí».
 
 ## Herramientas
-- `./inercia instalar | comprobar | temas | guion | video | voz | fotos | montar | terminar | publicar | medir`.
+- `./inercia instalar | comprobar | temas | guion | video | voz | chequeo | fotos | montar | terminar | publicar | medir`.
+- Al montar, revisar TAMBIÉN el resto del vídeo, no solo `out/hoja_final.jpg` (solo enseña el principio).
 - Doblaje con varias voces: `programa/doblaje.py`. Replicar un viral: `docs/replicar-viral.md`.
 - **NUNCA gastar créditos de vidIQ sin decir el coste y esperar el «sí» del usuario.**
 - Vídeos largos: la fórmula ya tiene modo largo; el motor de imagen para largos se configura más adelante (no ahora).

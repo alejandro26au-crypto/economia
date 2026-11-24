@@ -5,7 +5,7 @@ Flujo (todo automático salvo la voz):
   montaje en segundo plano → sonido con y sin música → subtítulos → 2 MP4 + ficha para publicar → medir a los 2 días.
 
 Órdenes:  ./inercia instalar | comprobar | temas | guion nuevo N "Título" [--largo] | guion N | video N | voz N [voz.mp3]
-          escena N | fotos N "30,140,…" | montar N | terminar N | publicar N | medir
+          escena N | chequeo N | fotos N "30,140,…" | montar N | terminar N | publicar N | medir
 """
 import datetime
 import json
@@ -258,6 +258,24 @@ def cmd_escena(args):
     comprobar_escena(n, fi, RAIZ / fi["carpeta"] if fi.get("carpeta") else None)
 
 
+def chequeo(v, parar=True):
+    """Chequeo SIN RENDERIZAR de web/story.js (segundos): palabras que no están en la voz, falta de SONIDOS (paran) y
+    avisos de encuadre: cabezas cortadas, gente pegada a la cámara, subtítulo o cuadro de cifras sobre una cara."""
+    r = subprocess.run(["node", "--no-warnings", str(HERR / "chequeo.mjs"), str(v)], capture_output=True, text=True)
+    print("\n".join(l for l in (r.stdout + r.stderr).splitlines() if "Reparsing" not in l and "type\": \"module" not in l and "trace-warnings" not in l))
+    if r.returncode and parar:
+        fallo("Corrige los ✗ del chequeo antes de seguir (no hace falta renderizar para verlos).")
+    return r.returncode == 0
+
+
+def cmd_chequeo(args):
+    n = num(args, "chequeo 1")
+    _, fi = cargar(n)
+    v = carpeta(fi, n)
+    comprobar_escena(n, fi, v, parar=False)
+    chequeo(v, parar=False)
+
+
 def cmd_fotos(args):
     """Hoja de fotos (con subtítulos) y comparación lado a lado con los romanos."""
     n = num(args, 'fotos 1 "30,140,260"')
@@ -265,6 +283,7 @@ def cmd_fotos(args):
     v = carpeta(fi, n)
     fr = args[1] if len(args) > 1 else "30,200,400,600"
     comprobar_escena(n, fi, v)
+    chequeo(v)
     corre(["bash", "rebuild.sh"], cwd=v)
     shutil.rmtree(v / "stills" / "a", ignore_errors=True); shutil.rmtree(v / "stills" / "a_sub", ignore_errors=True)
     corre(["node", "render.mjs", "stills/a", fr], cwd=v)
@@ -279,6 +298,7 @@ def cmd_montar(args):
     _, fi = cargar(n)
     v = carpeta(fi, n)
     comprobar_escena(n, fi, v)
+    chequeo(v)
     corre(["bash", "rebuild.sh"], cwd=v)
     total = json.loads(subprocess.run(["node", str(HERR / "cortes.mjs")], cwd=v, capture_output=True, text=True, check=True).stdout.strip().splitlines()[-1])["TOTAL"]
     corre(["bash", "rebuild.sh"], cwd=v)
@@ -388,7 +408,7 @@ def cmd_medir(_):
 
 
 ORDENES = {"instalar": cmd_instalar, "comprobar": cmd_comprobar, "temas": cmd_temas, "guion": cmd_guion, "video": cmd_video, "voz": cmd_voz,
-           "escena": cmd_escena, "fotos": cmd_fotos, "montar": cmd_montar, "terminar": cmd_terminar, "publicar": cmd_publicar, "medir": cmd_medir}
+           "escena": cmd_escena, "chequeo": cmd_chequeo, "fotos": cmd_fotos, "montar": cmd_montar, "terminar": cmd_terminar, "publicar": cmd_publicar, "medir": cmd_medir}
 
 if __name__ == "__main__":
     if len(sys.argv) < 2 or sys.argv[1] not in ORDENES:

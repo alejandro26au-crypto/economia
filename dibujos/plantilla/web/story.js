@@ -7,6 +7,7 @@ import { M, clamp, lerp, ramp, camFromKeys, idle, blinkAt, q } from './motion.js
 import { brazosEn } from './gestos.js';
 import { PAL, TOTAL_VOZ } from './tiempos.js';
 import { BOCA } from './boca.js';
+import { persona, plano, acerca, gira } from './encuadre.js';   // CÁMARAS AUTOMÁTICAS (ver abajo)
 export const FPS = 30, TOTAL = TOTAL_VOZ;
 
 // ---------- palabras → fotogramas ----------
@@ -39,7 +40,14 @@ export const LIGHTS = {
 };
 export const lightFor = (S) => ({ ...LIGHTS[S.light] });
 
-// ---------- cámaras: por defecto, un recorrido distinto por plano alrededor del centro de la escena ----------
+// ---------- cámaras ----------
+// NO poner coordenadas a mano: pedir el TIPO de plano a encuadre.js y el motor calcula la distancia justa.
+//   const CLI = persona([2.35, 0, -0.15], 0.79), TEN = persona([4.95, 0, -0.95], 0.78);     // pies y escala (s) de cada uno
+//   CAMS.caja = [{ f: A.caja, ...plano.dos(CLI, TEN, { lado: -40, max: 3.6 }) },            // max = distancia a la pared (dentro)
+//                { f: A.sig - 1, ...acerca(plano.dos(CLI, TEN, { lado: -40, max: 3.6 }), 0.1) }];   // empuje lento
+//   plano.cuerpo(P) · plano.cara(P) (solo 1-2) · plano.detras(P, [x, y, z]) · plano.contra(A, B) · plano.general(C, R) · gira(k, 6)
+// Después: `./inercia chequeo N` (segundos, sin renderizar) avisa de cabezas cortadas, gente pegada a la cámara, etc.
+// Por defecto (si no se cambia): un recorrido distinto por plano alrededor del centro de la escena.
 const CENTRO = [0, 1.4, -8];
 const CAMS = Object.fromEntries(SHOTS.map((s, i) => { const a = -0.5 + (i % 5) * 0.25, d = 11 - (i % 3) * 2;
   return [s.id, [{ f: s.a, pos: [CENTRO[0] + Math.sin(a) * d, 1.7 + (i % 2) * 0.6, CENTRO[2] + Math.cos(a) * d], look: CENTRO, fov: 46 },

@@ -13,8 +13,8 @@ else mal "node no está (instalar Node.js 22 LTS)"; fi
 command -v python3 >/dev/null && ok "$(python3 --version)" || mal "python3 no está"
 if command -v ffmpeg >/dev/null; then ok "ffmpeg"; ffmpeg -hide_banner -filters 2>/dev/null | grep -q " ass " && ok "ffmpeg con subtítulos (libass)" || mal "ffmpeg sin libass: no se podrán quemar subtítulos (el .srt sí)"; else mal "ffmpeg no está (apt-get install -y ffmpeg)"; fi
 echo "== Python"
-python3 -m pip install -q numpy pillow faster-whisper 2>&1 | grep -v -i "warning" || true
-python3 -c "import numpy, PIL, faster_whisper" 2>/dev/null && ok "numpy, Pillow, faster-whisper" || mal "faltan paquetes de Python (python3 -m pip install numpy pillow faster-whisper)"
+python3 -m pip install -q numpy pillow "faster-whisper==1.2.1" "av>=14" 2>&1 | grep -v -i "warning" || true
+python3 -c "import numpy, PIL, faster_whisper, av; assert int(av.__version__.split('.')[0]) >= 14" 2>/dev/null && ok "numpy, Pillow, faster-whisper" || mal "faltan paquetes de Python (python3 -m pip install numpy pillow faster-whisper)"
 echo "== Modelo de voz (tiempos de cada palabra)"
 python3 -c "from faster_whisper import WhisperModel; WhisperModel('small', device='cpu', compute_type='int8')" >/dev/null 2>&1 && ok "modelo «small» listo" || mal "no se pudo descargar el modelo (necesita salida a huggingface.co)"
 echo "== Playwright + Chromium (render)"
