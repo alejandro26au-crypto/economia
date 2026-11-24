@@ -47,25 +47,25 @@ const OJOS = [CLI[0], 1.27, CLI[2]], TIENDA_F = [56, 1.6, -5.9], BANCO_F = [63.5
 
 // ---------- cámaras (personajes de cuerpo entero o de rodillas arriba; cara grande solo en el gancho) ----------
 const CAMS = {
-  gancho: [{ f: 0, pos: [0.63, 1.65, 1.93], look: DAT, fov: 46 },                                    // la tarjeta en el datáfono: «Pagas tu tarjeta…»
+  gancho: [{ f: 0, pos: [-0.25, 1.75, 2.75], look: DAT, fov: 46 },                                    // la tarjeta en el datáfono: «Pagas tu tarjeta…»
     { f: en('banco') - 4, pos: [1.5, 1.5, 0.9], look: DAT, fov: 38 },
     { f: en('banco') - 3, pos: [2.05, 1.3, 1.25], look: OJOS, fov: 36 },                               // ÚNICO primer plano: «¡Y el banco gana IGUAL!» (la clienta)
     { f: A.promesa - 1, pos: [2.1, 1.3, 1.05], look: OJOS, fov: 33 }],
   promesa: [{ f: A.promesa, pos: [62.5, 1.7, 3.6], look: [56.5, 2.0, -5.5], fov: 52 },                     // la calle: primero la tienda…
     { f: en('centavo'), pos: [58.5, 1.7, -3.0], look: [63.5, 2.8, 7], fov: 54 }, { f: A.comision - 1, pos: [58.8, 1.7, -3.3], look: [63.5, 2.9, 7], fov: 52 }],   // …y el banco enfrente
-  comision: [{ f: A.comision, pos: [0.2, 1.8, 2.4], look: [3.4, 1.0, -0.8], fov: 48 },                     // la caja: la clienta paga, la tendera cobra
-    { f: en('comision'), pos: [0.8, 1.65, 1.7], look: [3.4, 1.05, -0.8], fov: 44, ease: 'easeOut' }, { f: A.quien - 1, pos: [0.9, 1.65, 1.6], look: [3.4, 1.05, -0.8], fov: 43 }],
+  comision: [{ f: A.comision, pos: [-0.6, 1.85, 3.2], look: [3.4, 1.0, -0.8], fov: 48 },                     // la caja: la clienta paga, la tendera cobra
+    { f: en('comision'), pos: [-0.1, 1.75, 2.6], look: [3.4, 1.05, -0.8], fov: 44, ease: 'easeOut' }, { f: A.quien - 1, pos: [0.0, 1.75, 2.5], look: [3.4, 1.05, -0.8], fov: 43 }],
   quien: [{ f: A.quien, pos: [0.3, 0.75, 2.6], look: [3.4, 1.35, -0.8], fov: 48, roll: -3 }, { f: A.tu - 1, pos: [0.55, 0.8, 2.3], look: [3.4, 1.35, -0.8], fov: 46, roll: -2 }],   // contrapicado: la clienta y la tendera en la caja
   tu: [{ f: A.tu, pos: [2.0, 1.4, 2.6], look: [2.3, 1.1, -0.2], fov: 44 }, { f: en('solo') - 2, pos: [2.05, 1.4, 2.3], look: [2.35, 1.1, -0.2], fov: 42 },                                   // «Pues tú»: la clienta
     { f: en('172'), pos: [-0.6, 1.5, 3.4], look: [-0.6, 1.2, -2.0], fov: 46, ease: 'easeOut' },            // las estanterías: los precios
     { f: A.peor - 1, pos: [-0.8, 1.45, 2.8], look: [-0.8, 1.25, -2.0], fov: 42 }],
   peor: [{ f: A.peor, pos: [4.6, 1.7, 1.6], look: [3.2, 1.0, -0.9], fov: 42 }, { f: A.efectivo - 1, pos: [4.2, 1.6, 1.1], look: [3.2, 1.05, -0.8], fov: 38 }],
-  efectivo: [{ f: A.efectivo, pos: [0.4, 1.55, 2.3], look: [3.2, 1.1, -0.7], fov: 46 },                    // la clienta en la caja: efectivo frente a tarjeta
-    { f: A.cadena - 1, pos: [0.7, 1.55, 2.0], look: [3.2, 1.1, -0.7], fov: 44 }],
+  efectivo: [{ f: A.efectivo, pos: [-0.3, 1.6, 2.9], look: [3.2, 1.1, -0.7], fov: 46 },                    // la clienta en la caja: efectivo frente a tarjeta
+    { f: A.cadena - 1, pos: [0.0, 1.6, 2.6], look: [3.2, 1.1, -0.7], fov: 44 }],
   cadena: [{ f: A.cadena, pos: [62.5, 1.8, 3.8], look: [56.5, 1.8, -5.5], fov: 50 },                     // la tienda: las monedas salen…
     { f: en('banco cobra') + 25, pos: [58.5, 1.8, -3.2], look: [63.5, 2.8, 7], fov: 54, ease: 'easeOut' },   // …y entran en el banco
     { f: en('puntos'), pos: [60.2, 1.5, 0.9], look: [57.9, 1.1, -3.4], fov: 46 }, { f: A.cta - 1, pos: [59.9, 1.5, 0.6], look: [57.9, 1.12, -3.4], fov: 44 }],   // los puntos vuelven a la clienta
-  cta: [{ f: A.cta, pos: [0.5, 1.5, 2.1], look: [3.0, 1.1, -0.6], fov: 46 }, { f: TOTAL - 1, pos: [0.8, 1.48, 1.8], look: [3.0, 1.12, -0.6], fov: 43 }],
+  cta: [{ f: A.cta, pos: [-0.2, 1.6, 2.8], look: [3.0, 1.1, -0.6], fov: 46 }, { f: TOTAL - 1, pos: [0.3, 1.55, 2.3], look: [3.0, 1.12, -0.6], fov: 43 }],
 };
 const KICKS = [{ f: en('igual'), a: 0.03 }, { f: en('172'), a: 0.03 }, { f: en('peor'), a: 0.03 }, { f: en('149'), a: 0.03 }, { f: en('1133'), a: 0.03 }];
 const ZOOMS = [[en('igual'), 0.12], [en('172'), 0.14], [en('149'), 0.14], [en('1133'), 0.14], [en('intereses', 2), 0.1]];
@@ -160,11 +160,11 @@ export const fxAt = (f, T) => {
   // la comisión: monedas que salen del datáfono y se van por la ventana (dentro) — «la tienda paga una comisión. Y parte va a tu banco»
   const c0 = en('comision');
   if (f >= c0 && f < A.quien) for (let i = 0; i < 6; i++) { const t = q(((f - c0) / 40 + i / 6) % 1, 2);
-    out.push(FX('mon' + i + t, moneda, lerp3([DAT[0], 1.1, DAT[2]], [-5.4, 2.4, 0.9], t).map((v, k) => k === 1 ? v + Math.sin(t * Math.PI) * 0.8 : v), 0.25)); }
+    out.push(FX('mon' + i + t, moneda, lerp3([DAT[0], 1.1, DAT[2]], [-5.4, 2.4, 0.9], t).map((v, k) => k === 1 ? v + Math.sin(t * Math.PI) * 0.8 : v), 0.4)); }
   // fuera: las monedas salen de la tienda y entran en el banco — «El banco cobra a la tienda»
   const c1 = en('banco cobra');
-  if (S_(f) === 'cadena' && f >= c1) for (let i = 0; i < 8; i++) { const t = q(((f - c1) / 45 + i / 8) % 1, 2);
-    out.push(FX('monf' + i + t, moneda, lerp3([57, 1.4, -5.2], [63.5, 1.6, 6.2], t).map((v, k) => k === 1 ? v + Math.sin(t * Math.PI) * 2.2 : v), 0.45)); }
+  if (S_(f) === 'cadena' && f >= c1) for (let i = 0; i < 10; i++) { const t = q(((f - c1) / 45 + i / 10) % 1, 2);
+    out.push(FX('monf' + i + t, moneda, lerp3([57, 1.4, -5.2], [63.5, 1.6, 6.2], t).map((v, k) => k === 1 ? v + Math.sin(t * Math.PI) * 2.2 : v), 0.9)); }
   // el efectivo: el billete se le va volando a la clienta — «unos 149 dólares menos al año»
   const b0 = en('149');
   if (f >= b0 && f < A.cadena) { const t = q(Math.min(1, (f - b0) / 40), 2); out.push(FX('bil' + t, billete, [CLI[0] + 0.2 + t * 1.2, 1.2 + t * 1.6, CLI[2] + 0.2], 0.35, { roll: t * 2 })); }

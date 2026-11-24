@@ -103,7 +103,7 @@ def dibuja(im, g, f, cfg, claves, a):
     font = ImageFont.truetype(str(FUENTE), int(tam * pop))
     palabras = [(w["p"].upper() if may else w["p"].lower() if cfg.get("minusculas", True) else w["p"]).strip("«»\"") for w in g]
     if not cfg.get("puntuacion", False):  # como en CapCut: sin puntos ni signos colgando
-        palabras = [re.sub(r"[.,;:!?…¡¿]+", "", p) or p for p in palabras]
+        palabras = [re.sub(r"(?<!\d)[.,]|[.,](?!\d)|[;:!?…¡¿]+", "", p) or p for p in palabras]   # 1.133 y 172.000 conservan el punto de los miles
     habla = max([i for i, w in enumerate(g) if f >= w["f0"]] or [0])
     # medir: si no cabe en el 88 % del ancho, partir en dos líneas
     d0 = ImageDraw.Draw(im)
