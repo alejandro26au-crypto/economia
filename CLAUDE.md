@@ -9,14 +9,22 @@ Habla con el usuario en español llano, frases cortas y pasos numerados. Puede t
 **Lee `docs/catalogo.md` SOLO cuando haga falta:** catálogo de escenarios, modelos 3D y reparto heredados del
 océano (para reutilizar) y estructura del código. Piezas para decorados: `src/motor/atrezo.ts`.
 
-## Estado (18 nov 2026)
-- Recién creado: motor copiado del océano y limpio. `src/ideas/8.ts` = EJEMPLO, el vídeo de Holland (vertical) como
-  modelo de escenas.
-- PENDIENTE (en este orden): 1) motor en horizontal 1920×1080 (cámara, rótulos, subtítulos); 2) montaje de
-  vídeos largos en tramos que se unen sin cortes (la nube corta procesos de más de 2 h); 3) borrador automático de
-  escenas a partir del guion; 4) vídeo piloto.
-- Público: España y Latinoamérica (español neutro). Por decidir: voz de ElevenLabs en español, tipo de personajes,
-  nombre y logo del canal, idea del piloto.
+## Estado (25 nov 2026) — rama `claude/nice-babbage-y76v31`
+- HECHO: motor horizontal 1920×1080. PROTAGONISTA 2D animado por partes en `src/personaje/Muneco.tsx` (cabeza
+  grande con sombreado a lápiz, pelo despeinado copiado de la hoja del usuario, camiseta negra, palos negros, manos
+  blancas; lo mueve el esqueleto de `src/bent/animaciones.ts`). Del kit de los romanos (océano, rama
+  determined-franklin, `dibujos/`): `src/personaje/gestos.ts` (boca con el volumen real de la voz, gestos atados a
+  palabras con impulso, cabeza que asiente); `canal voz` guarda `boca` en tiempos.json. Demo: composición
+  `muneco-demo`. Pruebas de estilo descartadas en `src/pruebas/` (boceto, isométrico, recortes): solo referencia.
+- ESTILO ELEGIDO: como el canal Zenn (@Zenn0009, 201k subs, vídeos de 8-10 min): muñeco simple y expresivo, fondos
+  PLANOS A COLOR con contorno negro limpio y colores apagados, un objeto clave por escena, miniaturas con 1-2 palabras
+  amarillas con borde negro. Identidad propia: pelo despeinado y camiseta negra (no copiar a Zenn).
+  Pendiente ver un vídeo de Zenn por dentro (movimiento, duración de planos, textos): el usuario manda capturas.
+- PENDIENTE (en orden): 1) ajustar el personaje al estilo limpio de Zenn (contorno limpio, sin lápiz); 2) fondos
+  planos a color y objetos; 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
+  negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
+  Cobra»).
+- vidIQ: gastar el mínimo de créditos (0 hasta el 9 dic 2026). Público: España y Latinoamérica.
 
 ## Lo que dicen los datos (vidIQ, 18 nov 2026)
 - En español destacan los vídeos que tocan TU dinero y una verdad escondida: «Cómo los ricos usan la deuda» (17x,
