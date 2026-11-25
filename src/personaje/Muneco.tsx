@@ -6,6 +6,7 @@
 import React from "react";
 import { Brazo, ManoDibujo, Pierna, Pose } from "../bent/rig";
 import { Anim, Expresion, poseCompleta } from "../bent/animaciones";
+import { abreBoca, brazosEn, cabezaEn, ClaveGesto } from "./gestos";
 
 export const NEGRO = "#151515";
 const PIEL = "#fbfbf9";
@@ -310,15 +311,22 @@ function parpadeo(f: number) {
 export type Tramo = { desde: number; anim: Anim; cara: Expresion; habla?: boolean };
 
 /** Pose del muñeco en el fotograma f según una lista de tramos (cambia de animación con mezcla suave). */
-export function poseEnTramos(tramos: Tramo[], f: number, semilla = 0): Pose {
+/** Extras del kit de los romanos: boca con la voz real, gestos atados a palabras y cabeza que asiente. */
+export type Habla = { boca?: number[] | null; claves?: ClaveGesto[]; golpes?: number[] };
+
+export function poseEnTramos(tramos: Tramo[], f: number, semilla = 0, habla: Habla = {}): Pose {
   let i = 0;
   while (i + 1 < tramos.length && tramos[i + 1].desde <= f) i++;
   const tr = tramos[i];
   const ant = i > 0 ? tramos[i - 1] : tr;
   const t = f - tr.desde;
-  const abre = tr.habla ? Math.max(0, Math.abs(Math.sin(f * 0.55)) * 0.85 * (Math.sin(f * 0.13 + 1) > -0.5 ? 1 : 0.1)) : 0;
+  const abre = habla.boca ? abreBoca(f, habla.boca) : tr.habla ? Math.max(0, Math.abs(Math.sin(f * 0.55)) * 0.85 * (Math.sin(f * 0.13 + 1) > -0.5 ? 1 : 0.1)) : 0;
   const p = poseCompleta({ anim: tr.anim, animAnt: ant.anim, t, expresion: tr.cara, abre, semilla, f });
-  return ajusta(p, tr, t);
+  const q = ajusta(p, tr, t);
+  const libre = tr.anim === "quieto" || tr.anim === "habla";
+  if (habla.claves && libre) Object.assign(q, brazosEn(f, habla.claves));
+  if (habla.golpes) q.cabeza += cabezaEn(f, habla.golpes);
+  return q;
 }
 
 /** Ajustes a sus proporciones: feliz con los ojos abiertos; al pensar, la mano llega a la barbilla. */

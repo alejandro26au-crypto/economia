@@ -3,6 +3,17 @@
 import React from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { DefsMuneco, Muneco, poseEnTramos, Tramo } from "../personaje/Muneco";
+import { ClaveGesto } from "../personaje/gestos";
+
+// gestos atados a «palabras» (fotogramas) y voz de mentira con sílabas y pausas, para la demo
+const CLAVES: ClaveGesto[] = [
+  { f: 100, der: "abre" },
+  { f: 122, izq: "cadera" },
+  { f: 140, der: "golpe" },
+  { f: 160, der: "pulgar", izq: "cuelga" },
+];
+const GOLPES = [110, 140, 160];
+const BOCA = Array.from({ length: 420 }, (_, f) => (f > 95 && f < 185 && Math.sin(f * 0.07) > -0.7 ? Math.abs(Math.sin(f * 0.6)) * (0.5 + 0.5 * Math.abs(Math.sin(f * 0.23))) : 0));
 
 const TRAMOS: Tramo[] = [
   { desde: 0, anim: "camina", cara: "feliz" },
@@ -12,11 +23,11 @@ const TRAMOS: Tramo[] = [
   { desde: 290, anim: "piensa", cara: "piensa" },
   { desde: 345, anim: "victoria", cara: "risa" },
 ];
-const NOMBRE: Record<string, string> = { camina: "camina", habla: "habla (boca con la voz)", senala: "señala", asustado: "se asusta", piensa: "piensa", victoria: "¡lo celebra!" };
+const NOMBRE: Record<string, string> = { camina: "camina", habla: "habla: boca con la voz y gestos en sus palabras", senala: "señala", asustado: "se asusta", piensa: "piensa", victoria: "¡lo celebra!" };
 
 export const MunecoDemo: React.FC = () => {
   const f = useCurrentFrame();
-  const p = poseEnTramos(TRAMOS, f);
+  const p = poseEnTramos(TRAMOS, f, 0, { boca: BOCA, claves: CLAVES, golpes: GOLPES });
   const x = interpolate(f, [0, 95], [-250, 900], { extrapolateRight: "clamp" });
   const tr = [...TRAMOS].reverse().find((t) => t.desde <= f)!;
   return (

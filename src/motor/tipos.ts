@@ -12,6 +12,7 @@ export type PropsShort = {
   variante: number;
   duracion: number; // segundos de voz
   palabras: Palabra[];
+  boca?: number[] | null; // volumen de la voz por fotograma (0..1): la boca del personaje lo sigue
   voz: string | null; // ruta dentro de public/ (o null en modo prueba)
   musica: string | null;
 };

@@ -159,6 +159,22 @@ def cmd_ideas(_):
         print(f"\n{n}. {d['titulo']}\n   {d['guion']}")
 
 
+def boca_de_voz(voz, fps=30):
+    """Boca que sigue la voz (del kit de los romanos): volumen de la voz en cada fotograma, de 0 (callado) a 1."""
+    import numpy as np
+
+    sr = 16000
+    raw = subprocess.run([ffmpeg(), "-v", "error", "-i", str(voz), "-ac", "1", "-ar", str(sr), "-f", "f32le", "-"], capture_output=True, check=True).stdout
+    x = np.frombuffer(raw, np.float32)
+    n = sr // fps
+    v = x[: len(x) // n * n].reshape(-1, n)
+    r = np.sqrt((v ** 2).mean(axis=1))
+    r = np.clip(r / max(np.percentile(r, 95), 1e-6), 0, 1)
+    r[r < 0.12] = 0  # silencio = boca cerrada
+    s = np.convolve(r, [0.25, 0.5, 0.25], "same")  # suave, sin perder sílabas
+    return [round(float(a), 2) for a in s]
+
+
 def cmd_voz(args):
     n, d = idea(args)
     audios = sorted([p for p in TU_VOZ.iterdir() if p.suffix.lower() in AUDIOS], key=lambda p: p.stat().st_mtime, reverse=True) if TU_VOZ.exists() else []
@@ -226,7 +242,8 @@ def cmd_voz(args):
         else:
             i += 1
     palabras = [{"p": w, "ini": round(t[0], 2), "fin": round(t[1], 2)} for w, t in zip(guion, tiempos)]
-    (destino / "tiempos.json").write_text(json.dumps({"duracion": round(total, 2), "palabras": palabras}, ensure_ascii=False, indent=1), encoding="utf-8")
+    boca = boca_de_voz(voz)
+    (destino / "tiempos.json").write_text(json.dumps({"duracion": round(total, 2), "palabras": palabras, "boca": boca}, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"✓ Voz preparada: {len(palabras)} palabras en {total:.1f} s ({claras} reconocidas).")
     if claras < 0.7 * len(a):
         print("  ⚠ La voz no parece decir el guion tal cual: el dibujo puede ir descuadrado. Genera la voz con el texto exacto.")
@@ -463,7 +480,7 @@ def preparar_props(n, args):
         shutil.copyfile(elegida, copia)
         musica = f"musica/{copia.name}"
     efectos_sonido()
-    props = {"n": n, "variante": variante, "duracion": t["duracion"], "palabras": t["palabras"], "voz": None if prueba else f"voces/{n}/voz.mp3", "musica": musica}
+    props = {"n": n, "variante": variante, "duracion": t["duracion"], "palabras": t["palabras"], "boca": t.get("boca"), "voz": None if prueba else f"voces/{n}/voz.mp3", "musica": musica}
     SALIDA.mkdir(exist_ok=True)
     pf = SALIDA / f"props-{n}.json"
     pf.write_text(json.dumps(props, ensure_ascii=False), encoding="utf-8")
