@@ -5,7 +5,8 @@ import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { bodyFront, Outfit, Pen } from "../personaje/toon";
 
 const PROTA: Outfit = { jacket: "#26242a", pants: "#2c2b31", boots: "#1b1a1f", hat: "mop", hair: "#1f1c1e", skin: "#fff6ec", buttons: "none" };
-const PELOS = ["rizos", "tupe", "despeinado", "rapado"] as const;
+const PELOS = ["corto", "corto", "corto", "corto"] as const;
+const CARAS = ["smile", "grin", "shock", "nervous"] as const;
 
 export const ToonDemo: React.FC = () => {
   const f = useCurrentFrame();
@@ -18,10 +19,8 @@ export const ToonDemo: React.FC = () => {
       g.translate(-20 + i * 480, 160);
       g.scale(1.1, 1.1);
       const p = new Pen(g);
-      bodyFront(p, { ...PROTA, hat: `pelo:${pelo}` }, { mode: "stand", expr: "smile", phase: f / 10, seed: 3, blink: false });
+      bodyFront(p, { ...PROTA, hat: `pelo:${pelo}` }, { mode: "stand", expr: CARAS[i], phase: f / 10, seed: 3, blink: false });
       g.restore();
-      g.font = "bold 64px sans-serif"; g.fillStyle = "#241726"; g.textAlign = "center";
-      g.fillText(`${i + 1}. ${pelo}`, -20 + i * 480 + 330, 110);
     });
   }, [f]);
   return (

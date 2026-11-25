@@ -387,6 +387,19 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     const at = (deg: number, r: number): P2 => [cx + Math.cos(rad(deg)) * A * r, hc - Math.sin(rad(deg)) * B * r];
     const arr = (d: number) => Math.max(0, Math.sin(rad(d)));
     const gauss = (d: number, c: number, w: number) => Math.exp(-(((d - c) / w) ** 2));
+    if (estilo === "corto") {
+      // el «pelo-corto» del océano (src/bent/rig.tsx), pasado a esta cabeza: una sola pieza lisa pegada a la
+      // cabeza, borde de la frente ondulado con un flequillo corto. Sencillo y limpio.
+      const S = (x: number, y: number): P2 => [cx + (x / 104) * A, hc + (y / 104) * B];
+      const q = (a: P2, c: P2, b: P2) => curve(a, [(a[0] + 2 * c[0] + b[0]) / 4, (a[1] + 2 * c[1] + b[1]) / 4], b, 12);
+      const p0 = S(-110, -20), p1 = S(0, -134), p2 = S(110, -32), p3 = S(48, -80), p4 = S(-44, -84);
+      const pts = R([...q(p0, S(-124, -136), p1), ...q(p1, S(124, -130), p2).slice(1), ...q(p2, S(92, -76), p3).slice(1),
+        ...q(p3, S(0, -64), p4).slice(1), ...q(p4, S(-92, -72), p0).slice(1, -1)]);
+      p.shadedFill(pts, col, mul(col, SH_FELT), light, A * 1.15, 0.35);
+      p.poly(pts, null, ow);
+      p.stroke(R(q(S(-70, -98), S(-30, -122), S(20, -122))), 3 * u, mix(col, "#ffffff", 0.3)); // brillo
+      return;
+    }
     const R0: Record<string, (d: number) => number> = {
       rizos: (d) => 1.1 + 0.16 * arr(d) + 0.07 * Math.abs(Math.sin(rad(d) * 10)),
       tupe: (d) => 1.05 + 0.1 * arr(d) + 0.36 * gauss(d, 72, 26),
