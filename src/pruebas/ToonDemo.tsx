@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { bodyFront, Outfit, Pen } from "../personaje/toon";
 
-const PROTA: Outfit = { jacket: "#26242a", pants: "#2c2b31", boots: "#1b1a1f", hat: "mop", hair: "#1f1c1e", skin: "#fff6ec", buttons: "none" };
+const PROTA: Outfit = { jacket: "#26242a", pants: "#2c2b31", boots: "#1b1a1f", hat: "mop", hair: "#1f1c1e", skin: "#fff6ec", buttons: "none", prota: true };
 const PELOS = ["despeinado", "despeinado", "despeinado", "despeinado"] as const; // pelo elegido por el usuario (25 nov 2026)
 const CARAS = ["smile", "grin", "shock", "nervous"] as const;
 

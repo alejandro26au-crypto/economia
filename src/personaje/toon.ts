@@ -22,6 +22,8 @@ export type Outfit = {
   build?: Build;
   /** especie «Moneda» (canal de economía): la cabeza es una moneda con borde, canto estriado y brillo */
   coin?: boolean;
+  /** estilo del PROTAGONISTA del canal: ojos grandes con brillo, manos blancas y camiseta de manga corta */
+  prota?: boolean;
 };
 type P2 = [number, number];
 
@@ -256,8 +258,19 @@ const eyeKind = (k: EyeK, lid: number): EyeK =>
   lid >= 1 && k !== "happy" && k !== "squeeze" && k !== "spiral" ? "dash" : lid > 0 ? halfLid(k) : k;
 const lidOf = (b: boolean | number | undefined) => (b === true ? 1 : Number(b) || 0);
 
+let OJOS_GRANDES = false; // lo activa bodyFront con o.prota
 const eye = (p: Pen, kind: EyeK, x: number, ey: number, u: number, side: number, look: number, skin: string) => {
   const lx = x + look * 3 * u, lw = 3.8 * u;
+  if (OJOS_GRANDES && (kind === "dot" || kind === "small" || kind === "lid")) {
+    // ojo grande como en los dibujos del usuario: blanco ovalado, pupila negra y brillo
+    const rx = 9 * u, ry = 11 * u, pr = kind === "small" ? 3.2 * u : 4.4 * u;
+    p.ell(x, ey - 2 * u, rx, ry, WHITE, 2.6 * u);
+    const px = x + look * 3.5 * u + side * 0.8 * u, py = ey + (kind === "lid" ? 0.5 : -0.5) * u;
+    p.dot(px, py, pr);
+    p.dot(px + 1.6 * u, py - 1.8 * u, 1.3 * u, WHITE);
+    if (kind === "lid") p.stroke([[x - rx + u, ey - 7 * u], [x + rx - u, ey - 7 * u]], 2.6 * u); // párpado tranquilo
+    return;
+  }
   switch (kind) {
     case "dot": p.ell(lx, ey, 3.8 * u, 5.5 * u, INK, 0); break;
     case "small": p.ell(lx, ey, 3 * u, 4.4 * u, INK, 0); break;
@@ -646,7 +659,15 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
       arms.push({ pts: [S, E, Hd], front: true });
     } else arms.push({ pts: hang(1, sw), front: false });
   }
-  const drawArm = (a: Arm) => { p.stroke(curve(a.pts[0], a.pts[1], a.pts[2]), 5.2 * u, armCol); p.dot(a.pts[2][0], a.pts[2][1], 5.5 * u); };
+  const drawArm = (a: Arm) => {
+    if (!o.prota) { p.stroke(curve(a.pts[0], a.pts[1], a.pts[2]), 5.2 * u, armCol); p.dot(a.pts[2][0], a.pts[2][1], 5.5 * u); return; }
+    // protagonista: brazo algo más grueso y MANO BLANCA con contorno y pulgar
+    p.stroke(curve(a.pts[0], a.pts[1], a.pts[2]), 6.8 * u, INK);
+    const [hx, hy] = a.pts[2], side = hx < tcx ? -1 : 1;
+    p.ell(hx, hy + 2 * u, 8 * u, 9 * u, WHITE, 2.4 * u); // palma (manopla blanca)
+    p.ell(hx - side * 6.5 * u, hy - 1 * u, 3.4 * u, 5 * u, WHITE, 2.2 * u, 0, 360, -side * 30); // pulgar hacia delante
+    p.stroke([[hx - side * 2 * u, hy + 7 * u], [hx + side * 3 * u, hy + 6 * u]], 1.4 * u, "#c9c4cc"); // pliegue de los dedos
+  };
   // behind the body: rifle, sword, arms
   if (rifle) {
     p.band([R0, R1], "#7a4b2a", 5 * u, 1.5 * u, "round");
@@ -684,6 +705,19 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
     });
     if (o.sash) { const s = facing || 1; p.poly([[tcx + s * 0.55 * T.a, torsoBot - 0.3 * HH], [tcx + s * 0.75 * T.a, torsoBot + 0.05 * HH], [tcx + s * 0.45 * T.a, torsoBot + 0.02 * HH]], o.sash, 1.6 * u); }
     p.inkRing(tp, ow, thick);
+    if (o.prota) for (const a of arms) { // MANGAS CORTAS de la camiseta, tapando el arranque del brazo
+      const S = a.pts[0], E = lerp2(a.pts[0], a.pts[1], 0.5), side = S[0] < tcx ? -1 : 1;
+      const dx = E[0] - S[0], dy = E[1] - S[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
+      const w0 = 8 * u, w1 = 7.5 * u, top: P2 = [S[0] - side * 6 * u, S[1] - 5 * u];
+      // manga: sale del hombro (redondeada arriba) y acaba en un borde recto un poco abierto
+      const manga: P2[] = [
+        ...curve([S[0] - nx * w0 * side, S[1] - ny * w0 * side], top, [S[0] + nx * w0 * side, S[1] + ny * w0 * side], 6),
+        [E[0] + nx * w1 * side + dx / L * 2 * u, E[1] + ny * w1 * side + dy / L * 2 * u],
+        [E[0] - nx * w1 * side, E[1] - ny * w1 * side],
+      ];
+      p.shadedFill(manga, o.jacket, mul(o.jacket, SH_CLOTH), light, 20 * u, 0.4);
+      p.poly(manga, null, 2.4 * u);
+    }
   }
   // in front of the body: hands holding props
   for (const a of arms) if (a.front) {
@@ -717,7 +751,9 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   p.inkRing(hp, ow, thick);
   hatOn(p, o, hp, H, 300, hc, light, seed, facing, false);
   const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap" && o.hat !== "mop" && !String(o.hat).startsWith("pelo:");
+  OJOS_GRANDES = !!o.prota;
   faceFront(p, 300, hc, W, expr, facing, look, lid, brim, skin, o.moustache, o.build === "stout");
+  OJOS_GRANDES = false;
   p.rot = null;
 };
 

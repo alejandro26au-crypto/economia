@@ -29,7 +29,12 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   `hat: "pelo:despeinado"` (negro). Piel blanca (humano, como sus dibujos). Descartados: lápiz, mechones de punta,
   pelo natural con raya, especie moneda (queda `coin` en toon.ts sin usar). Pendiente: ojos grandes como sus
   dibujos, manos blancas con dedos, camiseta de manga corta.
-- PENDIENTE (en orden): 1) personaje (pelo aprobado; faltan ojos, manos y camiseta); 2) fondos
+- KIT DE LA ESPECIE (25 nov): `src/personaje/especie.ts`. Todos comparten cuerpo y cara del protagonista
+  (`prota: true` en toon.ts: ojos grandes con brillo, manos blancas, camiseta de manga corta) y cambian pelo
+  (despeinado, corto, rizos, tupe, rapado), color de pelo, camiseta, pantalón, zapatos y piel. `REPARTO` con nombre
+  (protagonista, vecina, banquero, amigo, jefa, tendero, estudiante, nino) y `persona(semilla)` para gente de
+  relleno. Hoja: composición `reparto-especie`. La camiseta NEGRA es solo del protagonista.
+- PENDIENTE (en orden): 1) personaje y especie (hechos, a falta de visto bueno); 2) fondos
   planos a color y objetos; 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
