@@ -24,6 +24,8 @@ export type Outfit = {
   coin?: boolean;
   /** estilo de la ESPECIE del canal: ojos grandes con brillo, manos blancas y ropa con textura (sin mangas) */
   prota?: boolean;
+  /** detalles de la ropa de la especie: color del cinturón, bolsillo en el pecho, color del cuello de camisa */
+  cinturon?: string; bolsillo?: boolean; cuelloCamisa?: string;
 };
 type P2 = [number, number];
 
@@ -559,8 +561,8 @@ const footStroke = (p: Pen, a: P2, b: P2, w: number, col: string) => {
 
 /** ROPA CON TEXTURA (especie del canal): trama de tela, motas, cuello redondo, pliegues y dobladillo.
  *  Se dibuja recortada dentro del torso. */
-const ropaConTextura = (p: Pen, col: string, cx: number, top: number, bot: number, a: number, u: number, seed: number) => {
-  const g = p.g, oscuro = mix(col, "#000000", 0.28), claro = mix(col, "#ffffff", 0.16);
+const ropaConTextura = (p: Pen, o: Outfit, cx: number, top: number, bot: number, a: number, u: number, seed: number) => {
+  const col = o.jacket, g = p.g, oscuro = mix(col, "#000000", 0.28), claro = mix(col, "#ffffff", 0.16);
   g.save();
   g.globalAlpha = 0.16; // trama de tela: dos direcciones muy suaves
   for (let k = -40; k < 40; k++) {
@@ -579,9 +581,26 @@ const ropaConTextura = (p: Pen, col: string, cx: number, top: number, bot: numbe
     p.stroke(curve([cx + s * 0.2 * a, bot - 0.2 * (bot - top)], [cx + s * 0.32 * a, bot - 0.14 * (bot - top)], [cx + s * 0.46 * a, bot - 0.17 * (bot - top)], 6), 1.4 * u, oscuro);
   }
   g.globalAlpha = 1;
-  // cuello redondo (ribete) y dobladillo
-  p.stroke(curve([cx - 0.42 * a, top + 2 * u], [cx, top + 9 * u], [cx + 0.42 * a, top + 2 * u], 10), 3 * u, oscuro);
-  p.stroke(curve([cx - 0.38 * a, top + 4.5 * u], [cx, top + 11 * u], [cx + 0.38 * a, top + 4.5 * u], 10), 1.2 * u, claro);
+  // cuello redondo (ribete) si no lleva cuello de camisa; y dobladillo
+  if (!o.cuelloCamisa) {
+    p.stroke(curve([cx - 0.42 * a, top + 2 * u], [cx, top + 9 * u], [cx + 0.42 * a, top + 2 * u], 10), 3 * u, oscuro);
+    p.stroke(curve([cx - 0.38 * a, top + 4.5 * u], [cx, top + 11 * u], [cx + 0.38 * a, top + 4.5 * u], 10), 1.2 * u, claro);
+  } else p.stroke([[cx, top + 10 * u], [cx, top + 0.62 * (bot - top)]], 1.4 * u, oscuro); // tapeta de la camisa
+  const h = bot - top;
+  if (o.bolsillo) { // bolsillo de parche en el pecho, con pespunte
+    const bx = cx + 0.4 * a, by = top + 0.22 * h, bw = 9.5 * u, bh = 11 * u;
+    const bol: P2[] = [[bx - bw, by], [bx + bw, by], [bx + bw, by + bh - 2 * u], [bx, by + bh + 1.5 * u], [bx - bw, by + bh - 2 * u]];
+    p.poly(bol, mix(col, "#000000", 0.1), 1.5 * u);
+    g.setLineDash([1.6 * u, 1.4 * u]);
+    p.stroke([[bx - bw + 1.6 * u, by + 2 * u], [bx + bw - 1.6 * u, by + 2 * u]], 0.8 * u, claro);
+    g.setLineDash([]);
+  }
+  if (o.cinturon) { // cinturón con hebilla
+    const y = bot - 0.2 * h;
+    p.band([[cx - 1.4 * a, y], [cx + 1.4 * a, y]], o.cinturon, 6 * u, 1.4 * u);
+    p.poly([[cx - 4.5 * u, y - 4 * u], [cx + 4.5 * u, y - 4 * u], [cx + 4.5 * u, y + 4 * u], [cx - 4.5 * u, y + 4 * u]], "#d9b45a", 1.4 * u);
+    p.poly([[cx - 2 * u, y - 1.6 * u], [cx + 2 * u, y - 1.6 * u], [cx + 2 * u, y + 1.6 * u], [cx - 2 * u, y + 1.6 * u]], o.cinturon, 0.9 * u);
+  }
   p.stroke(curve([cx - 1.2 * a, bot - 7 * u], [cx, bot - 3 * u], [cx + 1.2 * a, bot - 7 * u], 10), 1.8 * u, oscuro);
   g.restore();
 };
@@ -731,10 +750,14 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
         if (o.sash && Math.abs(y - (torsoBot - 0.32 * HH)) < 0.08 * HH) continue;
         if (o.buttons !== "none") { p.dot(tcx + 2 * u * facing, y, 2.2 * u + 0.8 * u, INK); p.dot(tcx + 2 * u * facing, y, 2.2 * u, o.buttons ?? shade(o.jacket, 0.7)); }
       }
-      if (o.prota) ropaConTextura(p, o.jacket, tcx, chin, torsoBot, T.a, u, seed);
+      if (o.prota) ropaConTextura(p, o, tcx, chin, torsoBot, T.a, u, seed);
     });
     if (o.sash) { const s = facing || 1; p.poly([[tcx + s * 0.55 * T.a, torsoBot - 0.3 * HH], [tcx + s * 0.75 * T.a, torsoBot + 0.05 * HH], [tcx + s * 0.45 * T.a, torsoBot + 0.02 * HH]], o.sash, 1.6 * u); }
     p.inkRing(tp, ow, thick);
+    if (o.prota && o.cuelloCamisa) for (const sd of [-1, 1]) { // cuello de camisa: dos solapas en pico
+      const c = o.cuelloCamisa, n0: P2 = [tcx + sd * 1 * u, chin + 3 * u];
+      p.poly([n0, [tcx + sd * 0.46 * T.a, chin - 2 * u], [tcx + sd * 0.4 * T.a, chin + 6 * u], [tcx + sd * 0.12 * T.a, chin + 15 * u]], c, 1.8 * u);
+    }
   }
   // in front of the body: hands holding props
   for (const a of arms) if (a.front) {

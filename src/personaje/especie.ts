@@ -19,28 +19,34 @@ export const ZAPATOS = { negros: "#1b1a1f", marrones: "#5a3b2a", blancos: "#f1ef
 export type Ficha = {
   pelo: Pelo; cabello: keyof typeof CABELLOS; camiseta: keyof typeof CAMISETAS; pantalon: keyof typeof PANTALONES;
   zapatos: keyof typeof ZAPATOS; piel: keyof typeof PIELES; robusto?: boolean; nino?: boolean;
+  /** detalles de la ropa */
+  cinturon?: keyof typeof CINTURONES; bolsillo?: boolean; cuello?: keyof typeof CUELLOS;
 };
+export const CINTURONES = { marron: "#5a3b2a", negro: "#1b1a1f", cuero: "#8a5a32" };
+export const CUELLOS = { blanco: "#f1efe9", igual: "", celeste: "#bcd3ea" }; // «igual»: del color de la camiseta
 
 /** Convierte una ficha en el traje que entiende toon.ts. */
 export const vestir = (f: Ficha): Outfit => ({
   jacket: CAMISETAS[f.camiseta], pants: PANTALONES[f.pantalon], boots: ZAPATOS[f.zapatos], hat: `pelo:${f.pelo}`,
   hair: CABELLOS[f.cabello], skin: PIELES[f.piel], buttons: "none", prota: true,
   build: f.nino ? "kid" : f.robusto ? "stout" : "adult",
+  cinturon: f.cinturon ? CINTURONES[f.cinturon] : undefined, bolsillo: !!f.bolsillo,
+  cuelloCamisa: f.cuello ? (CUELLOS[f.cuello] || CAMISETAS[f.camiseta]) : undefined,
 });
 
 /** EL PROTAGONISTA: pelo despeinado negro y camiseta negra (fijo, no cambiar). */
-export const PROTAGONISTA: Ficha = { pelo: "despeinado", cabello: "negro", camiseta: "negra", pantalon: "negro", zapatos: "negros", piel: "clara" };
+export const PROTAGONISTA: Ficha = { pelo: "despeinado", cabello: "negro", camiseta: "negra", pantalon: "negro", zapatos: "negros", piel: "clara", cinturon: "marron", bolsillo: true, cuello: "igual" };
 
 /** Reparto fijo con nombre, para reutilizar la misma «persona» en varios vídeos. */
 export const REPARTO: Record<string, Ficha> = {
   protagonista: PROTAGONISTA,
-  vecina: { pelo: "rizos", cabello: "castano", camiseta: "mostaza", pantalon: "vaquero", zapatos: "blancos", piel: "media" },
-  banquero: { pelo: "corto", cabello: "canoso", camiseta: "gris", pantalon: "negro", zapatos: "negros", piel: "rosada", robusto: true },
-  amigo: { pelo: "tupe", cabello: "rubio", camiseta: "azul", pantalon: "beige", zapatos: "marrones", piel: "clara" },
-  jefa: { pelo: "corto", cabello: "pelirrojo", camiseta: "granate", pantalon: "negro", zapatos: "rojos", piel: "clara" },
-  tendero: { pelo: "rapado", cabello: "negro", camiseta: "verde", pantalon: "marron", zapatos: "marrones", piel: "morena", robusto: true },
-  estudiante: { pelo: "despeinado", cabello: "castano", camiseta: "turquesa", pantalon: "vaquero", zapatos: "blancos", piel: "oscura" },
-  nino: { pelo: "despeinado", cabello: "rubio", camiseta: "naranja", pantalon: "vaquero", zapatos: "rojos", piel: "rosada", nino: true },
+  vecina: { pelo: "rizos", cabello: "castano", camiseta: "mostaza", pantalon: "vaquero", zapatos: "blancos", piel: "media", bolsillo: true },
+  banquero: { pelo: "corto", cabello: "canoso", camiseta: "gris", pantalon: "negro", zapatos: "negros", piel: "rosada", robusto: true, cinturon: "negro", cuello: "blanco" },
+  amigo: { pelo: "tupe", cabello: "rubio", camiseta: "azul", pantalon: "beige", zapatos: "marrones", piel: "clara", cinturon: "cuero" },
+  jefa: { pelo: "corto", cabello: "pelirrojo", camiseta: "granate", pantalon: "negro", zapatos: "rojos", piel: "clara", cuello: "blanco", cinturon: "negro" },
+  tendero: { pelo: "rapado", cabello: "negro", camiseta: "verde", pantalon: "marron", zapatos: "marrones", piel: "morena", robusto: true, bolsillo: true, cinturon: "cuero" },
+  estudiante: { pelo: "despeinado", cabello: "castano", camiseta: "turquesa", pantalon: "vaquero", zapatos: "blancos", piel: "oscura", cuello: "igual" },
+  nino: { pelo: "despeinado", cabello: "rubio", camiseta: "naranja", pantalon: "vaquero", zapatos: "rojos", piel: "rosada", nino: true, bolsillo: true },
 };
 
 /** Persona de relleno (público, gente por la calle): cambia pelo, colores y piel según la semilla. */
@@ -54,6 +60,9 @@ export const persona = (semilla: number): Outfit => {
     zapatos: elige(Object.keys(ZAPATOS) as Ficha["zapatos"][], 5),
     piel: elige(Object.keys(PIELES) as Ficha["piel"][], 6),
     robusto: elige([false, false, true], 7),
+    cinturon: elige([undefined, "marron", "negro", "cuero"] as Ficha["cinturon"][], 8),
+    bolsillo: elige([false, true], 9),
+    cuello: elige([undefined, undefined, "blanco", "igual", "celeste"] as Ficha["cuello"][], 10),
   };
   return vestir(f);
 };
