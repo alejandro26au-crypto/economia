@@ -54,6 +54,7 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   pequeñas, una acción final, final abierto. Diferenciarnos con historias REALES y su lección para tu bolsillo.
 - FÓRMULA DEL CANAL apuntada en «Guion» (25 nov). ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (v4, promesa y recordatorio sutiles; promesa con el DATO y no con «quédate hasta el final», anticipo al final de cada historia y recordatorio hacia el min 5; regla aprendida: tramos con cifras de empresas aburren → contarlos con PERSONAS y un giro; prometer al inicio algo ÚTIL que se da al final) + `.fuentes.md`.
 - PRIMER VÍDEO (25 nov, rama `claude/loving-volta-radjoc`): «El conserje que murió con 8 millones» (Ronald Read).
+  Paquete de publicación (borrador) en `Textos/1 - … .publicar.md`. SIGUIENTE: visto bueno del guion → ficha → escenas.
   Guion v1 en `Textos/1 - El conserje que murió con 8 millones.txt` + `.fuentes.md`, esperando el visto bueno.
   El ensayo «El efecto cobra» queda solo como ensayo.
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
@@ -152,7 +153,10 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 4. Llega el MP3 → «Pon aquí tu voz» → `./canal voz N` → `./canal revisar N` → fotos clave → `./canal montar N`
    (en segundo plano) → enviar el vídeo.
 5. La variante (cámara) se guarda por idea en `Textos/variantes.json`.
-6. Guardar y subir; actualizar el «Estado» de arriba.
+6. **PAQUETE DE PUBLICACIÓN (usuario, 25 nov 2026), después de CADA vídeo:** enviar prompt de Nano Banana para la
+   miniatura (variantes A y B), título (+2 alternativas), descripción con fuentes, etiquetas, comentario fijado,
+   ajustes de YouTube y hora. Plantilla y reglas en `docs/publicacion.md`; se guarda en `Textos/N - Título.publicar.md`.
+7. Guardar y subir; actualizar el «Estado» de arriba.
 
 ## Órdenes (`./canal …`)
 `comprobar` · `ideas` · `guion nuevo N "Título"` · `guion N` · `voz N` · `prueba N` · `revisar N [--prueba]` ·
