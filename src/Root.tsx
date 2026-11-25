@@ -10,6 +10,7 @@ import { PruebaRecortes } from "./pruebas/Recortes";
 import { MunecoDemo } from "./pruebas/MunecoDemo";
 import { ToonDemo } from "./pruebas/ToonDemo";
 import { RepartoEspecie } from "./pruebas/RepartoEspecie";
+import { MuestraEscenarios } from "./pruebas/MuestraEscenarios";
 import { EstiloBoceto, EstiloIsometrico, HojaProtagonista } from "./pruebas/Boceto";
 import { EstiloIlustrado, EstiloMezcla, EstiloPlano } from "./pruebas/Estilos";
 
@@ -40,6 +41,7 @@ export const Root: React.FC = () => (
   <Composition id="estilo-isometrico" component={EstiloIsometrico} width={1920} height={1080} fps={FPS} durationInFrames={90} />
   <Composition id="toon-demo" component={ToonDemo} width={1920} height={1080} fps={FPS} durationInFrames={120} />
   <Composition id="reparto-especie" component={RepartoEspecie} width={1920} height={1080} fps={FPS} durationInFrames={60} />
+  <Composition id="muestra-escenarios" component={MuestraEscenarios} width={1920} height={1080} fps={FPS} durationInFrames={30} />
   <Composition id="muneco-demo" component={MunecoDemo} width={1920} height={1080} fps={FPS} durationInFrames={420} />
   <Composition id="muneco-lapiz" component={MunecoDemo} defaultProps={{ lapiz: true }} width={1920} height={1080} fps={FPS} durationInFrames={420} />
   <Composition id="prueba-recortes" component={PruebaRecortes} width={1920} height={1080} fps={FPS} durationInFrames={300} />

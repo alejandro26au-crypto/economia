@@ -39,8 +39,11 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   ficha). Los de rol típico ya traen sus piezas (banquero: traje gris, corbata y gafas). Detalles MÍNIMOS y
   variados (cinturón, bolsillo, cuello): no todos los llevan, para que cada uno parezca una persona distinta y no
   un uniforme. Si un guion pide una pieza que no existe (casco, gorra, bata…), se añade al armario.
-- PENDIENTE (en orden): 1) personaje y especie (hechos, a falta de visto bueno); 2) fondos
-  planos a color y objetos; 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
+- PERSONAJES APROBADOS por el usuario (25 nov 2026).
+- ESCENARIOS: hoja de MUESTRA solo para hacerse una idea (`muestra-escenarios`, `src/pruebas/MuestraEscenarios.tsx`:
+  banco, calle, despacho y 10 objetos de dinero). Regla del usuario: cada escenario se DISEÑA A MEDIDA de cada vídeo
+  mientras trabajamos en él (no hay un catálogo fijo).
+- PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
 - vidIQ: gastar el mínimo de créditos (0 hasta el 9 dic 2026). Público: España y Latinoamérica.
