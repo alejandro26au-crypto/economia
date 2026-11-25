@@ -37,6 +37,7 @@ export const Root: React.FC = () => (
   <Composition id="protagonista" component={HojaProtagonista} width={1920} height={1080} fps={FPS} durationInFrames={90} />
   <Composition id="estilo-isometrico" component={EstiloIsometrico} width={1920} height={1080} fps={FPS} durationInFrames={90} />
   <Composition id="muneco-demo" component={MunecoDemo} width={1920} height={1080} fps={FPS} durationInFrames={420} />
+  <Composition id="muneco-lapiz" component={MunecoDemo} defaultProps={{ lapiz: true }} width={1920} height={1080} fps={FPS} durationInFrames={420} />
   <Composition id="prueba-recortes" component={PruebaRecortes} width={1920} height={1080} fps={FPS} durationInFrames={300} />
   <Composition id="estilo-mezcla" component={EstiloMezcla} width={1920} height={1080} fps={FPS} durationInFrames={90} />
   <Composition

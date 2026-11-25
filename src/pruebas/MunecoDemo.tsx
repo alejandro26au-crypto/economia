@@ -4,6 +4,7 @@ import React from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { DefsMuneco, Muneco, poseEnTramos, Tramo } from "../personaje/Muneco";
 import { ClaveGesto } from "../personaje/gestos";
+import { DefsLapiz, PapelLapiz, Rayado } from "../personaje/lapiz";
 
 // gestos atados a «palabras» (fotogramas) y voz de mentira con sílabas y pausas, para la demo
 const CLAVES: ClaveGesto[] = [
@@ -25,19 +26,26 @@ const TRAMOS: Tramo[] = [
 ];
 const NOMBRE: Record<string, string> = { camina: "camina", habla: "habla: boca con la voz y gestos en sus palabras", senala: "señala", asustado: "se asusta", piensa: "piensa", victoria: "¡lo celebra!" };
 
-export const MunecoDemo: React.FC = () => {
+/** lapiz = muñeco y mundo a lápiz; sin él, el estilo limpio. */
+export const MunecoDemo: React.FC<{ lapiz?: boolean }> = ({ lapiz = false }) => {
   const f = useCurrentFrame();
   const p = poseEnTramos(TRAMOS, f, 0, { boca: BOCA, claves: CLAVES, golpes: GOLPES });
   const x = interpolate(f, [0, 95], [-250, 900], { extrapolateRight: "clamp" });
   const tr = [...TRAMOS].reverse().find((t) => t.desde <= f)!;
   return (
-    <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 45%, #ffffff 0%, #f4f1ea 75%, #e6e1d6 100%)" }}>
+    <AbsoluteFill style={{ background: "#e8d9b8" }}>
       <svg width={1920} height={1080}>
         <DefsMuneco />
-        <path d="M -20 905 Q 480 897 960 907 T 1940 901" stroke="#2b2925" strokeOpacity={0.5} strokeWidth={4} fill="none" />
-        <g transform={`translate(${x} 900) scale(0.95)`}>
-          <Muneco p={p} f={f} />
+        {lapiz ? <DefsLapiz /> : null}
+        <g filter={lapiz ? "url(#lp-trazo)" : undefined}>
+          {/* fondo plano de prueba (estilo Zenn): pared lisa y suelo liso con contorno */}
+          <rect x={-10} y={900} width={1940} height={200} fill="#c9b48c" stroke="#151515" strokeWidth={7} />
+          {lapiz ? <Rayado d="M -10 900 H 1930 V 1100 H -10 Z" opacidad={0.35} /> : null}
+          <g transform={`translate(${x} 900) scale(0.95)`}>
+            <Muneco p={p} f={f} lapiz={lapiz} />
+          </g>
         </g>
+        {lapiz ? <PapelLapiz /> : null}
       </svg>
       <div style={{ position: "absolute", left: 40, top: 30, font: "600 40px Inter, sans-serif", color: "#2b2925", opacity: 0.6 }}>{NOMBRE[tr.anim]}</div>
     </AbsoluteFill>

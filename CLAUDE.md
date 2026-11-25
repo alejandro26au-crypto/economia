@@ -20,7 +20,11 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   PLANOS A COLOR con contorno negro limpio y colores apagados, un objeto clave por escena, miniaturas con 1-2 palabras
   amarillas con borde negro. Identidad propia: pelo despeinado y camiseta negra (no copiar a Zenn).
   Pendiente ver un vídeo de Zenn por dentro (movimiento, duración de planos, textos): el usuario manda capturas.
-- PENDIENTE (en orden): 1) ajustar el personaje al estilo limpio de Zenn (contorno limpio, sin lápiz); 2) fondos
+- 25 nov (sesión 2): el usuario cambió a ESTILO A LÁPIZ para el muñeco y su mundo. `src/personaje/lapiz.tsx`
+  (DefsLapiz: trazo tembloroso `lp-trazo` para TODA la escena, PapelLapiz: grano de papel, Rayado: sombras de
+  grafito); `<Muneco lapiz />`. Pelo rehecho con LÍNEAS curvas (sin pinchos). Demos: `muneco-lapiz` y `muneco-demo`
+  (versión limpia). Esperando su visto bueno.
+- PENDIENTE (en orden): 1) personaje (hecho, a falta de visto bueno); 2) fondos
   planos a color y objetos; 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).

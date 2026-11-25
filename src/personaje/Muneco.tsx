@@ -1,5 +1,5 @@
-// EL PROTAGONISTA DEL CANAL, animado por partes (estilo de la hoja del usuario: lápiz, blanco y negro).
-// Cabeza grande con sombreado a lápiz, pelo negro despeinado, ojos grandes, cejas gruesas, camiseta negra,
+// EL PROTAGONISTA DEL CANAL, animado por partes. Estilo LIMPIO (como Zenn): colores planos, contorno negro
+// uniforme, sin lápiz ni rayados. Cabeza grande blanca, pelo negro despeinado, ojos grandes, cejas gruesas, camiseta negra,
 // brazos y piernas de palo negros, manos blancas con dedos y zapatos negros.
 // Lo mueve el esqueleto del motor (src/bent/animaciones.ts): camina, corre, habla, señala, piensa, encoge,
 // saluda, victoria, asustado, cruza, salta, mira; y la cara (expresión + boca al hablar + parpadeo).
@@ -9,8 +9,11 @@ import { Anim, Expresion, poseCompleta } from "../bent/animaciones";
 import { abreBoca, brazosEn, cabezaEn, ClaveGesto } from "./gestos";
 
 export const NEGRO = "#151515";
-const PIEL = "#fbfbf9";
-const ROPA = "#1f1e20";
+const PIEL = "#ffffff";
+const SOMBRA_PIEL = "#ebe8e2"; // sombra lisa (sin rayado)
+const ROPA = "#222124";
+const ROPA_LUZ = "#3a393d"; // cuello y pliegue, en liso
+const CONTORNO = 7; // grosor único del contorno
 
 // proporciones (pies en y = 0; mide ~650 hasta la punta del pelo)
 const MUSLO = 112;
@@ -26,90 +29,74 @@ type P = [number, number];
 const rad = (g: number) => (g * Math.PI) / 180;
 const sumaP = (p: P, ang: number, largo: number): P => [p[0] + Math.sin(rad(ang)) * largo, p[1] + Math.cos(rad(ang)) * largo];
 
-/** Filtros y tramas del muñeco (ponerlo una vez dentro del <svg>). */
-export const DefsMuneco: React.FC = () => (
-  <defs>
-    <filter id="mn-lapiz" x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves={2} seed={4} result="t" />
-      <feDisplacementMap in="SourceGraphic" in2="t" scale={3} xChannelSelector="R" yChannelSelector="G" />
-    </filter>
-    <pattern id="mn-rayado" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
-      <line x1={0} y1={0} x2={0} y2={9} stroke="#3a3a3a" strokeWidth={1.6} />
-    </pattern>
-    <pattern id="mn-rayado2" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-40)">
-      <line x1={0} y1={0} x2={0} y2={9} stroke="#3a3a3a" strokeWidth={1.2} />
-    </pattern>
-    <pattern id="mn-brillo" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(70)">
-      <line x1={0} y1={0} x2={0} y2={12} stroke="#8a8a8c" strokeWidth={2} />
-    </pattern>
-  </defs>
-);
+/** Antes llevaba el filtro de lápiz y las tramas; en el estilo limpio no hace falta nada (se deja por compatibilidad). */
+export const DefsMuneco: React.FC = () => null;
 
 // ---------------------------------------------------------------- pelo
-/** Mechón afilado: de la base (b) a la punta (t), curvado hacia un lado. */
-function mechon(b: P, t: P, ancho: number, curva: number) {
-  const mx = (b[0] + t[0]) / 2;
-  const my = (b[1] + t[1]) / 2;
-  const dx = t[0] - b[0];
-  const dy = t[1] - b[1];
-  const l = Math.hypot(dx, dy) || 1;
-  const nx = -dy / l;
-  const ny = dx / l;
-  const c: P = [mx + nx * curva, my + ny * curva];
-  return `M ${b[0] - nx * ancho} ${b[1] - ny * ancho} Q ${c[0] - nx * ancho * 0.4} ${c[1] - ny * ancho * 0.4} ${t[0]} ${t[1]} Q ${c[0] + nx * ancho * 0.4} ${c[1] + ny * ancho * 0.4} ${b[0] + nx * ancho} ${b[1] + ny * ancho} Z`;
+// PELO HECHO CON LÍNEAS (como dibujado a lápiz): una masa oscura y encima muchos trazos curvos que salen de la
+// coronilla, barridos hacia arriba y a la derecha, y por la izquierda caen hacia los ojos. Puntas redondas: sin
+// pinchos. Los trazos sobresalen un poco de la masa y dan el contorno despeinado.
+function azar(n: number) {
+  const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+  return x - Math.floor(x);
 }
-
-// Pelo copiado de la hoja del usuario: masa negra sobre la coronilla con la frente despejada, mechones largos
-// y afilados barridos hacia ARRIBA y a la DERECHA, y mechones que caen por el lado IZQUIERDO hasta los ojos.
-// [base, punta, ancho en la base, curva]
-const MECHONES: [P, P, number, number][] = [
-  // lado izquierdo: caen pegados a la cabeza hasta los ojos
-  [[-92, -30], [-122, 22], 10, -12],
-  [[-96, -56], [-134, -14], 11, -12],
-  [[-86, -78], [-136, -62], 11, -10],
-  // arriba: suben y se doblan hacia la derecha (como con viento)
-  [[-66, -90], [-96, -140], 12, 14],
-  [[-44, -100], [-52, -152], 12, 16],
-  [[-18, -104], [10, -160], 13, 18],
-  [[8, -104], [60, -152], 13, 18],
-  [[32, -98], [100, -136], 13, 16],
-  // derecha: barridos hacia la derecha
-  [[56, -86], [134, -104], 12, 14],
-  [[76, -70], [148, -66], 11, 12],
-  [[90, -50], [136, -26], 9, 8],
-  // capa de mechones finos entre los gruesos
-  [[-56, -96], [-84, -150], 7, 12],
-  [[-4, -104], [24, -166], 7, 16],
-  [[20, -102], [84, -150], 7, 16],
-  [[46, -94], [124, -126], 7, 12],
-];
-// pelos sueltos finos
-const SUELTOS: [P, P, number, number][] = [
-  [[-28, -102], [-60, -166], 3, 10],
-  [[40, -98], [120, -150], 3, 12],
-];
-const PICOS: [P, P, number, number][] = [];
+type Trazo = { d: (v: number) => string; w: number; color: string };
+const TRAZOS: Trazo[] = (() => {
+  const out: Trazo[] = [];
+  const N = 40;
+  for (let i = 0; i < N; i++) {
+    const k = i / (N - 1); // 0 = sien izquierda, 1 = lado derecho
+    const lado = k < 0.17; // los de la izquierda caen hacia los ojos
+    const grados = lado ? 205 - (k / 0.17) * 45 : 160 - ((k - 0.17) / 0.83) * 150;
+    const ang = rad(grados + (azar(i) - 0.5) * 8); // 0 = derecha, 90 = arriba
+    const ux = Math.cos(ang);
+    const uy = -Math.sin(ang);
+    const r0 = R * (0.9 + azar(i + 50) * 0.12); // nacen dentro de la masa
+    const largo = R * (0.42 + azar(i + 100) * 0.28) * (lado ? 0.8 : 1);
+    // hacia fuera y girados a la derecha (viento); los del lado izquierdo caen hacia abajo
+    const giro = lado ? rad(95) : rad(-(25 + azar(i + 150) * 25));
+    const dx = ux * Math.cos(giro) - uy * Math.sin(giro);
+    const dy = ux * Math.sin(giro) + uy * Math.cos(giro);
+    const b: P = [ux * r0, uy * r0];
+    const c: P = [b[0] + ux * largo * 0.55, b[1] + uy * largo * 0.55];
+    const t: P = [b[0] + dx * largo, b[1] + dy * largo];
+    const fase = azar(i + 200) * 6;
+    out.push({
+      d: (v) => {
+        const m = Math.sin(v + fase) * 1.8;
+        return `M ${b[0].toFixed(1)} ${b[1].toFixed(1)} Q ${c[0].toFixed(1)} ${c[1].toFixed(1)} ${(t[0] + m).toFixed(1)} ${(t[1] + m * 0.3).toFixed(1)}`;
+      },
+      w: 4 + azar(i + 250) * 4,
+      color: NEGRO,
+    });
+  }
+  // líneas de peinado por dentro de la masa (gris grafito), siguiendo el barrido hacia arriba-derecha
+  for (let i = 0; i < 11; i++) {
+    const x = -78 + i * 15 + azar(i + 400) * 8;
+    const y = -66 - Math.abs(Math.sin((i / 10) * Math.PI)) * 14 - azar(i + 450) * 8;
+    const l = 34 + azar(i + 500) * 22;
+    out.push({ d: () => `M ${x.toFixed(1)} ${y.toFixed(1)} q ${(l * 0.25).toFixed(1)} ${(-l * 0.6).toFixed(1)} ${(l * 0.7).toFixed(1)} ${(-l * 0.8).toFixed(1)}`, w: 2.6, color: "#6a6866" });
+  }
+  return out;
+})();
 
 const Pelo: React.FC<{ f: number }> = ({ f }) => {
-  const v = Math.sin(f / 13) * 1.8; // se mueve un poco con el cuerpo
-  const mueve = (t: P, i: number): P => [t[0] + v * ((i % 3) + 1) * 0.6, t[1] + v * 0.4];
+  const v = f / 13; // se mueve un poco con el cuerpo
   return (
-    <g fill={NEGRO}>
-      {/* masa: de la sien izquierda (baja) a la derecha, con el nacimiento del pelo alto y casi recto */}
+    <g>
+      {/* masa: de la sien izquierda (baja) a la derecha, con el nacimiento del pelo alto */}
       <path
-        d={`M -100 -16 Q -118 -84 -70 -112 Q -24 -142 26 -130 Q 84 -118 100 -64 Q 104 -46 98 -36 Q 84 -56 62 -60 Q 30 -72 0 -70 Q -34 -68 -62 -56 Q -82 -42 -100 -16 Z`}
+        d={`M -102 -12 Q -124 -96 -66 -124 Q -14 -150 40 -136 Q 98 -120 108 -60 Q 110 -44 100 -36 Q 84 -56 62 -60 Q 30 -72 0 -70 Q -34 -68 -62 -56 Q -84 -40 -102 -12 Z`}
+        fill="#262523"
+        stroke={NEGRO}
+        strokeWidth={4}
+        strokeLinejoin="round"
       />
-      {MECHONES.map(([b, t, a, c], i) => (
-        <path key={i} d={mechon(b, mueve(t, i), a, c)} />
-      ))}
-      {SUELTOS.map(([b, t, a, c], i) => (
-        <path key={`s${i}`} d={mechon(b, mueve(t, i + 1), a, c)} />
-      ))}
-      {PICOS.map(([b, t, a, c], i) => (
-        <path key={`p${i}`} d={mechon(b, t, a, c)} />
-      ))}
-      {/* vetas a lápiz siguiendo el peinado */}
-      <path d="M -60 -80 Q -40 -110 -20 -124 M -20 -92 Q 10 -118 40 -128 M 20 -86 Q 60 -100 96 -108 M -84 -50 Q -100 -40 -112 -10" stroke="#5a5a5c" strokeWidth={2.5} fill="none" strokeLinecap="round" />
+      <g fill="none" strokeLinecap="round">
+        {TRAZOS.map((t, i) => (
+          <path key={i} d={t.d(v)} stroke={t.color} strokeWidth={t.w} />
+        ))}
+      </g>
     </g>
   );
 };
@@ -201,23 +188,21 @@ const BocaMuneco: React.FC<{ p: Pose }> = ({ p }) => {
   }
 };
 
-const Cabeza: React.FC<{ p: Pose; f: number; id: string; parpadea: boolean }> = ({ p, f, id, parpadea }) => {
-  // sombreado a lápiz: media luna abajo a la izquierda
-  const ox = 22;
-  const oy = -18;
-  const rr = R * 0.93;
+const Cabeza: React.FC<{ p: Pose; f: number; id: string; parpadea: boolean; lapiz?: boolean }> = ({ p, f, id, parpadea, lapiz }) => {
+  // plana: blanco con una sombra lisa muy suave abajo a la izquierda y contorno negro uniforme
+  const ox = 26;
+  const oy = -22;
+  const rr = R * 0.97;
   const luna = `M ${-R - 6} ${-R - 6} H ${R + 6} V ${R + 6} H ${-R - 6} Z M ${ox + rr} ${oy} A ${rr} ${rr} 0 1 0 ${ox - rr} ${oy} A ${rr} ${rr} 0 1 0 ${ox + rr} ${oy} Z`;
   return (
     <g>
       <circle r={R} fill={PIEL} />
       <clipPath id={`mn-cab-${id}`}>
-        <circle r={R - 3} />
+        <circle r={R} />
       </clipPath>
-      <g clipPath={`url(#mn-cab-${id})`}>
-        <path d={luna} fillRule="evenodd" fill="#d8d8d6" opacity={0.7} />
-        <path d={luna} fillRule="evenodd" fill="url(#mn-rayado)" opacity={0.6} />
-      </g>
-      <circle r={R} fill="none" stroke={NEGRO} strokeWidth={8} />
+      <path d={luna} fillRule="evenodd" fill={SOMBRA_PIEL} clipPath={`url(#mn-cab-${id})`} />
+      {lapiz ? <path d={luna} fillRule="evenodd" fill="url(#lp-rayado)" opacity={0.5} clipPath={`url(#mn-cab-${id})`} /> : null}
+      <circle r={R} fill="none" stroke={NEGRO} strokeWidth={CONTORNO} />
       <Pelo f={f} />
       <Ojo c={OJO_A} p={p} parpadea={parpadea} />
       <Ojo c={OJO_B} p={p} parpadea={parpadea} />
@@ -230,7 +215,8 @@ const Cabeza: React.FC<{ p: Pose; f: number; id: string; parpadea: boolean }> = 
 
 // ---------------------------------------------------------------- cuerpo
 /** El muñeco completo en una pose (unidades del motor, pies en y = 0). */
-export const Muneco: React.FC<{ p: Pose; f: number; id?: string }> = ({ p, f, id = "mn" }) => {
+/** lapiz: sombras con rayado de grafito (necesita <DefsLapiz/> de ./lapiz; el temblor lo pone la escena). */
+export const Muneco: React.FC<{ p: Pose; f: number; id?: string; lapiz?: boolean }> = ({ p, f, id = "mn", lapiz = false }) => {
   const caderaA: P = [-20, -4];
   const caderaB: P = [20, -4];
   const pierna = (c: P, q: Pierna) => {
@@ -270,7 +256,6 @@ export const Muneco: React.FC<{ p: Pose; f: number; id?: string }> = ({ p, f, id
   const zapato = (tob: P) => (
     <g transform={`translate(${tob[0]} ${tob[1]})`}>
       <path d="M -20 -8 Q -24 -26 -2 -24 Q 18 -24 26 -12 Q 50 -8 52 10 L 52 16 L -24 16 Z" fill={NEGRO} stroke={NEGRO} strokeWidth={4} strokeLinejoin="round" />
-      <path d="M -10 -14 Q 6 -20 18 -14" fill="none" stroke="#8a8a8c" strokeWidth={3} strokeLinecap="round" />
     </g>
   );
   // camiseta (coordenadas del tronco: cadera en y = 0)
@@ -278,21 +263,19 @@ export const Muneco: React.FC<{ p: Pose; f: number; id?: string }> = ({ p, f, id
   const cuello: P = [4, hy - 2];
   const centroCabeza: P = [10, hy - CUELLO - R + 10];
   return (
-    <g filter="url(#mn-lapiz)">
-      <ellipse cx={p.x + 6} cy={10} rx={95 - Math.min(60, -p.y * 0.3)} ry={13} fill="url(#mn-rayado2)" opacity={0.5} />
+    <g strokeLinejoin="round">
+      <ellipse cx={p.x + 6} cy={10} rx={90 - Math.min(60, -p.y * 0.3)} ry={12} fill={lapiz ? "url(#lp-rayado2)" : "#000"} opacity={lapiz ? 0.6 : 0.14} />
       {palo(T(caderaA), T(pa.rodilla), T(pa.tobillo))}
       {palo(T(caderaB), T(pb.rodilla), T(pb.tobillo))}
       {zapato(T(pa.tobillo))}
       {zapato(T(pb.tobillo))}
       <g transform={`rotate(${p.inclina} ${raiz[0]} ${raiz[1]}) translate(${raiz[0]} ${raiz[1]})`}>
         {brazoDibujo(hA, p.bA)}
-        <path d={camiseta} fill={ROPA} stroke={NEGRO} strokeWidth={6} strokeLinejoin="round" />
-        <path d={camiseta} fill="url(#mn-brillo)" opacity={0.35} />
-        <path d={`M -40 ${hy + 30} Q -46 ${hy + 100} -40 -10`} stroke="#6a6a6c" strokeWidth={3} fill="none" opacity={0.6} />
-        <path d={`M -28 ${hy + 6} Q 4 ${hy + 22} 34 ${hy + 6}`} stroke="#6a6a6c" strokeWidth={3} fill="none" />
+        <path d={camiseta} fill={ROPA} stroke={NEGRO} strokeWidth={CONTORNO} strokeLinejoin="round" />
+        <path d={`M -26 ${hy + 6} Q 4 ${hy + 24} 32 ${hy + 6}`} stroke={ROPA_LUZ} strokeWidth={5} fill="none" strokeLinecap="round" />
         <path d={`M ${cuello[0]} ${cuello[1]} L ${cuello[0] + 2} ${cuello[1] - CUELLO - 6}`} stroke={NEGRO} strokeWidth={PALO} strokeLinecap="round" />
         <g transform={`translate(${centroCabeza[0]} ${centroCabeza[1] + p.respira * 1.5}) rotate(${p.cabeza} 0 ${R})`}>
-          <Cabeza p={p} f={f} id={id} parpadea={parpadeo(f)} />
+          <Cabeza p={p} f={f} id={id} parpadea={parpadeo(f)} lapiz={lapiz} />
         </g>
         {brazoDibujo(hB, p.bB)}
       </g>
