@@ -410,7 +410,7 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     const out: P2[] = [];
     for (let d = 158; d >= 22; d -= 2) out.push(at(d, rf(d)));
     // nacimiento del pelo (de derecha a izquierda); la frente queda libre para las cejas
-    const yh = estilo === "tupe" ? 0.72 : 0.66;
+    const yh = estilo === "tupe" || estilo === "despeinado" ? 0.74 : 0.66;
     const borde: P2[] = [];
     for (let i = 0; i <= 24; i++) {
       const t = i / 24, x = 0.9 - 1.8 * t;

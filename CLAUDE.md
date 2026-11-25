@@ -24,7 +24,12 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   (DefsLapiz: trazo tembloroso `lp-trazo` para TODA la escena, PapelLapiz: grano de papel, Rayado: sombras de
   grafito); `<Muneco lapiz />`. Pelo: casquete pegado a la cabeza + trazos gruesos de punta redonda barridos a la derecha, copiado de `public/protagonista/` (los dibujos del usuario: MIRARLOS SIEMPRE como referencia). Brazos y piernas más gruesos. Demos: `muneco-lapiz` y `muneco-demo`
   (versión limpia). Esperando su visto bueno.
-- PENDIENTE (en orden): 1) personaje (hecho, a falta de visto bueno); 2) fondos
+- 25 nov (sesión 2, después): el protagonista se hace con la librería de los romanos (`src/personaje/toon.ts`,
+  copia MIT del kit). Prueba: composición `toon-demo` (`src/pruebas/ToonDemo.tsx`). PELO ELEGIDO por el usuario:
+  `hat: "pelo:despeinado"` (negro). Piel blanca (humano, como sus dibujos). Descartados: lápiz, mechones de punta,
+  pelo natural con raya, especie moneda (queda `coin` en toon.ts sin usar). Pendiente: ojos grandes como sus
+  dibujos, manos blancas con dedos, camiseta de manga corta.
+- PENDIENTE (en orden): 1) personaje (pelo aprobado; faltan ojos, manos y camiseta); 2) fondos
   planos a color y objetos; 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
