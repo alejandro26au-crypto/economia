@@ -117,6 +117,10 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - Puntos de interés y obstáculos en METROS (`metros: true`); actores con `...enMetros("escenario", x, z)`.
 
 ## Proceso
+- **REGLA (usuario, 25 nov 2026): REVISAR Y CORREGIR ANTES DE MONTAR.** Primero una hoja de fotos de los momentos
+  clave; la reviso YO (personaje tapado o cortado, caras raras, textos cortados, objetos mal hechos) y CORRIJO todo
+  lo que vea. Solo cuando la hoja está limpia se monta el vídeo final, una sola vez. Nunca montar sabiendo que hay
+  fallos ni contarlos después.
 1. Guion aprobado → `./canal guion nuevo N "Título"`, rellenar la ficha, `./canal guion N`.
 2. Escenas en `src/ideas/N.ts` (apúntala en `src/ideas/lista.ts`) → `npx tsc --noEmit -p .`
 3. `./canal prueba N` + `./canal revisar N --prueba`: hoja de escenas + chequeo automático de planos.

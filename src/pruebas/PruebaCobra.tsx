@@ -36,11 +36,11 @@ const cobra = (g: CanvasRenderingContext2D, p: Pen, x: number, y: number, sube: 
     const k = i / n;
     pts.push([x + Math.sin(k * 5 + f / 9) * 40 * k * (1 - k * 0.4), y - k * alto]);
   }
-  p.band(pts, "#6f8a3a", 46, 6, "round");
-  p.stroke(pts.map(([a, b]) => [a + 6, b] as P2), 12, "#c9c98a"); // vientre claro
+  p.band(pts, "#6f8a3a", 70, 7, "round");
+  p.stroke(pts.map(([a, b]) => [a + 8, b] as P2), 20, "#c9c98a"); // vientre claro
   const [hx, hy] = pts[n];
   // capucha
-  forma(p, [[hx - 70, hy + 30], [hx - 58, hy - 40], [hx, hy - 62], [hx + 58, hy - 40], [hx + 70, hy + 30], [hx, hy + 52]], "#7d9a42", 6, 120);
+  forma(p, [[hx - 105, hy + 50], [hx - 90, hy - 50], [hx, hy - 85], [hx + 90, hy - 50], [hx + 105, hy + 50], [hx, hy + 80]], "#7d9a42", 6, 160);
   p.stroke([[hx - 40, hy + 10], [hx - 30, hy - 20]], 4, "#4f6a2a"); p.stroke([[hx + 40, hy + 10], [hx + 30, hy - 20]], 4, "#4f6a2a");
   forma(p, [[hx - 30, hy - 30], [hx + 30, hy - 30], [hx + 24, hy + 18], [hx - 24, hy + 18]], "#8bab4a", 5, 60); // cabeza
   for (const s of [-1, 1]) { p.ell(hx + s * 14, hy - 12, 9, 11, "#f0d24a", 3); p.ell(hx + s * 14, hy - 12, 2.5, 9, INK, 0); }
@@ -61,10 +61,10 @@ export const PruebaCobra: React.FC = () => {
     // ---------------- cámara: empuje lento hacia él (culpa), golpe hacia atrás en «No.», susto con temblor
     const empuje = interpolate(t, [0, 12.6], [1.0, 1.28], { ...cl, easing: Easing.inOut(Easing.quad) });
     const suelta = interpolate(t, [12.6, 13.1], [0, 1], { ...cl, easing: Easing.out(Easing.back(2)) });
-    const zCobra = interpolate(t, [15, 16.5], [0, 0.18], { ...cl, easing: Easing.out(Easing.cubic) });
+    const zCobra = interpolate(t, [15, 16.5], [0, 0.1], { ...cl, easing: Easing.out(Easing.cubic) });
     const z = empuje + (1.0 - empuje) * suelta + zCobra;
     const tiembla = t > 14.9 && t < 15.8 ? Math.sin(f * 2.3) * 12 * (15.8 - t) : 0;
-    const fx = interpolate(t, [0, 12.6, 13.1, 16.5], [960, 900, 960, 1180], cl), fy = interpolate(t, [0, 12.6, 13.1, 16.5], [560, 470, 560, 620], cl);
+    const fx = interpolate(t, [0, 12.6, 13.1, 16.5], [960, 900, 960, 1080], cl), fy = interpolate(t, [0, 12.6, 13.1, 16.5], [560, 470, 560, 520], cl);
     g.save();
     g.translate(960 + tiembla, 540 + tiembla * 0.5); g.scale(z, z); g.translate(-fx, -fy);
 
@@ -89,10 +89,10 @@ export const PruebaCobra: React.FC = () => {
     forma(p, caja(-300, 900, 2520, 500), "#4a3a2e", 0, 2000);
 
     // ---------------- protagonista detrás de la mesa
-    const expr: Expr = t < 4 ? "nervous" : t < 7.2 ? "smile" : t < 9.8 ? "nervous" : t < 12.6 ? "pained" : t < 14.8 ? "neutral" : "shock";
+    const expr: Expr = t < 4 ? "nervous" : t < 7.2 ? "smile" : t < 9.8 ? "nervous" : t < 12.6 ? "nervous" : t < 14.8 ? "neutral" : "shock";
     const exprOk: Expr = (["nervous", "smile", "pained", "neutral", "shock"] as Expr[]).includes(expr) ? expr : "neutral";
     const salto = t > 14.9 && t < 15.5 ? Math.sin(((t - 14.9) / 0.6) * Math.PI) * 50 : 0;
-    g.save(); g.translate(900 - 300 * 0.7, 1010 - 975 * 0.7 - salto); g.scale(0.7, 0.7);
+    g.save(); g.translate(880 - 300 * 0.9, 860 - 975 * 0.9 - salto); g.scale(0.9, 0.9);
     bodyFront(new Pen(g), PROTA, { mode: "stand", expr: exprOk, phase: f / 14, seed: 3, blink: f % 97 < 4, look: t > 14.8 ? 1 : 0 });
     g.restore();
 
@@ -158,7 +158,7 @@ export const PruebaCobra: React.FC = () => {
     }
     if (t > 18.2) {
       const s = spring({ frame: f - Math.round(18.2 * fps), fps, config: { damping: 9 } });
-      g.save(); g.translate(960, 150); g.scale(s, s); rotulo(g, "EL EFECTO COBRA", 0, 0, 110, "#ffd23f", 16); g.restore();
+      g.save(); g.translate(470, 560); g.rotate(-0.06); g.scale(s, s); rotulo(g, "EL EFECTO", 0, -60, 100, "#ffd23f", 16); rotulo(g, "COBRA", 0, 50, 130, "#ffd23f", 18); g.restore();
     }
   }, [f, fps]);
   return (
