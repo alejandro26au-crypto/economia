@@ -70,6 +70,12 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 ## Guion (vídeo largo)
 - 1.500-2.200 palabras (10-15 min). Español neutro (que se entienda en España y Latinoamérica). Cifras en dólares y,
   si ayuda, en euros.
+- **HABLAR DIRECTO AL ESPECTADOR PARA QUE SE SIENTA IDENTIFICADO** (lo que al usuario, como espectador, le engancha;
+  25 nov 2026): frases en «tú» que describen lo que siente o vive, sin juzgarle. Ejemplos: «Intentas salir de deudas,
+  pero sientes que no eres capaz», «Cobras, pagas el alquiler… y a día 15 ya no queda nada», «Ahorras, y siempre
+  llega un imprevisto que te deja a cero». Usarlas en el GANCHO (las primeras palabras), al volver de cada giro y en
+  el cierre, y quitar la culpa («no es que seas malo con el dinero: el sistema está hecho así»). La historia real
+  del vídeo se conecta siempre con eso que siente el espectador.
 - **Tono EFUSIVO** como el de los shorts: frases cortas, exclamaciones, preguntas al espectador y comparaciones con su
   vida (su sueldo, su alquiler, su banco, su hipoteca).
 - Estructura: gancho fuerte en los primeros 30 s (la pregunta o la cifra brutal) → la historia con rival, burlas,
