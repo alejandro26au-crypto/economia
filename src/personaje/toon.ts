@@ -403,13 +403,13 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     const R0: Record<string, (d: number) => number> = {
       rizos: (d) => 1.1 + 0.16 * arr(d) + 0.07 * Math.abs(Math.sin(rad(d) * 10)),
       tupe: (d) => 1.05 + 0.1 * arr(d) + 0.36 * gauss(d, 72, 26),
-      despeinado: (d) => 1.07 + 0.14 * arr(d) + 0.07 * Math.abs(Math.sin(rad(d) * 6.5 + 0.6)) ** 0.6 * arr(d),
+      despeinado: (d) => 1.08 + 0.2 * arr(d) + 0.07 * Math.abs(Math.sin(rad(d) * 6.5 + 0.6)) ** 0.6 * arr(d),
       rapado: () => 1.035,
     };
     const rf = R0[estilo] ?? R0.despeinado;
     const out: P2[] = [];
     // los extremos del casco caen justo sobre la cabeza (sin hueco): el volumen se reduce a 0 cerca de las sienes
-    const d0 = 144, d1 = 36;
+    const d0 = estilo === "despeinado" ? 172 : 144, d1 = estilo === "despeinado" ? 8 : 36;
     for (let d = d0; d >= d1; d -= 2) {
       const borde01 = Math.min(1, Math.min(d0 - d, d - d1) / 22), k = borde01 * borde01 * (3 - 2 * borde01);
       out.push(at(d, 1 + (rf(d) - 1) * k));
@@ -418,8 +418,8 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     const yh = estilo === "tupe" || estilo === "despeinado" ? 0.74 : 0.66;
     const borde: P2[] = [];
     for (let i = 0; i <= 24; i++) {
-      const t = i / 24, x = Math.cos(rad(36)) - 2 * Math.cos(rad(36)) * t;
-      const xe = Math.cos(rad(36)), ye = Math.sin(rad(36)), w = 1 - (x / xe) ** 2;
+      const t = i / 24, x = Math.cos(rad(d1)) - 2 * Math.cos(rad(d1)) * t;
+      const xe = Math.cos(rad(d1)), ye = Math.sin(rad(d1)), w = 1 - (x / xe) ** 2;
       let y = ye + (yh - ye) * Math.sqrt(Math.max(0, w));
       if (estilo === "rizos") y -= 0.05 * Math.abs(Math.sin(t * Math.PI * 6));
       if (estilo === "despeinado") y -= 0.08 * Math.max(0, Math.sin(t * Math.PI * 4 + 0.4)) ** 2 * (t > 0.3 ? 1 : 0.3);
