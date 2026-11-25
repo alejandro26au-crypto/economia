@@ -6,6 +6,7 @@ import { Short } from "./motor/Short";
 import { Chequeo } from "./motor/Chequeo";
 import { ALTO, ANCHO, FPS } from "./motor/tiempo";
 import { PropsShort } from "./motor/tipos";
+import { EstiloIlustrado, EstiloMezcla, EstiloPlano } from "./pruebas/Estilos";
 
 // Guion de la idea 0 (Textos/0 - …txt) para ver algo en el estudio sin voz.
 const GUION_0 =
@@ -27,6 +28,9 @@ export const Root: React.FC = () => (
   <Composition id="ficha-cerca" component={FichaCerca} width={2000} height={1000} fps={FPS} durationInFrames={30} />
   <Composition id="ficha-bent" component={Ficha} width={2560} height={2100} fps={FPS} durationInFrames={30} />
   <Composition id="chequeo" component={Chequeo} width={ANCHO} height={ALTO} fps={FPS} durationInFrames={1} defaultProps={EJEMPLO} />
+  <Composition id="estilo-plano" component={EstiloPlano} width={1920} height={1080} fps={FPS} durationInFrames={90} />
+  <Composition id="estilo-ilustrado" component={EstiloIlustrado} width={1920} height={1080} fps={FPS} durationInFrames={90} />
+  <Composition id="estilo-mezcla" component={EstiloMezcla} width={1920} height={1080} fps={FPS} durationInFrames={90} />
   <Composition
     id="short"
     component={Short}
