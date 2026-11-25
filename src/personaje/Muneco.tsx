@@ -23,7 +23,7 @@ const ANTEBRAZO = 102;
 const R = 104; // radio de la cabeza
 const TORSO = 185; // de la cadera al hombro
 const CUELLO = 14;
-const PALO = 12; // grosor de brazos y piernas
+const PALO = 18; // grosor de brazos y piernas (más gruesos, como en los dibujos del usuario)
 
 type P = [number, number];
 const rad = (g: number) => (g * Math.PI) / 180;
@@ -33,69 +33,47 @@ const sumaP = (p: P, ang: number, largo: number): P => [p[0] + Math.sin(rad(ang)
 export const DefsMuneco: React.FC = () => null;
 
 // ---------------------------------------------------------------- pelo
-// PELO HECHO CON LÍNEAS (como dibujado a lápiz): una masa oscura y encima muchos trazos curvos que salen de la
-// coronilla, barridos hacia arriba y a la derecha, y por la izquierda caen hacia los ojos. Puntas redondas: sin
-// pinchos. Los trazos sobresalen un poco de la masa y dan el contorno despeinado.
-function azar(n: number) {
-  const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
-  return x - Math.floor(x);
-}
-type Trazo = { d: (v: number) => string; w: number; color: string };
-const TRAZOS: Trazo[] = (() => {
-  const out: Trazo[] = [];
-  const N = 40;
-  for (let i = 0; i < N; i++) {
-    const k = i / (N - 1); // 0 = sien izquierda, 1 = lado derecho
-    const lado = k < 0.17; // los de la izquierda caen hacia los ojos
-    const grados = lado ? 205 - (k / 0.17) * 45 : 160 - ((k - 0.17) / 0.83) * 150;
-    const ang = rad(grados + (azar(i) - 0.5) * 8); // 0 = derecha, 90 = arriba
-    const ux = Math.cos(ang);
-    const uy = -Math.sin(ang);
-    const r0 = R * (0.9 + azar(i + 50) * 0.12); // nacen dentro de la masa
-    const largo = R * (0.42 + azar(i + 100) * 0.28) * (lado ? 0.8 : 1);
-    // hacia fuera y girados a la derecha (viento); los del lado izquierdo caen hacia abajo
-    const giro = lado ? rad(95) : rad(-(25 + azar(i + 150) * 25));
-    const dx = ux * Math.cos(giro) - uy * Math.sin(giro);
-    const dy = ux * Math.sin(giro) + uy * Math.cos(giro);
-    const b: P = [ux * r0, uy * r0];
-    const c: P = [b[0] + ux * largo * 0.55, b[1] + uy * largo * 0.55];
-    const t: P = [b[0] + dx * largo, b[1] + dy * largo];
-    const fase = azar(i + 200) * 6;
-    out.push({
-      d: (v) => {
-        const m = Math.sin(v + fase) * 1.8;
-        return `M ${b[0].toFixed(1)} ${b[1].toFixed(1)} Q ${c[0].toFixed(1)} ${c[1].toFixed(1)} ${(t[0] + m).toFixed(1)} ${(t[1] + m * 0.3).toFixed(1)}`;
-      },
-      w: 4 + azar(i + 250) * 4,
-      color: NEGRO,
-    });
-  }
-  // líneas de peinado por dentro de la masa (gris grafito), siguiendo el barrido hacia arriba-derecha
-  for (let i = 0; i < 11; i++) {
-    const x = -78 + i * 15 + azar(i + 400) * 8;
-    const y = -66 - Math.abs(Math.sin((i / 10) * Math.PI)) * 14 - azar(i + 450) * 8;
-    const l = 34 + azar(i + 500) * 22;
-    out.push({ d: () => `M ${x.toFixed(1)} ${y.toFixed(1)} q ${(l * 0.25).toFixed(1)} ${(-l * 0.6).toFixed(1)} ${(l * 0.7).toFixed(1)} ${(-l * 0.8).toFixed(1)}`, w: 2.6, color: "#6a6866" });
-  }
-  return out;
-})();
+// PELO SENCILLO HECHO CON LÍNEAS (como los dibujos del usuario en public/protagonista/): un casquete negro pegado a
+// la coronilla y, encima, trazos cortos de puntas redondas barridos hacia la derecha. Sin pinchos.
+// [x0, y0, x1, y1, curva, grosor] en coordenadas de la cabeza (centro 0,0; radio R = 104)
+const TRAZOS: [number, number, number, number, number, number][] = [
+  // izquierda: flequillo que cae hacia la sien y la frente
+  [-60, -96, -112, -40, -10, 13],
+  [-50, -104, -120, -76, -6, 12],
+  [-40, -88, -84, -50, -4, 11],
+  // arriba: trazos gruesos que se juntan, suben y se doblan a la derecha
+  [-70, -96, -96, -134, 12, 13],
+  [-50, -106, -60, -152, 14, 14],
+  [-28, -112, -14, -160, 14, 14],
+  [-6, -114, 30, -158, 14, 14],
+  [14, -112, 66, -150, 12, 14],
+  [34, -106, 96, -132, 10, 13],
+  [50, -96, 122, -110, 8, 12],
+  // derecha: barridos a la derecha
+  [64, -84, 132, -80, 6, 11],
+  [74, -70, 124, -50, 4, 9],
+  // pelos sueltos finos arriba
+  [-36, -116, -58, -172, 10, 4.5],
+  [0, -118, 22, -176, 10, 4.5],
+  [30, -110, 92, -160, 10, 4],
+];
 
 const Pelo: React.FC<{ f: number }> = ({ f }) => {
-  const v = f / 13; // se mueve un poco con el cuerpo
+  const v = Math.sin(f / 13) * 1.5; // se mueve un poco con el cuerpo
   return (
     <g>
-      {/* masa: de la sien izquierda (baja) a la derecha, con el nacimiento del pelo alto */}
+      {/* casquete: sigue la cabeza por arriba y deja la frente libre */}
       <path
-        d={`M -102 -12 Q -124 -96 -66 -124 Q -14 -150 40 -136 Q 98 -120 108 -60 Q 110 -44 100 -36 Q 84 -56 62 -60 Q 30 -72 0 -70 Q -34 -68 -62 -56 Q -84 -40 -102 -12 Z`}
-        fill="#262523"
-        stroke={NEGRO}
-        strokeWidth={4}
-        strokeLinejoin="round"
+        d="M -100 -28 Q -112 -92 -60 -118 Q 0 -140 58 -114 Q 104 -92 104 -48 Q 86 -64 60 -66 Q 30 -74 0 -72 Q -34 -70 -62 -60 Q -84 -50 -100 -28 Z"
+        fill={NEGRO}
       />
-      <g fill="none" strokeLinecap="round">
-        {TRAZOS.map((t, i) => (
-          <path key={i} d={t.d(v)} stroke={t.color} strokeWidth={t.w} />
-        ))}
+      <g fill="none" stroke={NEGRO} strokeLinecap="round">
+        {TRAZOS.map(([x0, y0, x1, y1, c, w], i) => {
+          const mx = (x0 + x1) / 2 + c * 0.6;
+          const my = (y0 + y1) / 2 - c;
+          const m = v * ((i % 3) + 1) * 0.5;
+          return <path key={i} d={`M ${x0} ${y0} Q ${mx} ${my} ${x1 + m} ${y1}`} strokeWidth={w} />;
+        })}
       </g>
     </g>
   );

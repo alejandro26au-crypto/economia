@@ -22,7 +22,7 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   Pendiente ver un vídeo de Zenn por dentro (movimiento, duración de planos, textos): el usuario manda capturas.
 - 25 nov (sesión 2): el usuario cambió a ESTILO A LÁPIZ para el muñeco y su mundo. `src/personaje/lapiz.tsx`
   (DefsLapiz: trazo tembloroso `lp-trazo` para TODA la escena, PapelLapiz: grano de papel, Rayado: sombras de
-  grafito); `<Muneco lapiz />`. Pelo rehecho con LÍNEAS curvas (sin pinchos). Demos: `muneco-lapiz` y `muneco-demo`
+  grafito); `<Muneco lapiz />`. Pelo: casquete pegado a la cabeza + trazos gruesos de punta redonda barridos a la derecha, copiado de `public/protagonista/` (los dibujos del usuario: MIRARLOS SIEMPRE como referencia). Brazos y piernas más gruesos. Demos: `muneco-lapiz` y `muneco-demo`
   (versión limpia). Esperando su visto bueno.
 - PENDIENTE (en orden): 1) personaje (hecho, a falta de visto bueno); 2) fondos
   planos a color y objetos; 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
