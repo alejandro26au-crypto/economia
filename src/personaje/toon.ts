@@ -26,6 +26,8 @@ export type Outfit = {
   prota?: boolean;
   /** detalles de la ropa de la especie: color del cinturón, bolsillo en el pecho, color del cuello de camisa */
   cinturon?: string; bolsillo?: boolean; cuelloCamisa?: string;
+  /** PIEZAS DEL ARMARIO (se añaden según la escena): traje = color de la camisa que asoma; corbata, gafas, delantal = color */
+  traje?: string; corbata?: string; gafas?: string; delantal?: string;
 };
 type P2 = [number, number];
 
@@ -261,6 +263,7 @@ const eyeKind = (k: EyeK, lid: number): EyeK =>
 const lidOf = (b: boolean | number | undefined) => (b === true ? 1 : Number(b) || 0);
 
 let OJOS_GRANDES = false; // lo activa bodyFront con o.prota
+let GAFAS: string | null = null; // color de la montura (pieza del armario)
 const eye = (p: Pen, kind: EyeK, x: number, ey: number, u: number, side: number, look: number, skin: string) => {
   const lx = x + look * 3 * u, lw = 3.8 * u;
   if (OJOS_GRANDES && (kind === "dot" || kind === "small" || kind === "lid")) {
@@ -335,6 +338,13 @@ const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr, facing
     const [dI, dO] = F.brow, by = ey - (brim ? 17 : 20) * u;
     if (kind === "shock" || kind === "shockHalf") p.arc(x, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u);
     else taper(p, [x - side * 8.5 * u, by + dI * u], [x + side * 8.5 * u, by + dO * u], 5 * u, 2.5 * u);
+  }
+  if (GAFAS) { // gafas redondas sobre los ojos grandes
+    for (const side of [-1, 1]) p.ell(fx + side * ex, ey - 2 * u, 12 * u, 12.5 * u, null, 2.4 * u, 0, 360, 0);
+    p.stroke([[fx - ex + 12 * u, ey - 4 * u], [fx + ex - 12 * u, ey - 4 * u]], 2.2 * u, GAFAS);
+    p.g.save(); p.g.strokeStyle = GAFAS;
+    for (const side of [-1, 1]) { p.g.beginPath(); p.g.ellipse(fx + side * ex, ey - 2 * u, 12 * u, 12.5 * u, 0, 0, Math.PI * 2); p.g.lineWidth = 2.4 * u; p.g.stroke(); }
+    p.g.restore();
   }
   const mx = cx + 8 * u * facing, my = cy + 20 * u;
   mouth(p, F.mouth, mx, my, u);
@@ -605,6 +615,32 @@ const ropaConTextura = (p: Pen, o: Outfit, cx: number, top: number, bot: number,
   g.restore();
 };
 
+/** PIEZAS DEL ARMARIO sobre el torso: delantal, traje (chaqueta abierta con solapas y camisa) y corbata. */
+const piezasTorso = (p: Pen, o: Outfit, cx: number, top: number, bot: number, a: number, u: number) => {
+  const h = bot - top;
+  if (o.delantal) {
+    const d = o.delantal, y0 = top + 0.3 * h;
+    p.stroke([[cx - 0.32 * a, y0], [cx - 0.12 * a, top + 2 * u]], 2.4 * u, d);
+    p.stroke([[cx + 0.32 * a, y0], [cx + 0.12 * a, top + 2 * u]], 2.4 * u, d);
+    p.poly([[cx - 0.4 * a, y0], [cx + 0.4 * a, y0], [cx + 0.62 * a, bot + 10 * u], [cx - 0.62 * a, bot + 10 * u]], d, 1.8 * u);
+    p.poly([[cx - 0.2 * a, y0 + 0.2 * h], [cx + 0.2 * a, y0 + 0.2 * h], [cx + 0.2 * a, y0 + 0.36 * h], [cx - 0.2 * a, y0 + 0.36 * h]], mix(d, "#000000", 0.1), 1.3 * u);
+  }
+  if (o.traje) {
+    const vy = top + 0.5 * h, vw = 0.36 * a;
+    p.poly([[cx - vw, top - 4 * u], [cx + vw, top - 4 * u], [cx, vy]], o.traje, 0); // camisa que asoma
+    const sol = mix(o.jacket, "#000000", 0.22);
+    for (const sd of [-1, 1]) { // solapas
+      p.poly([[cx + sd * vw, top - 2 * u], [cx + sd * (vw + 0.16 * a), top + 0.12 * h], [cx + sd * 0.12 * a, vy - 2 * u], [cx, vy]], sol, 1.5 * u);
+    }
+    for (const k of [0.6, 0.76]) { p.dot(cx, top + k * h, 2.2 * u, INK); p.dot(cx, top + k * h, 1.5 * u, mix(o.jacket, "#000000", 0.4)); }
+  }
+  if (o.corbata) {
+    const c = o.corbata, y1 = top + (o.traje ? 0.5 : 0.6) * h;
+    p.poly([[cx - 3 * u, top + 2 * u], [cx + 3 * u, top + 2 * u], [cx + 2 * u, top + 7 * u], [cx - 2 * u, top + 7 * u]], c, 1.3 * u);
+    p.poly([[cx - 2 * u, top + 7 * u], [cx + 2 * u, top + 7 * u], [cx + 4.5 * u, y1 - 4 * u], [cx, y1], [cx - 4.5 * u, y1 - 4 * u]], c, 1.3 * u);
+  }
+};
+
 /** Cabeza de MONEDA: canto estriado, aro interior en relieve y brillo arriba a la izquierda. */
 const coinHead = (p: Pen, H: Blob, cx: number, hc: number, gold: string, seed: number) => {
   const u = (2 * H.a) / 100, dark = mul(gold, [0.78, 0.62, 0.42]), lite = mix(gold, "#ffffff", 0.55);
@@ -751,6 +787,7 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
         if (o.buttons !== "none") { p.dot(tcx + 2 * u * facing, y, 2.2 * u + 0.8 * u, INK); p.dot(tcx + 2 * u * facing, y, 2.2 * u, o.buttons ?? shade(o.jacket, 0.7)); }
       }
       if (o.prota) ropaConTextura(p, o, tcx, chin, torsoBot, T.a, u, seed);
+      if (o.prota) piezasTorso(p, o, tcx, chin, torsoBot, T.a, u);
     });
     if (o.sash) { const s = facing || 1; p.poly([[tcx + s * 0.55 * T.a, torsoBot - 0.3 * HH], [tcx + s * 0.75 * T.a, torsoBot + 0.05 * HH], [tcx + s * 0.45 * T.a, torsoBot + 0.02 * HH]], o.sash, 1.6 * u); }
     p.inkRing(tp, ow, thick);
@@ -792,8 +829,10 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   hatOn(p, o, hp, H, 300, hc, light, seed, facing, false);
   const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap" && o.hat !== "mop" && !String(o.hat).startsWith("pelo:");
   OJOS_GRANDES = !!o.prota;
+  GAFAS = o.gafas ?? null;
   faceFront(p, 300, hc, W, expr, facing, look, lid, brim, skin, o.moustache, o.build === "stout");
   OJOS_GRANDES = false;
+  GAFAS = null;
   p.rot = null;
 };
 

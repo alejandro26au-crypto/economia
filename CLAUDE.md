@@ -34,6 +34,11 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   (despeinado, corto, rizos, tupe, rapado), color de pelo, camiseta, pantalón, zapatos y piel. `REPARTO` con nombre
   (protagonista, vecina, banquero, amigo, jefa, tendero, estudiante, nino) y `persona(semilla)` para gente de
   relleno. Hoja: composición `reparto-especie`. La camiseta NEGRA es solo del protagonista.
+- ARMARIO (regla del usuario, 25 nov): cada personaje tiene ropa PREDETERMINADA (su ficha) y en cada vídeo se le
+  AÑADE lo que pida el guion o la escena con `con(ficha, { traje, corbata, gafas, delantal })` (no se toca la
+  ficha). Los de rol típico ya traen sus piezas (banquero: traje gris, corbata y gafas). Detalles MÍNIMOS y
+  variados (cinturón, bolsillo, cuello): no todos los llevan, para que cada uno parezca una persona distinta y no
+  un uniforme. Si un guion pide una pieza que no existe (casco, gorra, bata…), se añade al armario.
 - PENDIENTE (en orden): 1) personaje y especie (hechos, a falta de visto bueno); 2) fondos
   planos a color y objetos; 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto

@@ -2,6 +2,10 @@
 // y la cara del protagonista (cabeza de judía, ojos grandes con brillo, manos blancas, camiseta de manga corta) y
 // cambian el PELO (estilo y color), la CAMISETA, el PANTALÓN, los ZAPATOS y la PIEL para ser otra persona.
 // Dibujo: src/personaje/toon.ts (bodyFront). Uso: bodyFront(pen, persona(7), { mode: "stand", expr: "smile" }).
+//
+// CÓMO SE USA EN UN VÍDEO: la ficha de cada personaje es su ropa PREDETERMINADA. Según el guion o la escena se
+// le AÑADEN piezas del ARMARIO con `con(ficha, { traje: "marino", corbata: "roja", gafas: true })`, sin tocar la
+// ficha. Ejemplo: el protagonista va a una boda → vestir(con(PROTAGONISTA, { traje: "negro", corbata: "roja" })).
 import { Outfit } from "./toon";
 
 export type Pelo = "despeinado" | "corto" | "rizos" | "tupe" | "rapado";
@@ -21,17 +25,35 @@ export type Ficha = {
   zapatos: keyof typeof ZAPATOS; piel: keyof typeof PIELES; robusto?: boolean; nino?: boolean;
   /** detalles de la ropa */
   cinturon?: keyof typeof CINTURONES; bolsillo?: boolean; cuello?: keyof typeof CUELLOS;
+  /** piezas del armario puestas (predeterminadas del personaje o añadidas en la escena) */
+  piezas?: Piezas;
 };
+
+/** Añade piezas del armario a una ficha para UNA escena (no cambia la ficha original). */
+export const con = (f: Ficha, piezas: Piezas): Ficha => ({ ...f, piezas: { ...f.piezas, ...piezas } });
 export const CINTURONES = { marron: "#5a3b2a", negro: "#1b1a1f", cuero: "#8a5a32" };
+// ARMARIO: piezas que se añaden por escena (colores apagados)
+export const TRAJES = { gris: "#6c7079", marino: "#2f3b55", negro: "#26242a", marron: "#6b4a32", beige: "#b9a27a" };
+export const CORBATAS = { roja: "#b8383a", azul: "#2f5fa0", dorada: "#d9a441", verde: "#3f7a50", negra: "#1b1a1f" };
+export const DELANTALES = { blanco: "#ecebe6", azul: "#3f6fb5", marron: "#7a5232", verde: "#4f7a4a" };
+export type Piezas = {
+  /** traje: la camiseta pasa a ser chaqueta del color elegido y asoma una camisa blanca */
+  traje?: keyof typeof TRAJES; corbata?: keyof typeof CORBATAS; gafas?: boolean; delantal?: keyof typeof DELANTALES;
+};
 export const CUELLOS = { blanco: "#f1efe9", igual: "", celeste: "#bcd3ea" }; // «igual»: del color de la camiseta
 
 /** Convierte una ficha en el traje que entiende toon.ts. */
 export const vestir = (f: Ficha): Outfit => ({
-  jacket: CAMISETAS[f.camiseta], pants: PANTALONES[f.pantalon], boots: ZAPATOS[f.zapatos], hat: `pelo:${f.pelo}`,
+  jacket: f.piezas?.traje ? TRAJES[f.piezas.traje] : CAMISETAS[f.camiseta],
+  traje: f.piezas?.traje ? "#f1efe9" : undefined,
+  corbata: f.piezas?.corbata ? CORBATAS[f.piezas.corbata] : undefined,
+  gafas: f.piezas?.gafas ? "#241726" : undefined,
+  delantal: f.piezas?.delantal ? DELANTALES[f.piezas.delantal] : undefined, pants: PANTALONES[f.pantalon], boots: ZAPATOS[f.zapatos], hat: `pelo:${f.pelo}`,
   hair: CABELLOS[f.cabello], skin: PIELES[f.piel], buttons: "none", prota: true,
   build: f.nino ? "kid" : f.robusto ? "stout" : "adult",
-  cinturon: f.cinturon ? CINTURONES[f.cinturon] : undefined, bolsillo: !!f.bolsillo,
-  cuelloCamisa: f.cuello ? (CUELLOS[f.cuello] || CAMISETAS[f.camiseta]) : undefined,
+  cinturon: f.cinturon ? CINTURONES[f.cinturon] : undefined,
+  cuelloCamisa: f.piezas?.traje ? undefined : f.cuello ? (CUELLOS[f.cuello] || CAMISETAS[f.camiseta]) : undefined,
+  bolsillo: !f.piezas?.traje && !!f.bolsillo,
 });
 
 /** EL PROTAGONISTA: pelo despeinado negro y camiseta negra (fijo, no cambiar). */
@@ -41,10 +63,10 @@ export const PROTAGONISTA: Ficha = { pelo: "despeinado", cabello: "negro", camis
 export const REPARTO: Record<string, Ficha> = {
   protagonista: PROTAGONISTA,
   vecina: { pelo: "rizos", cabello: "castano", camiseta: "mostaza", pantalon: "vaquero", zapatos: "blancos", piel: "media", bolsillo: true },
-  banquero: { pelo: "corto", cabello: "canoso", camiseta: "gris", pantalon: "negro", zapatos: "negros", piel: "rosada", robusto: true, cinturon: "negro", cuello: "blanco" },
+  banquero: { pelo: "corto", cabello: "canoso", camiseta: "gris", pantalon: "negro", zapatos: "negros", piel: "rosada", robusto: true, cinturon: "negro", piezas: { traje: "gris", corbata: "azul", gafas: true } },
   amigo: { pelo: "tupe", cabello: "rubio", camiseta: "azul", pantalon: "beige", zapatos: "marrones", piel: "clara", cinturon: "cuero" },
-  jefa: { pelo: "corto", cabello: "pelirrojo", camiseta: "granate", pantalon: "negro", zapatos: "rojos", piel: "clara", cuello: "blanco", cinturon: "negro" },
-  tendero: { pelo: "rapado", cabello: "negro", camiseta: "verde", pantalon: "marron", zapatos: "marrones", piel: "morena", robusto: true, bolsillo: true, cinturon: "cuero" },
+  jefa: { pelo: "corto", cabello: "pelirrojo", camiseta: "granate", pantalon: "negro", zapatos: "rojos", piel: "clara", cuello: "blanco", cinturon: "negro", piezas: { gafas: true } },
+  tendero: { pelo: "rapado", cabello: "negro", camiseta: "verde", pantalon: "marron", zapatos: "marrones", piel: "morena", robusto: true, bolsillo: true, cinturon: "cuero", piezas: { delantal: "blanco" } },
   estudiante: { pelo: "despeinado", cabello: "castano", camiseta: "turquesa", pantalon: "vaquero", zapatos: "blancos", piel: "oscura", cuello: "igual" },
   nino: { pelo: "despeinado", cabello: "rubio", camiseta: "naranja", pantalon: "vaquero", zapatos: "rojos", piel: "rosada", nino: true, bolsillo: true },
 };
@@ -60,9 +82,13 @@ export const persona = (semilla: number): Outfit => {
     zapatos: elige(Object.keys(ZAPATOS) as Ficha["zapatos"][], 5),
     piel: elige(Object.keys(PIELES) as Ficha["piel"][], 6),
     robusto: elige([false, false, true], 7),
-    cinturon: elige([undefined, "marron", "negro", "cuero"] as Ficha["cinturon"][], 8),
-    bolsillo: elige([false, true], 9),
-    cuello: elige([undefined, undefined, "blanco", "igual", "celeste"] as Ficha["cuello"][], 10),
   };
+  // DETALLES MÍNIMOS y distintos (que no parezca un uniforme): cada persona lleva UNO o NINGUNO de estos,
+  // y a veces gafas aparte. Ninguno lleva cinturón + bolsillo + cuello a la vez.
+  const detalle = elige(["nada", "nada", "cinturon", "bolsillo", "cuello", "cinturon+cuello"], 8);
+  if (detalle.includes("cinturon")) f.cinturon = elige(["marron", "negro", "cuero"] as Ficha["cinturon"][], 9);
+  if (detalle === "bolsillo") f.bolsillo = true;
+  if (detalle.includes("cuello")) f.cuello = elige(["blanco", "igual", "celeste"] as Ficha["cuello"][], 10);
+  if (elige([0, 0, 0, 0, 1], 11)) f.piezas = { gafas: true };
   return vestir(f);
 };
