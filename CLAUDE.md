@@ -52,6 +52,7 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - COMPETIDOR DIRECTO: Los Ecomonos (475K, España, finanzas personales con monos animados). Análisis en
   `docs/analisis-viral-ecomonos.md`: promesa numerada, capítulos con anticipo, verdades con nombre propio, cifras
   pequeñas, una acción final, final abierto. Diferenciarnos con historias REALES y su lección para tu bolsillo.
+- ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (7.408 caracteres) + `.fuentes.md`.
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
@@ -68,7 +69,10 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   la crisis española de 2008, Pablo Escobar y su dinero, el Banco de Inglaterra contra Soros.
 
 ## Guion (vídeo largo)
-- 1.500-2.200 palabras (10-15 min). Español neutro (que se entienda en España y Latinoamérica). Cifras en dólares y,
+- **LÍMITE DE ELEVENLABS (usuario, 25 nov 2026): máximo 10.000 créditos al mes → vídeos de ~8 MINUTOS con unos
+  7.500-8.000 CARACTERES (1 crédito ≈ 1 carácter con espacios; ≈ 1.250-1.350 palabras).** Contar los caracteres
+  antes de enseñar el guion (`python3 -c "print(len(open(F).read()))"`). (Sustituye a la línea siguiente.)
+- (antes) 1.500-2.200 palabras (10-15 min). Español neutro (que se entienda en España y Latinoamérica). Cifras en dólares y,
   si ayuda, en euros.
 - **HABLAR DIRECTO AL ESPECTADOR PARA QUE SE SIENTA IDENTIFICADO** (lo que al usuario, como espectador, le engancha;
   25 nov 2026): frases en «tú» que describen lo que siente o vive, sin juzgarle. Ejemplos: «Intentas salir de deudas,
