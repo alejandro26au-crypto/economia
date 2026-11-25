@@ -156,10 +156,12 @@ const Cofre: React.FC<{ x: number; y: number }> = ({ x, y }) => (
 );
 
 // ------------------------------------------------------------------ el protagonista (el de la foto de perfil)
-export type CaraProta = "curioso" | "feliz" | "sorpresa" | "chulo" | "risa" | "piensa";
-export type BrazosProta = "mejilla-cadera" | "senala" | "abiertos" | "cruzados" | "victoria" | "explica";
+// Reglas fijas en docs/estilo.md. Medidas en unidades del motor: pies en y = 0, ~600 hasta la punta del pelo.
+export type CaraProta = "curioso" | "feliz" | "sorpresa" | "chulo" | "risa" | "piensa" | "preocupado" | "asustado" | "enfadado";
+export type BrazosProta = "mejilla-cadera" | "senala" | "abiertos" | "cruzados" | "victoria" | "explica" | "manos-cabeza" | "encoge";
+type Mano = "abierta" | "dedo" | "puno" | "palma";
 
-/** Pelo despeinado: casquete con borde de mechones irregulares, flequillo en picos y unos pelos sueltos de punta. */
+/** Pelo despeinado: casquete con borde de mechones irregulares y flequillo en picos que deja ver la frente. */
 function peloDespeinado(cy: number, r: number) {
   const g = Math.PI / 180;
   const fuera: string[] = [];
@@ -169,7 +171,6 @@ function peloDespeinado(cy: number, r: number) {
     const pico = t % 2 ? 8 + ((t * 7) % 4) * 5 : 0;
     fuera.push(`${Math.cos(a) * (r + pico)} ${cy + Math.sin(a) * (r + pico)}`);
   }
-  // flequillo: de derecha a izquierda, en picos que bajan por la frente
   const dentro: string[] = [];
   const M = 9;
   for (let t = 0; t <= M; t++) {
@@ -181,49 +182,85 @@ function peloDespeinado(cy: number, r: number) {
   return `M ${fuera.join(" L ")} L ${dentro.join(" L ")} Z`;
 }
 
-const BRAZOS: Record<BrazosProta, { a: [number, number][]; b: [number, number][]; manoA?: "dedo"; manoB?: "dedo" }> = {
-  // a = brazo izquierdo de la pantalla, b = derecho; [hombro, codo, mano]
-  "mejilla-cadera": { a: [[-44, -388], [-84, -330], [-70, -468]], b: [[44, -388], [92, -326], [50, -262]] },
-  senala: { a: [[-44, -388], [-62, -318], [-60, -250]], b: [[44, -388], [104, -418], [160, -462]], manoB: "dedo" },
-  abiertos: { a: [[-44, -388], [-112, -372], [-158, -432]], b: [[44, -388], [112, -372], [158, -432]] },
-  cruzados: { a: [[-44, -388], [-70, -322], [34, -334]], b: [[44, -388], [70, -318], [-30, -326]] },
-  victoria: { a: [[-44, -388], [-92, -326], [-50, -262]], b: [[44, -388], [96, -456], [92, -548]] },
-  explica: { a: [[-44, -388], [-70, -318], [-60, -250]], b: [[44, -388], [96, -330], [140, -380]] },
+type Brazo = { p: [number, number][]; mano: Mano };
+const BRAZOS: Record<BrazosProta, { a: Brazo; b: Brazo }> = {
+  // a = brazo izquierdo de la pantalla, b = derecho; p = [hombro, codo, mano]
+  "mejilla-cadera": { a: { p: [[-44, -388], [-86, -330], [-76, -470]], mano: "abierta" }, b: { p: [[44, -388], [94, -326], [52, -262]], mano: "puno" } },
+  senala: { a: { p: [[-44, -388], [-62, -318], [-60, -250]], mano: "puno" }, b: { p: [[44, -388], [104, -418], [158, -462]], mano: "dedo" } },
+  abiertos: { a: { p: [[-44, -388], [-112, -372], [-156, -432]], mano: "abierta" }, b: { p: [[44, -388], [112, -372], [156, -432]], mano: "abierta" } },
+  cruzados: { a: { p: [[-44, -388], [-72, -322], [34, -334]], mano: "puno" }, b: { p: [[44, -388], [72, -318], [-30, -326]], mano: "puno" } },
+  victoria: { a: { p: [[-44, -388], [-92, -326], [-52, -262]], mano: "puno" }, b: { p: [[44, -388], [98, -456], [92, -550]], mano: "puno" } },
+  explica: { a: { p: [[-44, -388], [-70, -318], [-60, -250]], mano: "puno" }, b: { p: [[44, -388], [98, -330], [146, -384]], mano: "palma" } },
+  "manos-cabeza": { a: { p: [[-44, -388], [-126, -400], [-96, -508]], mano: "abierta" }, b: { p: [[44, -388], [126, -400], [96, -508]], mano: "abierta" } },
+  encoge: { a: { p: [[-44, -380], [-96, -316], [-142, -318]], mano: "palma" }, b: { p: [[44, -380], [96, -316], [142, -318]], mano: "palma" } },
 };
+
+/** Dedo con contorno: trazo negro grueso y blanco encima (como la mano dibujada a tinta). */
+const Dedo: React.FC<{ x: number; y: number; ang: number; largo: number; ancho?: number }> = ({ x, y, ang, largo, ancho = 18 }) => {
+  const d = `M ${x} ${y} L ${x + Math.cos(ang) * largo} ${y + Math.sin(ang) * largo}`;
+  return (
+    <g filter="url(#trazo)">
+      <path d={d} stroke={LAPIZ} strokeWidth={ancho} strokeLinecap="round" />
+      <path d={d} stroke="#fbf8ef" strokeWidth={ancho - 8} strokeLinecap="round" />
+    </g>
+  );
+};
+
+const ManoProta: React.FC<{ b: Brazo; lado: -1 | 1 }> = ({ b, lado }) => {
+  const [x, y] = b.p[2];
+  const [cx, cy] = b.p[1];
+  const ang = Math.atan2(y - cy, x - cx); // hacia donde apunta el antebrazo
+  const pulgar = ang - lado * 1.2;
+  return (
+    <g>
+      {b.mano === "abierta" &&
+        [-0.45, -0.1, 0.25].map((d) => <Dedo key={d} x={x + Math.cos(ang) * 6} y={y + Math.sin(ang) * 6} ang={ang + d * lado} largo={32} />)}
+      {b.mano === "palma" &&
+        [-0.35, 0, 0.35].map((d) => <Dedo key={d} x={x} y={y} ang={-Math.PI / 2 + d + lado * 0.5} largo={28} />)}
+      {b.mano === "dedo" && <Dedo x={x} y={y} ang={ang} largo={46} />}
+      {b.mano !== "puno" && <Dedo x={x} y={y} ang={b.mano === "palma" ? -Math.PI / 2 - lado * 0.6 : pulgar} largo={22} />}
+      <B color="#fbf8ef" grosor={4}>{(p) => <circle cx={x} cy={y} r={b.mano === "puno" ? 17 : 16} {...p} />}</B>
+      {b.mano === "puno" && <B grosor={2.5}>{(p) => <path d={`M ${x - 6} ${y - 8} Q ${x} ${y - 2} ${x - 6} ${y + 6}`} {...p} />}</B>}
+    </g>
+  );
+};
+
+/** Gota de sudor azul. */
+const Sudor: React.FC<{ x: number; y: number; tam?: number }> = ({ x, y, tam = 1 }) => (
+  <g transform={`translate(${x} ${y}) scale(${tam})`}>
+    <B color="#9cc8ec" grosor={3.5}>{(p) => <path d="M 0 -22 Q 14 0 12 8 Q 8 20 0 20 Q -8 20 -12 8 Q -14 0 0 -22 Z" {...p} />}</B>
+    <path d="M -4 4 Q -4 12 2 14" stroke="#fff" strokeWidth={3} fill="none" strokeLinecap="round" />
+  </g>
+);
 
 const Prota: React.FC<{ cara: CaraProta; brazos: BrazosProta; f: number }> = ({ cara: c, brazos, f }) => {
   const respira = Math.sin(f / 14) * 3;
+  const tiembla = c === "asustado" ? Math.sin(f * 2.1) * 2 : 0;
   const cy = -505 + respira;
   const r = 94;
   const br = BRAZOS[brazos];
-  const brazo = (pts: [number, number][]) => `M ${pts[0][0]} ${pts[0][1] + respira} Q ${pts[1][0]} ${pts[1][1]} ${pts[2][0]} ${pts[2][1]}`;
-  const mano = (pts: [number, number][], dedo?: "dedo") => {
-    const [x, y] = pts[2];
-    const [cx, cyy] = pts[1];
-    const ang = Math.atan2(y - cyy, x - cx);
-    return (
-      <g>
-        {dedo ? <B grosor={6}>{(p) => <path d={`M ${x} ${y} L ${x + Math.cos(ang) * 30} ${y + Math.sin(ang) * 30}`} {...p} />}</B> : null}
-        <B color="#fbf8ef" grosor={4}>{(p) => <circle cx={x} cy={y} r={15} {...p} />}</B>
-      </g>
-    );
-  };
-  // mirada y gestos de cada cara
+  const brazo = (b: Brazo) => `M ${b.p[0][0]} ${b.p[0][1] + respira} Q ${b.p[1][0]} ${b.p[1][1]} ${b.p[2][0]} ${b.p[2][1]}`;
   const ojo = {
-    curioso: { px: 6, py: -9, alto: 21 },
-    feliz: { px: 3, py: 0, alto: 21 },
-    sorpresa: { px: 0, py: 0, alto: 25 },
-    chulo: { px: 4, py: 2, alto: 21 },
-    risa: { px: 0, py: 0, alto: 21 },
-    piensa: { px: -6, py: -10, alto: 21 },
+    curioso: { px: 6, py: -9, alto: 21, pu: 8.5 },
+    feliz: { px: 3, py: 0, alto: 21, pu: 8.5 },
+    sorpresa: { px: 0, py: 0, alto: 25, pu: 6 },
+    chulo: { px: 4, py: 2, alto: 21, pu: 8.5 },
+    risa: { px: 0, py: 0, alto: 21, pu: 8.5 },
+    piensa: { px: -6, py: -10, alto: 21, pu: 8.5 },
+    preocupado: { px: -2, py: 5, alto: 22, pu: 8 },
+    asustado: { px: 0, py: 0, alto: 26, pu: 5 },
+    enfadado: { px: 2, py: 3, alto: 18, pu: 9 },
   }[c];
   const cejas = {
-    curioso: `M -46 ${cy - 38} Q -30 ${cy - 48} -12 ${cy - 40} M 12 ${cy - 46} Q 30 ${cy - 62} 48 ${cy - 48}`,
-    feliz: `M -46 ${cy - 40} Q -30 ${cy - 52} -12 ${cy - 42} M 12 ${cy - 42} Q 30 ${cy - 52} 46 ${cy - 40}`,
-    sorpresa: `M -46 ${cy - 50} Q -30 ${cy - 66} -12 ${cy - 54} M 12 ${cy - 54} Q 30 ${cy - 66} 46 ${cy - 50}`,
-    chulo: `M -46 ${cy - 32} Q -30 ${cy - 36} -12 ${cy - 32} M 12 ${cy - 42} Q 30 ${cy - 60} 48 ${cy - 46}`,
-    risa: `M -46 ${cy - 42} Q -30 ${cy - 54} -12 ${cy - 44} M 12 ${cy - 44} Q 30 ${cy - 54} 46 ${cy - 42}`,
-    piensa: `M -46 ${cy - 46} Q -30 ${cy - 60} -12 ${cy - 48} M 12 ${cy - 38} Q 30 ${cy - 44} 46 ${cy - 38}`,
+    curioso: `M -48 ${cy - 38} Q -32 ${cy - 48} -14 ${cy - 40} M 14 ${cy - 46} Q 32 ${cy - 62} 50 ${cy - 48}`,
+    feliz: `M -48 ${cy - 40} Q -32 ${cy - 52} -14 ${cy - 42} M 14 ${cy - 42} Q 32 ${cy - 52} 48 ${cy - 40}`,
+    sorpresa: `M -48 ${cy - 52} Q -32 ${cy - 68} -14 ${cy - 56} M 14 ${cy - 56} Q 32 ${cy - 68} 48 ${cy - 52}`,
+    chulo: `M -48 ${cy - 32} Q -32 ${cy - 36} -14 ${cy - 32} M 14 ${cy - 42} Q 32 ${cy - 60} 50 ${cy - 46}`,
+    risa: `M -48 ${cy - 42} Q -32 ${cy - 54} -14 ${cy - 44} M 14 ${cy - 44} Q 32 ${cy - 54} 48 ${cy - 42}`,
+    piensa: `M -48 ${cy - 46} Q -32 ${cy - 60} -14 ${cy - 48} M 14 ${cy - 38} Q 32 ${cy - 44} 48 ${cy - 38}`,
+    preocupado: `M -50 ${cy - 34} Q -32 ${cy - 38} -14 ${cy - 52} M 14 ${cy - 52} Q 32 ${cy - 38} 50 ${cy - 34}`,
+    asustado: `M -50 ${cy - 42} Q -34 ${cy - 50} -14 ${cy - 64} M 14 ${cy - 64} Q 34 ${cy - 50} 50 ${cy - 42}`,
+    enfadado: `M -50 ${cy - 50} L -12 ${cy - 30} M 12 ${cy - 30} L 50 ${cy - 50}`,
   }[c];
   const boca = () => {
     switch (c) {
@@ -239,35 +276,51 @@ const Prota: React.FC<{ cara: CaraProta; brazos: BrazosProta; f: number }> = ({ 
         return <B color="#7a2a26" grosor={5}>{(p) => <path d={`M -36 ${cy + 30} Q 4 ${cy + 38} 44 ${cy + 28} Q 36 ${cy + 84} 4 ${cy + 84} Q -30 ${cy + 82} -36 ${cy + 30} Z`} {...p} />}</B>;
       case "piensa":
         return <B grosor={5}>{(p) => <path d={`M -18 ${cy + 46} Q 4 ${cy + 54} 26 ${cy + 42}`} {...p} />}</B>;
+      case "preocupado":
+        return <B grosor={5}>{(p) => <path d={`M -24 ${cy + 52} Q -14 ${cy + 44} -4 ${cy + 52} Q 6 ${cy + 60} 16 ${cy + 52} Q 24 ${cy + 46} 30 ${cy + 50}`} {...p} />}</B>;
+      case "asustado":
+        return <B color="#7a2a26" grosor={5}>{(p) => <path d={`M -22 ${cy + 44} Q -10 ${cy + 38} 4 ${cy + 42} Q 18 ${cy + 38} 30 ${cy + 44} Q 34 ${cy + 76} 4 ${cy + 78} Q -26 ${cy + 76} -22 ${cy + 44} Z`} {...p} />}</B>;
+      case "enfadado":
+        return <B grosor={5}>{(p) => <path d={`M -22 ${cy + 58} Q 4 ${cy + 40} 30 ${cy + 58}`} {...p} />}</B>;
     }
   };
+  const lineasImpacto = (
+    <B grosor={4}>
+      {(p) => (
+        <path
+          d={[-150, -120, -60, -20, 20, 60].map((a) => {
+            const g = (a * Math.PI) / 180;
+            return `M ${Math.cos(g) * (r + 40)} ${cy + Math.sin(g) * (r + 40)} L ${Math.cos(g) * (r + 66)} ${cy + Math.sin(g) * (r + 66)}`;
+          }).join(" ")}
+          {...p}
+        />
+      )}
+    </B>
+  );
   return (
-    <g>
+    <g transform={`translate(${tiembla} 0)`}>
       <ellipse cx={4} cy={6} rx={92} ry={13} fill="url(#rayado)" opacity={0.5} />
-      {/* piernas largas de palo y zapatos */}
-      <B grosor={8}>{(p) => <path d="M -16 -236 Q -20 -120 -26 -12 M 16 -236 Q 22 -120 30 -12" {...p} />}</B>
-      <B color="#2f2d2c" grosor={4}>{(p) => <path d="M -24 -18 Q -66 -18 -70 4 L -12 4 Q -8 -10 -24 -18 Z" {...p} />}</B>
-      <B color="#2f2d2c" grosor={4}>{(p) => <path d="M 28 -18 Q 72 -18 76 4 L 18 4 Q 14 -10 28 -18 Z" {...p} />}</B>
-      {/* camiseta negra con mangas cortas */}
+      {/* pantalón negro recto, zapatos */}
+      <B color="#2c2b2d" raya grosor={5}>{(p) => <path d="M -40 -236 L 40 -236 L 34 -16 L 10 -16 L 4 -180 L -4 -180 L -10 -16 L -34 -16 Z" {...p} />}</B>
+      <B color="#2f2d2c" grosor={4}>{(p) => <path d="M -26 -20 Q -70 -20 -74 4 L -12 4 Q -8 -12 -26 -20 Z" {...p} />}</B>
+      <B color="#2f2d2c" grosor={4}>{(p) => <path d="M 28 -20 Q 74 -20 78 4 L 14 4 Q 10 -12 28 -20 Z" {...p} />}</B>
+      {/* camiseta negra de manga corta */}
       <B color="#363537" raya grosor={6}>
-        {(p) => <path d={`M -38 ${-402 + respira} Q -62 ${-396 + respira} -70 -350 L -50 -340 Q -54 -290 -48 -226 Q 0 -216 48 -226 Q 54 -290 50 -340 L 70 -350 Q 62 ${-396 + respira} 38 ${-402 + respira} Q 0 ${-388 + respira} -38 ${-402 + respira} Z`} {...p} />}
+        {(p) => <path d={`M -38 ${-402 + respira} Q -62 ${-396 + respira} -70 -350 L -50 -340 Q -54 -290 -50 -226 Q 0 -218 50 -226 Q 54 -290 50 -340 L 70 -350 Q 62 ${-396 + respira} 38 ${-402 + respira} Q 0 ${-388 + respira} -38 ${-402 + respira} Z`} {...p} />}
       </B>
-      <B grosor={8}>{(p) => <path d={brazo(br.a)} {...p} />}</B>
-      <B grosor={8}>{(p) => <path d={brazo(br.b)} {...p} />}</B>
       {/* cabeza */}
       <B grosor={6}>{(p) => <path d={`M 0 ${-394 + respira} L 0 ${cy + r - 6}`} {...p} />}</B>
       <B color="#fbf8ef" grosor={7}>{(p) => <circle cx={0} cy={cy} r={r} {...p} />}</B>
       <ellipse cx={50} cy={cy + 34} rx={24} ry={36} fill="url(#rayadoFino)" opacity={0.3} />
       <B color="#2a2826" raya grosor={4}>{(p) => <path d={peloDespeinado(cy, r)} {...p} />}</B>
       <B grosor={4}>{(p) => <path d={`M -20 ${cy - r - 6} Q -34 ${cy - r - 40} -58 ${cy - r - 44} M 6 ${cy - r - 8} Q 4 ${cy - r - 46} 22 ${cy - r - 60} M 34 ${cy - r + 2} Q 56 ${cy - r - 26} 80 ${cy - r - 24}`} {...p} />}</B>
-      {/* ojos */}
       {[-30, 30].map((dx) =>
         c === "risa" ? (
           <B key={dx} grosor={6}>{(p) => <path d={`M ${dx - 16} ${cy + 2} Q ${dx} ${cy - 18} ${dx + 16} ${cy + 2}`} {...p} />}</B>
         ) : (
           <g key={dx}>
             <B color="#ffffff" grosor={4}>{(p) => <ellipse cx={dx} cy={cy} rx={17} ry={ojo.alto} {...p} />}</B>
-            <circle cx={dx + ojo.px} cy={cy + ojo.py} r={c === "sorpresa" ? 6 : 8.5} fill={LAPIZ} />
+            <circle cx={dx + ojo.px} cy={cy + ojo.py} r={ojo.pu} fill={LAPIZ} />
             <circle cx={dx + ojo.px + 2.5} cy={cy + ojo.py - 3} r={2.6} fill="#fff" />
             {c === "chulo" ? <path d={`M ${dx - 19} ${cy - 4} Q ${dx} ${cy - 12} ${dx + 19} ${cy - 4} L ${dx + 19} ${cy - 24} L ${dx - 19} ${cy - 24} Z`} fill="#fbf8ef" stroke={LAPIZ} strokeWidth={4} /> : null}
           </g>
@@ -275,10 +328,31 @@ const Prota: React.FC<{ cara: CaraProta; brazos: BrazosProta; f: number }> = ({ 
       )}
       <B grosor={5}>{(p) => <path d={cejas} {...p} />}</B>
       {boca()}
-      <ellipse cx={-54} cy={cy + 30} rx={14} ry={8} fill="#f0a8a0" opacity={0.55} filter="url(#acuarela)" />
-      <ellipse cx={58} cy={cy + 26} rx={14} ry={8} fill="#f0a8a0" opacity={0.55} filter="url(#acuarela)" />
-      {mano(br.a, br.manoA)}
-      {mano(br.b, br.manoB)}
+      {c === "enfadado" ? null : (
+        <>
+          <ellipse cx={-56} cy={cy + 30} rx={14} ry={8} fill="#f0a8a0" opacity={0.55} filter="url(#acuarela)" />
+          <ellipse cx={60} cy={cy + 26} rx={14} ry={8} fill="#f0a8a0" opacity={0.55} filter="url(#acuarela)" />
+        </>
+      )}
+      {/* brazos y manos (delante de la cabeza: así la mano puede ir a la mejilla) */}
+      <B grosor={8}>{(p) => <path d={brazo(br.a)} {...p} />}</B>
+      <B grosor={8}>{(p) => <path d={brazo(br.b)} {...p} />}</B>
+      <ManoProta b={br.a} lado={-1} />
+      <ManoProta b={br.b} lado={1} />
+      {/* extras de la emoción */}
+      {c === "preocupado" ? <Sudor x={82} y={cy - 46} /> : null}
+      {c === "asustado" ? (
+        <>
+          <Sudor x={-104} y={cy - 6} tam={0.8} />
+          <Sudor x={108} y={cy + 10} tam={0.9} />
+          {lineasImpacto}
+        </>
+      ) : null}
+      {c === "sorpresa" ? lineasImpacto : null}
+      {c === "piensa" ? <text x={96} y={cy - 90} style={{ font: `90px ${MANO}` }} fill={LAPIZ}>?</text> : null}
+      {c === "enfadado" ? (
+        <B grosor={3}>{(p) => <path d={`M 90 ${cy - 120} c 30 -20 50 10 20 20 c -30 10 -40 -30 -5 -35 c 40 -5 45 40 5 45 c -35 5 -50 -35 -15 -50`} {...p} />}</B>
+      ) : null}
     </g>
   );
 };
@@ -289,31 +363,40 @@ const Protagonista: React.FC<{ x: number; y: number; tam: number; f: number; car
   </g>
 );
 
-/** Hoja del protagonista: seis caras y gestos para elegir. */
+/** Hoja del protagonista: todas las caras con su gesto típico. */
 export const HojaProtagonista: React.FC = () => {
   useFuente();
   const f = useCurrentFrame();
   const vinetas: [CaraProta, BrazosProta, string][] = [
-    ["curioso", "mejilla-cadera", "Curioso"],
-    ["feliz", "explica", "Explica contento"],
-    ["sorpresa", "abiertos", "¡Sorpresa!"],
-    ["chulo", "cruzados", "Seguro de sí"],
-    ["risa", "victoria", "¡Lo sabía!"],
-    ["piensa", "senala", "Mira esto"],
+    ["curioso", "mejilla-cadera", "curioso"],
+    ["feliz", "explica", "feliz"],
+    ["risa", "victoria", "risa"],
+    ["sorpresa", "abiertos", "sorpresa"],
+    ["chulo", "cruzados", "chulo"],
+    ["piensa", "senala", "piensa"],
+    ["preocupado", "encoge", "preocupado"],
+    ["asustado", "manos-cabeza", "asustado"],
+    ["enfadado", "cruzados", "enfadado"],
   ];
+  const cols = 5;
+  const aw = 366;
+  const ah = 510;
   return (
     <AbsoluteFill style={{ background: "#f6f0e2" }}>
       <svg width={W} height={H}>
         <Filtros />
         <rect width={W} height={H} fill="#f8f4ea" />
         {vinetas.map(([c, b, nombre], i) => {
-          const x = 40 + (i % 3) * 620;
-          const y = 30 + Math.floor(i / 3) * 520;
+          const fila = Math.floor(i / cols);
+          const enFila = fila === 0 ? cols : vinetas.length - cols;
+          const x0 = (W - (enFila * aw + (enFila - 1) * 14)) / 2;
+          const x = x0 + (i % cols) * (aw + 14);
+          const y = 22 + fila * (ah + 16);
           return (
             <g key={i}>
-              <B color="#fffdf7" grosor={5}>{(p) => <rect x={x} y={y} width={600} height={500} {...p} />}</B>
-              <text x={x + 24} y={y + 52} style={{ font: `44px ${MANO}` }} fill={LAPIZ}>{nombre}</text>
-              <g transform={`translate(${x + 330} ${y + 478}) scale(0.64)`}>
+              <B color="#fffdf7" grosor={4.5}>{(p) => <rect x={x} y={y} width={aw} height={ah} {...p} />}</B>
+              <text x={x + 18} y={y + 44} style={{ font: `38px ${MANO}` }} fill={LAPIZ}>{nombre}</text>
+              <g transform={`translate(${x + aw / 2} ${y + ah - 26}) scale(0.68)`}>
                 <Prota cara={c} brazos={b} f={f + i * 9} />
               </g>
             </g>
@@ -466,6 +549,154 @@ export const EstiloBoceto: React.FC = () => {
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 34, textAlign: "center" }}>
         <span style={{ font: `66px ${MANO}`, color: "#fff", WebkitTextStroke: `8px ${LAPIZ}`, paintOrder: "stroke", letterSpacing: 1 }}>¿Y si tu dinero no está en el banco?</span>
       </div>
+    </AbsoluteFill>
+  );
+};
+
+// ------------------------------------------------------------------ escena ISOMÉTRICA (estilo infografía)
+// Mundo en metros: x hacia abajo-derecha, y hacia abajo-izquierda, z hacia arriba.
+const ISO = { ox: 960, oy: 300, s: 40 };
+const iso = (x: number, y: number, z = 0): [number, number] => [ISO.ox + (x - y) * 0.866 * ISO.s, ISO.oy + (x + y) * 0.5 * ISO.s - z * ISO.s];
+const pts = (...ps: [number, number][]) => ps.map((p) => p.join(",")).join(" ");
+
+/** Bloque de edificio isométrico: techo, fachada izquierda (y = y1) y fachada derecha (x = x1, rayada). */
+const Bloque: React.FC<{ x0: number; x1: number; y0: number; y1: number; h: number; techo: string; izq: string; der: string; ventanas?: string; nombre?: string; tamNombre?: number }> = ({ x0, x1, y0, y1, h, techo, izq, der, ventanas, nombre, tamNombre = 46 }) => {
+  const filas = Math.floor((h - 0.6) / 1.2);
+  const vIzq: React.ReactNode[] = [];
+  const vDer: React.ReactNode[] = [];
+  if (ventanas) {
+    for (let f = 0; f < filas; f++) {
+      const z0 = 0.7 + f * 1.2;
+      for (let u = x0 + 0.5; u + 0.6 <= x1 - 0.3; u += 1.1) vIzq.push(<polygon key={`i${f}-${u}`} points={pts(iso(u, y1, z0), iso(u + 0.6, y1, z0), iso(u + 0.6, y1, z0 + 0.7), iso(u, y1, z0 + 0.7))} fill={ventanas} stroke={LAPIZ} strokeWidth={1.8} strokeOpacity={0.7} />);
+      for (let v = y0 + 0.5; v + 0.6 <= y1 - 0.3; v += 1.1) vDer.push(<polygon key={`d${f}-${v}`} points={pts(iso(x1, v, z0), iso(x1, v + 0.6, z0), iso(x1, v + 0.6, z0 + 0.7), iso(x1, v, z0 + 0.7))} fill={ventanas} stroke={LAPIZ} strokeWidth={1.8} strokeOpacity={0.6} />);
+    }
+  }
+  const [nx, ny] = iso((x0 + x1) / 2 - 0.2 * (x1 - x0), y1, h - 0.4);
+  return (
+    <g>
+      <B color={izq}>{(p) => <polygon points={pts(iso(x0, y1, 0), iso(x1, y1, 0), iso(x1, y1, h), iso(x0, y1, h))} {...p} />}</B>
+      <B color={der} raya>{(p) => <polygon points={pts(iso(x1, y0, 0), iso(x1, y1, 0), iso(x1, y1, h), iso(x1, y0, h))} {...p} />}</B>
+      <B color={techo}>{(p) => <polygon points={pts(iso(x0, y0, h), iso(x1, y0, h), iso(x1, y1, h), iso(x0, y1, h))} {...p} />}</B>
+      {vIzq}
+      <g opacity={0.85}>{vDer}</g>
+      {nombre ? (
+        <text transform={`matrix(0.866 0.5 0 1 ${nx} ${ny})`} style={{ font: `${tamNombre}px ${MANO}` }} fill={LAPIZ}>{nombre}</text>
+      ) : null}
+    </g>
+  );
+};
+
+/** El banco en isométrica: zócalo, columnas en la fachada y frontón. */
+const BancoIso: React.FC = () => {
+  const x0 = 2, x1 = 8, y0 = 11, y1 = 16, h = 3.6;
+  return (
+    <g>
+      <B color="#d8caa8" raya>{(p) => <polygon points={pts(iso(x0 - 0.4, y1 + 0.6, 0), iso(x1 + 0.4, y1 + 0.6, 0), iso(x1 + 0.4, y1 + 0.6, 0.4), iso(x0 - 0.4, y1 + 0.6, 0.4))} {...p} />}</B>
+      <B color="#e6d9bc">{(p) => <polygon points={pts(iso(x0 - 0.4, y0 - 0.4, 0.4), iso(x1 + 0.4, y0 - 0.4, 0.4), iso(x1 + 0.4, y1 + 0.6, 0.4), iso(x0 - 0.4, y1 + 0.6, 0.4))} {...p} />}</B>
+      <Bloque x0={x0} x1={x1} y0={y0} y1={y1} h={h} techo="#e9dcc0" izq="#eadfc6" der="#d9c9a6" />
+      {/* columnas delante de la fachada */}
+      {[2.5, 3.8, 5.1, 6.4, 7.6].map((u) => (
+        <B key={u} color="#f7f1e2">{(p) => <polygon points={pts(iso(u - 0.22, y1 + 0.3, 0.4), iso(u + 0.22, y1 + 0.3, 0.4), iso(u + 0.22, y1 + 0.3, h), iso(u - 0.22, y1 + 0.3, h))} {...p} />}</B>
+      ))}
+      {/* frontón (triángulo) y tejado */}
+      <B color="#d4c4a0" raya>{(p) => <polygon points={pts(iso(x1 + 0.3, y1 + 0.5, h), iso(x1 + 0.3, y0 - 0.3, h), iso(x1 + 0.3 - 3.3, y0 - 0.3, h + 1.6), iso(x1 + 0.3 - 3.3, y1 + 0.5, h + 1.6))} {...p} />}</B>
+      <B color="#efe4cc">{(p) => <polygon points={pts(iso(x0 - 0.3, y1 + 0.5, h), iso(x1 + 0.3, y1 + 0.5, h), iso((x0 + x1) / 2, y1 + 0.5, h + 1.6))} {...p} />}</B>
+      <text transform={`matrix(0.866 0.5 0 1 ${iso(3.6, y1 + 0.5, h + 0.45)[0]} ${iso(3.6, y1 + 0.5, h + 0.45)[1]})`} style={{ font: `40px ${MANO}` }} fill={LAPIZ}>BANCO</text>
+    </g>
+  );
+};
+
+/** Barco de carga en el canal con contenedores. */
+const Barco: React.FC<{ f: number }> = ({ f }) => {
+  const dz = Math.sin(f / 10) * 0.05;
+  const x0 = 17.9, x1 = 20.1;
+  const y0 = 8 + f * 0.01, y1 = 14.5 + f * 0.01;
+  return (
+    <g transform={`translate(0 ${-dz * ISO.s})`}>
+      <B color="#5a6e8a" raya>{(p) => <polygon points={pts(iso(x0, y1, 0), iso(x1, y1, 0), iso(x1, y1 + 1.2, 0.9), iso(x0 + 1.1, y1 + 1.6, 1), iso(x0, y1 + 1.2, 0.9))} {...p} />}</B>
+      <Bloque x0={x0} x1={x1} y0={y0} y1={y1} h={0.9} techo="#8a5a4a" izq="#c0504a" der="#9a3a36" />
+      <Bloque x0={x0 + 0.2} x1={x1 - 0.2} y0={y0 + 0.5} y1={y0 + 2.6} h={2.1} techo="#9ac0d8" izq="#7aa8c8" der="#5a88a8" />
+      <Bloque x0={x0 + 0.2} x1={x1 - 0.2} y0={y0 + 2.9} y1={y0 + 5} h={2.1} techo="#f0c050" izq="#e9b232" der="#c99020" />
+      <text transform={`matrix(0.866 0.5 0 1 ${iso(x0 + 0.5, y0 + 5, 1.7)[0]} ${iso(x0 + 0.5, y0 + 5, 1.7)[1]})`} style={{ font: `34px ${MANO}` }} fill={LAPIZ}>$</text>
+      <Bloque x0={x0 + 0.4} x1={x1 - 0.4} y0={y0 - 0.2} y1={y0 + 0.4} h={2.8} techo="#eae4d8" izq="#f4efe4" der="#d8d0c0" />
+    </g>
+  );
+};
+
+const Arbol: React.FC<{ x: number; y: number }> = ({ x, y }) => {
+  const [X, Y] = iso(x, y);
+  return (
+    <g>
+      <B grosor={5}>{(p) => <path d={`M ${X} ${Y} L ${X} ${Y - 40}`} {...p} />}</B>
+      <B color="#8fbf78" raya grosor={3.5}>{(p) => <path d={nube(X, Y - 66, 34, 32, 8)} {...p} />}</B>
+    </g>
+  );
+};
+
+export const EstiloIsometrico: React.FC = () => {
+  useFuente();
+  const f = useCurrentFrame();
+  const flota = (i: number) => Math.sin((f + i * 15) / 11) * 7;
+  const suelo = pts(iso(-8, -8), iso(32, -8), iso(32, 32), iso(-8, 32));
+  const canal = pts(iso(17, -8), iso(21, -8), iso(21, 32), iso(17, 32));
+  const calle = pts(iso(-8, 17.4), iso(17, 17.4), iso(17, 19.6), iso(-8, 19.6));
+  const calle2 = pts(iso(15, -8), iso(16.6, -8), iso(16.6, 17.4), iso(15, 17.4));
+  return (
+    <AbsoluteFill style={{ background: "#f6f0e2" }}>
+      <svg width={W} height={H}>
+        <Filtros />
+        <rect width={W} height={H} fill="#f6f0e2" />
+        <rect x={-20} y={-20} width={W + 40} height={420} fill="#cfe2ec" opacity={0.7} filter="url(#acuarela)" />
+        <B color="#fbf8f0" grosor={2.5}>{(p) => <path d={nube(300, 110, 120, 36, 9)} {...p} />}</B>
+        <B color="#fbf8f0" grosor={2.5}>{(p) => <path d={nube(1580, 80, 140, 34, 9)} {...p} />}</B>
+        <B grosor={3}>{(p) => <path d="M 1420 150 q 12 -12 24 0 q 12 -12 24 0 M 1500 120 q 9 -9 18 0 q 9 -9 18 0" {...p} />}</B>
+        {/* suelo, canal y calles */}
+        <B color="#e8dbbf" grosor={3}>{(p) => <polygon points={suelo} {...p} />}</B>
+        <B color="#dcd3c2" grosor={3}>{(p) => <polygon points={calle} {...p} />}</B>
+        <B color="#dcd3c2" grosor={3}>{(p) => <polygon points={calle2} {...p} />}</B>
+        <B color="#9cc4dc" grosor={4}>{(p) => <polygon points={canal} {...p} />}</B>
+        {Array.from({ length: 10 }, (_, i) => {
+          const [X, Y] = iso(18 + (i % 3) * 1.1, -4 + i * 3.4);
+          return <B key={i} grosor={2.5}>{(p) => <path d={`M ${X} ${Y} q 10 -6 20 0 q 10 6 20 0`} {...p} stroke="#5a88a8" />}</B>;
+        })}
+        {/* edificios, de atrás hacia delante */}
+        <Bloque x0={1} x1={4} y0={1} y1={4} h={10} techo="#b8c8d6" izq="#cbd6df" der="#aebccb" ventanas="#9fb8cc" />
+        <Bloque x0={6} x1={9.5} y0={-1} y1={2.5} h={8.5} techo="#c2d0da" izq="#d4dde4" der="#b4c2ce" ventanas="#a8c0d2" />
+        <Bloque x0={-1} x1={2.5} y0={6} y1={9} h={7.5} techo="#c0cdd8" izq="#cdd7e0" der="#b2c0cc" ventanas="#a4bcd0" />
+        <Bloque x0={9} x1={14} y0={4} y1={9} h={6} techo="#d6dde2" izq="#e2e6ea" der="#c4ccd4" ventanas="#9ec4d8" nombre="BOLSA" />
+        {/* pantalla de la bolsa con flecha que sube */}
+        <g transform={`translate(0 ${flota(0)})`}>
+          <B color="#fffdf6" grosor={4}>{(p) => <rect x={1090} y={300} width={190} height={120} rx={6} {...p} />}</B>
+          <B grosor={6}>{(p) => <path d="M 1110 396 L 1150 372 L 1180 384 L 1220 340 L 1256 326" {...p} stroke="#4a9a52" />}</B>
+          <B grosor={5}>{(p) => <path d="M 1236 322 L 1258 325 L 1252 346" {...p} stroke="#4a9a52" />}</B>
+        </g>
+        <BancoIso />
+        <Arbol x={9} y={16.5} />
+        <Arbol x={12} y={14} />
+        <Arbol x={1} y={20.5} />
+        <Barco f={f} />
+        {/* gente y dinero en la calle */}
+        <Paseante x={iso(10, 18.5)[0]} y={iso(10, 18.5)[1]} tam={0.3} color="#7a8ea6" lleva="maletin" />
+        <Paseante x={iso(6.5, 18.8)[0]} y={iso(6.5, 18.8)[1]} tam={0.3} color="#a8846a" lleva="saco" espejo />
+        <Paseante x={iso(12.5, 11)[0]} y={iso(12.5, 11)[1]} tam={0.27} color="#8a9a6a" />
+        <Moneda x={iso(13.5, 18)[0]} y={iso(13.5, 18)[1] - 14} r={16} />
+        <Moneda x={iso(14, 18.8)[0]} y={iso(14, 18.8)[1] - 12} r={14} />
+        {/* símbolos flotantes */}
+        <g transform={`translate(0 ${flota(1)})`}>
+          <text x={560} y={420} style={{ font: `70px ${MANO}` }} fill="#4a8a40">$</text>
+        </g>
+        <g transform={`translate(0 ${flota(2)})`}>
+          <text x={1500} y={330} style={{ font: `64px ${MANO}` }} fill="#c99a20">$</text>
+        </g>
+        {/* protagonista en primer término con su pensamiento */}
+        <B color="#ffffff" grosor={4.5}>{(p) => <path d={nube(1640, 520, 150, 80, 11)} {...p} />}</B>
+        <B color="#ffffff" grosor={3.5}>{(p) => <ellipse cx={1610} cy={630} rx={18} ry={12} {...p} />}</B>
+        <B color="#ffffff" grosor={3}>{(p) => <ellipse cx={1626} cy={662} rx={10} ry={7} {...p} />}</B>
+        <Moneda x={1580} y={515} r={30} />
+        <text x={1640} y={548} style={{ font: `90px ${MANO}` }} fill={LAPIZ}>?</text>
+        <Protagonista x={1640} y={1060} tam={0.62} f={f} cara="curioso" brazos="mejilla-cadera" />
+        <rect width={W} height={H} fill="#fff" filter="url(#papel)" />
+      </svg>
     </AbsoluteFill>
   );
 };
