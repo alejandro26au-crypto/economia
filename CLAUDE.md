@@ -47,6 +47,8 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   con su valor, años que corren, gráfica que se dibuja, personaje que reacciona, cámara con golpe de zoom y temblor.
   `VALOR_HOY = 60` es APROXIMADO: comprobar con Eurostat/INE (la red de la nube bloquea esas webs). Regla del
   usuario: TODO debe moverse y ser atractivo aunque sea 2D (nada estático).
+- ANÁLISIS VIRAL (25 nov): `docs/analisis-viral-zenn.md` («What Did Ancient Humans Do at Night?», 8,2 M vistas):
+  estructura con tiempos, fórmula, miniatura y qué aplicar. Créditos vidIQ: quedan 140 (25 nov).
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
