@@ -52,7 +52,7 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - COMPETIDOR DIRECTO: Los Ecomonos (475K, España, finanzas personales con monos animados). Análisis en
   `docs/analisis-viral-ecomonos.md`: promesa numerada, capítulos con anticipo, verdades con nombre propio, cifras
   pequeñas, una acción final, final abierto. Diferenciarnos con historias REALES y su lección para tu bolsillo.
-- FÓRMULA DEL CANAL apuntada en «Guion» (25 nov). ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (v3, 7.457 caracteres; promesa con el DATO y no con «quédate hasta el final», anticipo al final de cada historia y recordatorio hacia el min 5; regla aprendida: tramos con cifras de empresas aburren → contarlos con PERSONAS y un giro; prometer al inicio algo ÚTIL que se da al final) + `.fuentes.md`.
+- FÓRMULA DEL CANAL apuntada en «Guion» (25 nov). ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (v4, promesa y recordatorio sutiles; promesa con el DATO y no con «quédate hasta el final», anticipo al final de cada historia y recordatorio hacia el min 5; regla aprendida: tramos con cifras de empresas aburren → contarlos con PERSONAS y un giro; prometer al inicio algo ÚTIL que se da al final) + `.fuentes.md`.
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
@@ -92,10 +92,14 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
      la tuya, conoce otras tres»).
   3. PROMESA ÚTIL con un DATO concreto que se da al final («verás cómo 10 € al mes te ahorran más de 1.000»).
      Nada de «quédate hasta el final»: se promete con contenido, y el premio tiene que estar a la altura.
+     SUTIL, NUNCA COMO CEBO (usuario, 25 nov): que suene a dato curioso dentro de la historia, no a anuncio.
+     Mal: «quédate y te enseño un truco que te ahorra 1.000 €». Bien: «y lo más curioso: la cobra que llevas tú
+     se vence con diez euros al mes».
   4. HISTORIAS REALES con escalada y un GIRO cada 1-2 min («y aún es peor», «esta historia nunca pasó»). Las partes
      de empresas o cifras se cuentan con PERSONAS («imagina que trabajas allí…»), no con listas de números.
   5. ANTICIPO al final de cada historia («la siguiente lleva traje y corbata») y RECORDATORIO de la promesa hacia
-     el minuto 5 («no me olvido de tus mil euros»).
+     el minuto 5, metido en la historia y sutil, sin anunciarlo. Mal: «no me olvido de tus mil euros, llegan
+     pronto». Bien: «guarda esta idea de la cola cortada: tu tarjeta funciona exactamente igual».
   6. LA LECCIÓN en una frase sencilla, sin tecnicismos.
   7. TU BOLSILLO: la historia aplicada al espectador con un cálculo REAL y cifras pequeñas.
   8. ACCIÓN CONCRETA que pueda hacer hoy (esta noche, en el móvil) y entrega del premio prometido.
