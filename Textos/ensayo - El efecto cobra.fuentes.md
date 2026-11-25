@@ -1,6 +1,6 @@
 # Ensayo «El efecto cobra» — datos y fuentes (25 nov 2026)
 ENSAYO para probar la fórmula (identificación + historia real + tu bolsillo), NO es el primer vídeo del canal.
-7.408 caracteres (≈ 7.400 créditos de ElevenLabs), 1.304 palabras, ≈ 8,4 min.
+Versión 2: Wells Fargo contado con personas (empleado presionado → despidos), promesa útil al inicio y truco final (cuota × meses; +10 €/mes ahorra >1.000 €).
 
 | Dato | Fuente | Estado |
 |---|---|---|
@@ -12,3 +12,5 @@ ENSAYO para probar la fórmula (identificación + historia real + tu bolsillo), 
 | Ley de Goodhart: «cuando una medida se convierte en objetivo, deja de ser una buena medida» (formulación de Marilyn Strathern, 1997, sobre la idea de Goodhart, 1975) | Goodhart (1975); Strathern (1997) | conocido |
 | Tarjeta: 2.000 € al 22 % TAE; 40 €/mes → 109 meses (9 años), total 4.356 €, intereses 2.356 €; 100 €/mes → 25 meses, intereses 455 € | Cálculo propio (interés mensual equivalente a la TAE) | calculado |
 | «22 % es muy normal en tarjetas revolving» | Banco de España (tipos de tarjetas revolving) | COMPROBAR el dato actual antes de publicar |
+| Wells Fargo despidió a unos 5.300 empleados (2011-2016) por las cuentas falsas | CFPB / prensa de sept. 2016 (CNN, NYT) | comprobar la cifra exacta antes de publicar |
+| 2.000 € al 22 % TAE: 50 €/mes → 67 meses, intereses 1.330 € (frente a 109 meses y 2.356 € con 40 €/mes): 42 meses antes y 1.026 € menos | Cálculo propio | calculado |
