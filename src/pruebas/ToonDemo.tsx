@@ -4,8 +4,8 @@ import React, { useEffect, useRef } from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { bodyFront, Outfit, Pen } from "../personaje/toon";
 
-const PROTA: Outfit = { jacket: "#26242a", pants: "#2c2b31", boots: "#1b1a1f", hat: "mop", hair: "#2e2622", skin: "#fff6ec", buttons: "none" };
-const EXPR = ["smile", "grin", "shock", "nervous", "laugh"] as const;
+const PROTA: Outfit = { jacket: "#26242a", pants: "#2c2b31", boots: "#1b1a1f", hat: "mop", hair: "#1f1c1e", skin: "#fff6ec", buttons: "none" };
+const PELOS = ["rizos", "tupe", "despeinado", "rapado"] as const;
 
 export const ToonDemo: React.FC = () => {
   const f = useCurrentFrame();
@@ -13,13 +13,15 @@ export const ToonDemo: React.FC = () => {
   useEffect(() => {
     const g = ref.current!.getContext("2d")!;
     g.clearRect(0, 0, 1920, 1080);
-    EXPR.forEach((e, i) => {
+    PELOS.forEach((pelo, i) => {
       g.save();
-      g.translate(160 + i * 380, 130);
-      g.scale(0.82, 0.82);
+      g.translate(-20 + i * 480, 160);
+      g.scale(1.1, 1.1);
       const p = new Pen(g);
-      bodyFront(p, PROTA, { mode: "stand", expr: e, phase: f / 10, seed: 3, blink: false });
+      bodyFront(p, { ...PROTA, hat: `pelo:${pelo}` }, { mode: "stand", expr: "smile", phase: f / 10, seed: 3, blink: false });
       g.restore();
+      g.font = "bold 64px sans-serif"; g.fillStyle = "#241726"; g.textAlign = "center";
+      g.fillText(`${i + 1}. ${pelo}`, -20 + i * 480 + 330, 110);
     });
   }, [f]);
   return (

@@ -381,6 +381,53 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
       const [tx, ty] = R([[cx, yb - ht - 6 * u]])[0];
       p.ell(tx, ty, 7 * u, 7 * u, "#2b7a4b", 2.5 * u); // green tuft
     }
+  } else if (typeof o.hat === "string" && o.hat.startsWith("pelo:")) {
+    // CATÁLOGO DE PELOS para el protagonista (elegir uno): rizos, tupe, despeinado, rapado.
+    const estilo = o.hat.slice(5), A = H.a, B = H.b, col = o.hair ?? "#1f1c1e";
+    const at = (deg: number, r: number): P2 => [cx + Math.cos(rad(deg)) * A * r, hc - Math.sin(rad(deg)) * B * r];
+    const arr = (d: number) => Math.max(0, Math.sin(rad(d)));
+    const gauss = (d: number, c: number, w: number) => Math.exp(-(((d - c) / w) ** 2));
+    const R0: Record<string, (d: number) => number> = {
+      rizos: (d) => 1.1 + 0.16 * arr(d) + 0.07 * Math.abs(Math.sin(rad(d) * 10)),
+      tupe: (d) => 1.05 + 0.1 * arr(d) + 0.36 * gauss(d, 72, 26),
+      despeinado: (d) => 1.07 + 0.14 * arr(d) + 0.07 * Math.abs(Math.sin(rad(d) * 6.5 + 0.6)) ** 0.6 * arr(d),
+      rapado: () => 1.035,
+    };
+    const rf = R0[estilo] ?? R0.despeinado;
+    const out: P2[] = [];
+    for (let d = 158; d >= 22; d -= 2) out.push(at(d, rf(d)));
+    // nacimiento del pelo (de derecha a izquierda); la frente queda libre para las cejas
+    const yh = estilo === "tupe" ? 0.72 : 0.66;
+    const borde: P2[] = [];
+    for (let i = 0; i <= 24; i++) {
+      const t = i / 24, x = 0.9 - 1.8 * t;
+      let y = yh + 0.1 * (1 - x * x) - 0.12;
+      if (estilo === "rizos") y -= 0.05 * Math.abs(Math.sin(t * Math.PI * 6));
+      if (estilo === "despeinado") y -= 0.08 * Math.max(0, Math.sin(t * Math.PI * 4 + 0.4)) ** 2 * (t > 0.3 ? 1 : 0.3);
+      borde.push([cx + x * A, hc - y * B]);
+    }
+    const pts = R([...out, ...borde]);
+    const fill = estilo === "rapado" ? mix(col, "#fff6ec", 0.35) : col;
+    p.shadedFill(pts, fill, mul(fill, SH_FELT), light, A * 1.2, 0.35);
+    p.poly(pts, null, estilo === "rapado" ? ow * 0.8 : ow);
+    const luz = mix(fill, "#ffffff", 0.3), veta = mix(fill, "#000000", 0.4);
+    if (estilo === "rizos") for (let i = 0; i < 9; i++) {
+      const d = 148 - i * 14.5, [x, y] = at(d, 0.98 + 0.08 * (i % 2));
+      p.arc(x, y, 7 * u, 7 * u, 200, 470, 1.4 * u, veta);
+    }
+    if (estilo === "tupe") {
+      p.stroke(R(curve([cx - 0.3 * A, hc - 0.74 * B], [cx - 0.05 * A, hc - 1.3 * B], [cx + 0.42 * A, hc - 1.38 * B], 10)), 1.6 * u, veta);
+      p.stroke(R(curve([cx + 0.05 * A, hc - 0.74 * B], [cx + 0.2 * A, hc - 1.16 * B], [cx + 0.56 * A, hc - 1.2 * B], 10)), 1.6 * u, veta);
+      p.stroke(R(curve([cx - 0.5 * A, hc - 1.0 * B], [cx - 0.1 * A, hc - 1.42 * B], [cx + 0.3 * A, hc - 1.46 * B], 10)), 3 * u, luz);
+    }
+    if (estilo === "despeinado") {
+      for (const k of [-0.5, -0.15, 0.2, 0.55]) p.stroke(R(curve([cx + k * A, hc - 0.72 * B], [cx + (k + 0.05) * A, hc - 0.98 * B], [cx + (k + 0.22) * A, hc - 1.12 * B], 8)), 1.4 * u, veta);
+      p.stroke(R(curve([cx - 0.6 * A, hc - 1.0 * B], [cx - 0.2 * A, hc - 1.22 * B], [cx + 0.2 * A, hc - 1.2 * B], 10)), 3 * u, luz);
+    }
+    if (estilo === "rapado") for (let i = 0; i < 26; i++) {
+      const d = 150 - i * 4.6, [x, y] = at(d, 0.86 + 0.1 * rnd(seed, 70 + i));
+      p.dot(x, y, 0.9 * u, veta);
+    }
   } else if (o.hat === "mop") {
     // PELO NATURAL DEL PROTAGONISTA: volumen suave arriba con ondas leves, raya a la derecha y flequillo que cae en
     // diagonal hacia la izquierda; tapa un poco las sienes. Sombra pintada, contorno grueso-fino y mechas suaves.
@@ -650,7 +697,7 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   if (o.coin) coinHead(p, H, 300, hc, skin, seed);
   p.inkRing(hp, ow, thick);
   hatOn(p, o, hp, H, 300, hc, light, seed, facing, false);
-  const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap" && o.hat !== "mop";
+  const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap" && o.hat !== "mop" && !String(o.hat).startsWith("pelo:");
   faceFront(p, 300, hc, W, expr, facing, look, lid, brim, skin, o.moustache, o.build === "stout");
   p.rot = null;
 };
