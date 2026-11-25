@@ -117,6 +117,9 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - Puntos de interés y obstáculos en METROS (`metros: true`); actores con `...enMetros("escenario", x, z)`.
 
 ## Proceso
+- **SIN SUBTÍTULOS EN EL VÍDEO (usuario, 25 nov 2026):** como Zenn, Dalio o Los Ecomonos, el vídeo final va sin
+  subtítulos quemados; se genera un `.srt` con el texto exacto y los tiempos de la voz para subirlo a YouTube (CC).
+  En las pruebas sin voz se pueden poner subtítulos solo para entender el ritmo.
 - **REGLA (usuario, 25 nov 2026): REVISAR Y CORREGIR ANTES DE MONTAR.** Primero una hoja de fotos de los momentos
   clave; la reviso YO (personaje tapado o cortado, caras raras, textos cortados, objetos mal hechos) y CORRIJO todo
   lo que vea. Solo cuando la hoja está limpia se monta el vídeo final, una sola vez. Nunca montar sabiendo que hay
