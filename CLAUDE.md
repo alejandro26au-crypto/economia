@@ -78,13 +78,16 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   25 nov 2026): frases en «tú» que describen lo que siente o vive, sin juzgarle. Ejemplos: «Intentas salir de deudas,
   pero sientes que no eres capaz», «Cobras, pagas el alquiler… y a día 15 ya no queda nada», «Ahorras, y siempre
   llega un imprevisto que te deja a cero». Usarlas en el GANCHO (las primeras palabras), al volver de cada giro y en
-  el cierre, y quitar la culpa («no es que seas malo con el dinero: el sistema está hecho así»). La historia real
+  el cierre, y quitar la culpa SOLO cuando el tema lo pida («no es que seas malo con el dinero: el sistema está hecho así»). La historia real
   del vídeo se conecta siempre con eso que siente el espectador.
 - **Tono EFUSIVO** como el de los shorts: frases cortas, exclamaciones, preguntas al espectador y comparaciones con su
   vida (su sueldo, su alquiler, su banco, su hipoteca).
 - **FÓRMULA DEL CANAL (aprobada por el usuario, 25 nov 2026; modelo: `Textos/ensayo - El efecto cobra.txt`;
   sale de los análisis de Zenn, Dalio y Los Ecomonos en `docs/`).** Sustituye a la estructura anterior:
-  1. IDENTIFICACIÓN (0-15 s): frase en «tú» sobre lo que vive el espectador + quitarle la culpa («no eres tú»).
+  1. IDENTIFICACIÓN (0-15 s): frase en «tú» sobre lo que vive, quiere o le preocupa al espectador. Quitarle la
+     culpa («no eres tú») SOLO si el tema lo pide (deudas, no llegar a fin de mes…). En temas de ahorro, inversión
+     o trucos, la identificación es su deseo o su duda («quieres que tu dinero crezca, pero no sabes por dónde
+     empezar»). El canal tratará temas variados: historias, ahorro, inversión, consejos.
   2. METÁFORA que une todo el vídeo (la cobra en tu cartera) y PROMESA en forma de lista si encaja («antes de ver
      la tuya, conoce otras tres»).
   3. PROMESA ÚTIL con un DATO concreto que se da al final («verás cómo 10 € al mes te ahorran más de 1.000»).
