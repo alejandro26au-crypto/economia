@@ -52,7 +52,7 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - COMPETIDOR DIRECTO: Los Ecomonos (475K, España, finanzas personales con monos animados). Análisis en
   `docs/analisis-viral-ecomonos.md`: promesa numerada, capítulos con anticipo, verdades con nombre propio, cifras
   pequeñas, una acción final, final abierto. Diferenciarnos con historias REALES y su lección para tu bolsillo.
-- ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (v2, ~7.880 caracteres; regla aprendida: tramos con cifras de empresas aburren → contarlos con PERSONAS y un giro; prometer al inicio algo ÚTIL que se da al final) + `.fuentes.md`.
+- ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (v3, 7.457 caracteres; promesa con el DATO y no con «quédate hasta el final», anticipo al final de cada historia y recordatorio hacia el min 5; regla aprendida: tramos con cifras de empresas aburren → contarlos con PERSONAS y un giro; prometer al inicio algo ÚTIL que se da al final) + `.fuentes.md`.
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
