@@ -22,7 +22,7 @@ export type Outfit = {
   build?: Build;
   /** especie «Moneda» (canal de economía): la cabeza es una moneda con borde, canto estriado y brillo */
   coin?: boolean;
-  /** estilo del PROTAGONISTA del canal: ojos grandes con brillo, manos blancas y camiseta de manga corta */
+  /** estilo de la ESPECIE del canal: ojos grandes con brillo, manos blancas y ropa con textura (sin mangas) */
   prota?: boolean;
 };
 type P2 = [number, number];
@@ -557,6 +557,35 @@ const footStroke = (p: Pen, a: P2, b: P2, w: number, col: string) => {
   p.stroke([a, b], w, col);
 };
 
+/** ROPA CON TEXTURA (especie del canal): trama de tela, motas, cuello redondo, pliegues y dobladillo.
+ *  Se dibuja recortada dentro del torso. */
+const ropaConTextura = (p: Pen, col: string, cx: number, top: number, bot: number, a: number, u: number, seed: number) => {
+  const g = p.g, oscuro = mix(col, "#000000", 0.28), claro = mix(col, "#ffffff", 0.16);
+  g.save();
+  g.globalAlpha = 0.16; // trama de tela: dos direcciones muy suaves
+  for (let k = -40; k < 40; k++) {
+    const x = cx + k * 3.2 * u;
+    p.stroke([[x - 1.6 * a, top - 10 * u], [x + 1.6 * a, bot + 10 * u]], 0.7 * u, claro);
+    p.stroke([[x + 1.6 * a, top - 10 * u], [x - 1.6 * a, bot + 10 * u]], 0.6 * u, oscuro);
+  }
+  g.globalAlpha = 0.35; // motas del tejido
+  for (let i = 0; i < 160; i++) {
+    const x = cx + (rnd(seed, 300 + i) * 2 - 1) * 1.1 * a, y = top + rnd(seed, 500 + i) * (bot - top);
+    p.dot(x, y, (0.5 + rnd(seed, 700 + i) * 0.7) * u, i % 2 ? claro : oscuro);
+  }
+  g.globalAlpha = 0.55; // pliegues desde las axilas y en la cintura
+  for (const s of [-1, 1]) {
+    p.stroke(curve([cx + s * 0.72 * a, top + 0.18 * (bot - top)], [cx + s * 0.5 * a, top + 0.45 * (bot - top)], [cx + s * 0.62 * a, top + 0.72 * (bot - top)], 8), 1.6 * u, oscuro);
+    p.stroke(curve([cx + s * 0.2 * a, bot - 0.2 * (bot - top)], [cx + s * 0.32 * a, bot - 0.14 * (bot - top)], [cx + s * 0.46 * a, bot - 0.17 * (bot - top)], 6), 1.4 * u, oscuro);
+  }
+  g.globalAlpha = 1;
+  // cuello redondo (ribete) y dobladillo
+  p.stroke(curve([cx - 0.42 * a, top + 2 * u], [cx, top + 9 * u], [cx + 0.42 * a, top + 2 * u], 10), 3 * u, oscuro);
+  p.stroke(curve([cx - 0.38 * a, top + 4.5 * u], [cx, top + 11 * u], [cx + 0.38 * a, top + 4.5 * u], 10), 1.2 * u, claro);
+  p.stroke(curve([cx - 1.2 * a, bot - 7 * u], [cx, bot - 3 * u], [cx + 1.2 * a, bot - 7 * u], 10), 1.8 * u, oscuro);
+  g.restore();
+};
+
 /** Cabeza de MONEDA: canto estriado, aro interior en relieve y brillo arriba a la izquierda. */
 const coinHead = (p: Pen, H: Blob, cx: number, hc: number, gold: string, seed: number) => {
   const u = (2 * H.a) / 100, dark = mul(gold, [0.78, 0.62, 0.42]), lite = mix(gold, "#ffffff", 0.55);
@@ -662,7 +691,7 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   const drawArm = (a: Arm) => {
     if (!o.prota) { p.stroke(curve(a.pts[0], a.pts[1], a.pts[2]), 5.2 * u, armCol); p.dot(a.pts[2][0], a.pts[2][1], 5.5 * u); return; }
     // protagonista: brazo algo más grueso y MANO BLANCA con contorno y pulgar
-    p.stroke(curve(a.pts[0], a.pts[1], a.pts[2]), 6.8 * u, INK);
+    p.stroke(curve(a.pts[0], a.pts[1], a.pts[2]), 5.6 * u, INK);
     const [hx, hy] = a.pts[2], side = hx < tcx ? -1 : 1;
     p.ell(hx, hy + 2 * u, 8 * u, 9 * u, WHITE, 2.4 * u); // palma (manopla blanca)
     p.ell(hx - side * 6.5 * u, hy - 1 * u, 3.4 * u, 5 * u, WHITE, 2.2 * u, 0, 360, -side * 30); // pulgar hacia delante
@@ -702,22 +731,10 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
         if (o.sash && Math.abs(y - (torsoBot - 0.32 * HH)) < 0.08 * HH) continue;
         if (o.buttons !== "none") { p.dot(tcx + 2 * u * facing, y, 2.2 * u + 0.8 * u, INK); p.dot(tcx + 2 * u * facing, y, 2.2 * u, o.buttons ?? shade(o.jacket, 0.7)); }
       }
+      if (o.prota) ropaConTextura(p, o.jacket, tcx, chin, torsoBot, T.a, u, seed);
     });
     if (o.sash) { const s = facing || 1; p.poly([[tcx + s * 0.55 * T.a, torsoBot - 0.3 * HH], [tcx + s * 0.75 * T.a, torsoBot + 0.05 * HH], [tcx + s * 0.45 * T.a, torsoBot + 0.02 * HH]], o.sash, 1.6 * u); }
     p.inkRing(tp, ow, thick);
-    if (o.prota) for (const a of arms) { // MANGAS CORTAS de la camiseta, tapando el arranque del brazo
-      const S = a.pts[0], E = lerp2(a.pts[0], a.pts[1], 0.5), side = S[0] < tcx ? -1 : 1;
-      const dx = E[0] - S[0], dy = E[1] - S[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
-      const w0 = 8 * u, w1 = 7.5 * u, top: P2 = [S[0] - side * 6 * u, S[1] - 5 * u];
-      // manga: sale del hombro (redondeada arriba) y acaba en un borde recto un poco abierto
-      const manga: P2[] = [
-        ...curve([S[0] - nx * w0 * side, S[1] - ny * w0 * side], top, [S[0] + nx * w0 * side, S[1] + ny * w0 * side], 6),
-        [E[0] + nx * w1 * side + dx / L * 2 * u, E[1] + ny * w1 * side + dy / L * 2 * u],
-        [E[0] - nx * w1 * side, E[1] - ny * w1 * side],
-      ];
-      p.shadedFill(manga, o.jacket, mul(o.jacket, SH_CLOTH), light, 20 * u, 0.4);
-      p.poly(manga, null, 2.4 * u);
-    }
   }
   // in front of the body: hands holding props
   for (const a of arms) if (a.front) {

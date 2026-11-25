@@ -30,7 +30,7 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   pelo natural con raya, especie moneda (queda `coin` en toon.ts sin usar). Pendiente: ojos grandes como sus
   dibujos, manos blancas con dedos, camiseta de manga corta.
 - KIT DE LA ESPECIE (25 nov): `src/personaje/especie.ts`. Todos comparten cuerpo y cara del protagonista
-  (`prota: true` en toon.ts: ojos grandes con brillo, manos blancas, camiseta de manga corta) y cambian pelo
+  (`prota: true` en toon.ts: ojos grandes con brillo, manos blancas, ropa SIN MANGAS con textura de tela: trama, motas, cuello, pliegues y dobladillo; referencia del usuario: los personajes de @heymiloq, NO el del traje gris de Benthara) y cambian pelo
   (despeinado, corto, rizos, tupe, rapado), color de pelo, camiseta, pantalón, zapatos y piel. `REPARTO` con nombre
   (protagonista, vecina, banquero, amigo, jefa, tendero, estudiante, nino) y `persona(semilla)` para gente de
   relleno. Hoja: composición `reparto-especie`. La camiseta NEGRA es solo del protagonista.
