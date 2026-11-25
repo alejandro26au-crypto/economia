@@ -43,6 +43,10 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - ESCENARIOS: hoja de MUESTRA solo para hacerse una idea (`muestra-escenarios`, `src/pruebas/MuestraEscenarios.tsx`:
   banco, calle, despacho y 10 objetos de dinero). Regla del usuario: cada escenario se DISEÑA A MEDIDA de cada vídeo
   mientras trabajamos en él (no hay un catálogo fijo).
+- PRUEBA DE EXPLICACIÓN (25 nov): `prueba-100-euros` (`src/pruebas/Prueba100Euros.tsx`, 20 s): billete que encoge
+  con su valor, años que corren, gráfica que se dibuja, personaje que reacciona, cámara con golpe de zoom y temblor.
+  `VALOR_HOY = 60` es APROXIMADO: comprobar con Eurostat/INE (la red de la nube bloquea esas webs). Regla del
+  usuario: TODO debe moverse y ser atractivo aunque sea 2D (nada estático).
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
