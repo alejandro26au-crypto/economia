@@ -52,7 +52,7 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - COMPETIDOR DIRECTO: Los Ecomonos (475K, España, finanzas personales con monos animados). Análisis en
   `docs/analisis-viral-ecomonos.md`: promesa numerada, capítulos con anticipo, verdades con nombre propio, cifras
   pequeñas, una acción final, final abierto. Diferenciarnos con historias REALES y su lección para tu bolsillo.
-- ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (v3, 7.457 caracteres; promesa con el DATO y no con «quédate hasta el final», anticipo al final de cada historia y recordatorio hacia el min 5; regla aprendida: tramos con cifras de empresas aburren → contarlos con PERSONAS y un giro; prometer al inicio algo ÚTIL que se da al final) + `.fuentes.md`.
+- FÓRMULA DEL CANAL apuntada en «Guion» (25 nov). ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (v3, 7.457 caracteres; promesa con el DATO y no con «quédate hasta el final», anticipo al final de cada historia y recordatorio hacia el min 5; regla aprendida: tramos con cifras de empresas aburren → contarlos con PERSONAS y un giro; prometer al inicio algo ÚTIL que se da al final) + `.fuentes.md`.
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
@@ -82,9 +82,23 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   del vídeo se conecta siempre con eso que siente el espectador.
 - **Tono EFUSIVO** como el de los shorts: frases cortas, exclamaciones, preguntas al espectador y comparaciones con su
   vida (su sueldo, su alquiler, su banco, su hipoteca).
-- Estructura: gancho fuerte en los primeros 30 s (la pregunta o la cifra brutal) → la historia con rival, burlas,
-  pista falsa y escalada → **un giro o sorpresa cada 1-2 minutos** («Y aún es peor…») → la verdad y la ciencia
-  económica con cifras → qué significa hoy para tu dinero → cierre. UNA historia continua, sin capítulos.
+- **FÓRMULA DEL CANAL (aprobada por el usuario, 25 nov 2026; modelo: `Textos/ensayo - El efecto cobra.txt`;
+  sale de los análisis de Zenn, Dalio y Los Ecomonos en `docs/`).** Sustituye a la estructura anterior:
+  1. IDENTIFICACIÓN (0-15 s): frase en «tú» sobre lo que vive el espectador + quitarle la culpa («no eres tú»).
+  2. METÁFORA que une todo el vídeo (la cobra en tu cartera) y PROMESA en forma de lista si encaja («antes de ver
+     la tuya, conoce otras tres»).
+  3. PROMESA ÚTIL con un DATO concreto que se da al final («verás cómo 10 € al mes te ahorran más de 1.000»).
+     Nada de «quédate hasta el final»: se promete con contenido, y el premio tiene que estar a la altura.
+  4. HISTORIAS REALES con escalada y un GIRO cada 1-2 min («y aún es peor», «esta historia nunca pasó»). Las partes
+     de empresas o cifras se cuentan con PERSONAS («imagina que trabajas allí…»), no con listas de números.
+  5. ANTICIPO al final de cada historia («la siguiente lleva traje y corbata») y RECORDATORIO de la promesa hacia
+     el minuto 5 («no me olvido de tus mil euros»).
+  6. LA LECCIÓN en una frase sencilla, sin tecnicismos.
+  7. TU BOLSILLO: la historia aplicada al espectador con un cálculo REAL y cifras pequeñas.
+  8. ACCIÓN CONCRETA que pueda hacer hoy (esta noche, en el móvil) y entrega del premio prometido.
+  9. CIERRE CIRCULAR: la última frase vuelve a la primera.
+  Si el vídeo es UNA sola historia larga (John Law, Lehman…), no hay lista: se mantienen los pasos 1, 3, 4, 5, 7,
+  8 y 9. Cifras en euros y, si ayuda, también en dólares (público de España y Latinoamérica).
 - Datos REALES comprobados, con `dato` y `fuentes` en la ficha `Textos/N - Título.json` (bancos centrales, FMI,
   Banco Mundial, hemerotecas, libros de historia económica). Lo cómico es dramatización; las cifras, nunca.
 - Enseñar el guion en un bloque para copiar. El usuario hace la voz en ElevenLabs con el texto EXACTO.
