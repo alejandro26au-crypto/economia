@@ -1,6 +1,6 @@
 # «El conserje que murió con 8 millones» — datos y fuentes (25 nov 2026)
 PRIMER VÍDEO del canal (tema 1 de `docs/temas-primer-video.md`). Guion v1: 7.532 caracteres, 1.336 palabras (~8 min).
-Metáfora: el árbol que Ronald nunca cortó. Mantra (5 veces): «No es lo que ganas. Es lo que dejas crecer.»
+Metáfora: el árbol que Ronald nunca cortó. Mantra (4 veces): «No es lo que ganas. Es lo que dejas crecer.»
 
 | Dato del guion | Fuente | Estado |
 |---|---|---|
