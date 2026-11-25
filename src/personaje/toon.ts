@@ -20,6 +20,8 @@ export type Outfit = {
   jacket: string; pants: string; boots: string; hat?: string | null; belt?: string | null; buttons?: string; rifle?: boolean;
   sash?: string; sword?: boolean; moustache?: string; skin?: string; head?: number; cap?: string; hair?: string; dress?: string;
   build?: Build;
+  /** especie «Moneda» (canal de economía): la cabeza es una moneda con borde, canto estriado y brillo */
+  coin?: boolean;
 };
 type P2 = [number, number];
 
@@ -379,6 +381,36 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
       const [tx, ty] = R([[cx, yb - ht - 6 * u]])[0];
       p.ell(tx, ty, 7 * u, 7 * u, "#2b7a4b", 2.5 * u); // green tuft
     }
+  } else if (o.hat === "mop") {
+    // PELO NATURAL DEL PROTAGONISTA: volumen suave arriba con ondas leves, raya a la derecha y flequillo que cae en
+    // diagonal hacia la izquierda; tapa un poco las sienes. Sombra pintada, contorno grueso-fino y mechas suaves.
+    const A = H.a, B = H.b;
+    const at = (deg: number, r: number): P2 => [cx + Math.cos(rad(deg)) * A * r, hc - Math.sin(rad(deg)) * B * r];
+    const out: P2[] = [];
+    for (let d = 194; d >= -8; d -= 4) { // casco exterior con ondas suaves (más volumen arriba)
+      const arriba = Math.max(0, Math.sin(rad(d)));
+      const r = 1.06 + 0.24 * arriba ** 1.5 + 0.03 * Math.sin(rad(d) * 7 + rnd(seed, 60) * 6) * arriba;
+      out.push(at(d, r));
+    }
+    // borde de abajo: sien derecha -> raya -> flequillo en diagonal -> sien izquierda
+    const raya: P2 = [cx + 0.38 * A, hc - 0.86 * B];
+    const borde: P2[] = [
+      ...curve(at(-8, 1.0), [cx + 0.84 * A, hc - 0.58 * B], raya, 8),
+      ...curve(raya, [cx + 0.05 * A, hc - 0.8 * B], [cx - 0.22 * A, hc - 0.66 * B], 8).slice(1),
+      ...curve([cx - 0.22 * A, hc - 0.66 * B], [cx - 0.3 * A, hc - 0.74 * B], [cx - 0.5 * A, hc - 0.62 * B], 6).slice(1),
+      ...curve([cx - 0.5 * A, hc - 0.62 * B], [cx - 0.64 * A, hc - 0.68 * B], [cx - 0.82 * A, hc - 0.42 * B], 6).slice(1),
+      ...curve([cx - 0.82 * A, hc - 0.42 * B], [cx - 0.98 * A, hc - 0.24 * B], at(194, 1.06), 6).slice(1),
+    ];
+    const pts = R([...out, ...borde]);
+    const col = o.hair ?? "#2a2320";
+    p.shadedFill(pts, col, mul(col, SH_FELT), light, A * 1.2, 0.35);
+    p.poly(pts, null, ow);
+    // mechas: salen de la raya y siguen el peinado
+    const veta = mix(col, "#000000", 0.35), luz = mix(col, "#ffffff", 0.28);
+    p.stroke(R(curve(raya, [cx + 0.1 * A, hc - 1.16 * B], [cx - 0.66 * A, hc - 0.96 * B], 10)), 1.6 * u, veta);
+    p.stroke(R(curve(raya, [cx - 0.02 * A, hc - 0.96 * B], [cx - 0.4 * A, hc - 0.76 * B], 10)), 1.4 * u, veta);
+    p.stroke(R(curve(raya, [cx + 0.68 * A, hc - 1.08 * B], [cx + 0.9 * A, hc - 0.62 * B], 8)), 1.4 * u, veta);
+    p.stroke(R(curve([cx - 0.7 * A, hc - 1.08 * B], [cx - 0.3 * A, hc - 1.3 * B], [cx + 0.1 * A, hc - 1.28 * B], 10)), 3 * u, luz);
   } else if (o.hat === "cap" || o.hat === "hair") {
     const cut = crown + (o.hat === "cap" ? 0.3 : 0.42) * HH;
     const keep = (x: number, y: number) => y < cut || (side && o.hat === "hair" && x < cx - 6 * u && y < hc + 0.42 * H.b);
@@ -444,6 +476,22 @@ export type FrontOpts = {
 const footStroke = (p: Pen, a: P2, b: P2, w: number, col: string) => {
   if (col !== INK) p.stroke([a, b], w + 3, INK);
   p.stroke([a, b], w, col);
+};
+
+/** Cabeza de MONEDA: canto estriado, aro interior en relieve y brillo arriba a la izquierda. */
+const coinHead = (p: Pen, H: Blob, cx: number, hc: number, gold: string, seed: number) => {
+  const u = (2 * H.a) / 100, dark = mul(gold, [0.78, 0.62, 0.42]), lite = mix(gold, "#ffffff", 0.55);
+  const hp = blobPts(cx, hc, H, 96);
+  hp.forEach(([x, y], i) => { // canto estriado
+    if (i % 2) return;
+    const k = 0.9;
+    p.stroke([[x, y], [cx + (x - cx) * k, hc + (y - hc) * k]], 1.5 * u, dark);
+  });
+  const inner = blobPts(cx, hc, { ...H, a: H.a * 0.84, b: H.b * 0.84 }, 72);
+  p.stroke([...inner, inner[0]], 2.4 * u, dark); // aro en relieve: sombra
+  p.stroke(inner.slice(34, 58).map(([x, y]) => [x + 0.8 * u, y + 0.8 * u] as P2), 1.4 * u, lite); // y su luz
+  const shine = blobPts(cx, hc, { ...H, a: H.a * 0.7, b: H.b * 0.7 }, 72).slice(40, 52);
+  p.stroke(shine, 3.2 * u, lite); // brillo
 };
 
 export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
@@ -565,7 +613,7 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
       for (let i = 0; i < 4; i++) {
         const y = chin + 0.12 * HH + i * 0.2 * HH;
         if (o.sash && Math.abs(y - (torsoBot - 0.32 * HH)) < 0.08 * HH) continue;
-        p.dot(tcx + 2 * u * facing, y, 2.2 * u + 0.8 * u, INK); p.dot(tcx + 2 * u * facing, y, 2.2 * u, o.buttons ?? shade(o.jacket, 0.7));
+        if (o.buttons !== "none") { p.dot(tcx + 2 * u * facing, y, 2.2 * u + 0.8 * u, INK); p.dot(tcx + 2 * u * facing, y, 2.2 * u, o.buttons ?? shade(o.jacket, 0.7)); }
       }
     });
     if (o.sash) { const s = facing || 1; p.poly([[tcx + s * 0.55 * T.a, torsoBot - 0.3 * HH], [tcx + s * 0.75 * T.a, torsoBot + 0.05 * HH], [tcx + s * 0.45 * T.a, torsoBot + 0.02 * HH]], o.sash, 1.6 * u); }
@@ -599,9 +647,10 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   hatBehind(p, o, H, 300, hc, light, thick, ow, false);
   const hp = blobPts(300, hc, H);
   p.shadedFill(hp, skin, mul(skin, SH_SKIN), light, H.a);
+  if (o.coin) coinHead(p, H, 300, hc, skin, seed);
   p.inkRing(hp, ow, thick);
   hatOn(p, o, hp, H, 300, hc, light, seed, facing, false);
-  const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap";
+  const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap" && o.hat !== "mop";
   faceFront(p, 300, hc, W, expr, facing, look, lid, brim, skin, o.moustache, o.build === "stout");
   p.rot = null;
 };
