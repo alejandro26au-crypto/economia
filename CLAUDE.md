@@ -53,6 +53,9 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   `docs/analisis-viral-ecomonos.md`: promesa numerada, capítulos con anticipo, verdades con nombre propio, cifras
   pequeñas, una acción final, final abierto. Diferenciarnos con historias REALES y su lección para tu bolsillo.
 - FÓRMULA DEL CANAL apuntada en «Guion» (25 nov). ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (v4, promesa y recordatorio sutiles; promesa con el DATO y no con «quédate hasta el final», anticipo al final de cada historia y recordatorio hacia el min 5; regla aprendida: tramos con cifras de empresas aburren → contarlos con PERSONAS y un giro; prometer al inicio algo ÚTIL que se da al final) + `.fuentes.md`.
+- PRIMER VÍDEO (25 nov, rama `claude/loving-volta-radjoc`): «El conserje que murió con 8 millones» (Ronald Read).
+  Guion v1 en `Textos/1 - El conserje que murió con 8 millones.txt` + `.fuentes.md`, esperando el visto bueno.
+  El ensayo «El efecto cobra» queda solo como ensayo.
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
@@ -64,6 +67,8 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   vistas, 33 min). Las historias de economía bien contadas están poco explotadas en español.
 - En inglés funcionan las historias largas de dinero (John Law, Lehman, «por qué EE. UU. es tan rico», 35-47 min).
 - Fórmula del canal: historia real de dinero + qué significa para el bolsillo del espectador hoy.
+- **BANCO DE TEMAS GUARDADOS (usar en este orden o según convenga): `docs/temas-primer-video.md`** (6 temas con
+  historia, identificación, dato útil y fuentes). Tema 1 (el conserje Ronald Read) = PRIMER VÍDEO, en guion.
 - Ideas: John Law y la burbuja del Mississippi, Lehman Brothers, los hermanos Hunt y la plata, LTCM (los Nobel que
   perdieron 4.600 millones), Michael Burry (se rieron de él y tenía razón), Alemania 1923, el corralito argentino,
   la crisis española de 2008, Pablo Escobar y su dinero, el Banco de Inglaterra contra Soros.
@@ -108,6 +113,17 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   8 y 9. Cifras en euros y, si ayuda, también en dólares (público de España y Latinoamérica).
 - Datos REALES comprobados, con `dato` y `fuentes` en la ficha `Textos/N - Título.json` (bancos centrales, FMI,
   Banco Mundial, hemerotecas, libros de historia económica). Lo cómico es dramatización; las cifras, nunca.
+- **REVISIÓN OBLIGATORIA DE CADA GUION (usuario, 25 nov 2026):** antes de enseñarlo, comprobar punto por punto
+  que cumple la FÓRMULA DEL CANAL y apuntar el resultado al enseñarlo. Lista:
+  1. ¿Las PRIMERAS palabras son una frase en «tú» de identificación? ¿Culpa quitada solo si el tema lo pide?
+  2. ¿Hay UNA metáfora que une todo el vídeo y una frase mantra repetida 4-6 veces?
+  3. ¿La promesa útil tiene un DATO concreto, suena sutil (no a cebo) y se entrega al final?
+  4. ¿Historias reales con un giro cada 1-2 min («y aún es peor…»), contadas con PERSONAS y no con listas de cifras?
+  5. ¿Anticipo al final de cada historia y recordatorio sutil de la promesa hacia el minuto 4-5?
+  6. ¿Lección en una frase sencilla? 7. ¿Tu bolsillo con un cálculo REAL y cifras pequeñas?
+  8. ¿Acción concreta para hoy (en el móvil, esta noche)? 9. ¿Cierre circular (la última frase vuelve a la primera)?
+  10. ¿7.500-8.000 caracteres? ¿Cada cifra está en el `.fuentes.md` como comprobada, calculada o dramatización?
+  Si falla algún punto, se corrige ANTES de enseñarlo.
 - Enseñar el guion en un bloque para copiar. El usuario hace la voz en ElevenLabs con el texto EXACTO.
 
 ## Escenarios

@@ -16,7 +16,7 @@ Búsquedas web gratis (0 créditos de vidIQ). Vídeos de ~8 min, máx. 8.000 car
 - **Padre Rico / Babilonia:** giro real: la empresa de Kiyosaki (Rich Global LLC) quebró en 2012 tras una condena de
   23,7 M$; la empresa de mapas de Clason no sobrevivió a la Gran Depresión. Buen segundo vídeo.
 
-## Recomendados
+## Recomendados (tema 1 elegido como primer vídeo el 25 nov; los demás quedan guardados)
 1. Ronald Read (el mejor para empezar).
 2. El corralito.
 3. Newton (cerrando con la apuesta de Buffett).
