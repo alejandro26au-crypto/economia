@@ -6,6 +6,7 @@ import { Short } from "./motor/Short";
 import { Chequeo } from "./motor/Chequeo";
 import { ALTO, ANCHO, FPS } from "./motor/tiempo";
 import { PropsShort } from "./motor/tipos";
+import { PruebaRecortes } from "./pruebas/Recortes";
 import { EstiloBoceto, EstiloIsometrico, HojaProtagonista } from "./pruebas/Boceto";
 import { EstiloIlustrado, EstiloMezcla, EstiloPlano } from "./pruebas/Estilos";
 
@@ -34,6 +35,7 @@ export const Root: React.FC = () => (
   <Composition id="estilo-boceto" component={EstiloBoceto} width={1920} height={1080} fps={FPS} durationInFrames={90} />
   <Composition id="protagonista" component={HojaProtagonista} width={1920} height={1080} fps={FPS} durationInFrames={90} />
   <Composition id="estilo-isometrico" component={EstiloIsometrico} width={1920} height={1080} fps={FPS} durationInFrames={90} />
+  <Composition id="prueba-recortes" component={PruebaRecortes} width={1920} height={1080} fps={FPS} durationInFrames={300} />
   <Composition id="estilo-mezcla" component={EstiloMezcla} width={1920} height={1080} fps={FPS} durationInFrames={90} />
   <Composition
     id="short"
