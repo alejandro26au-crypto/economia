@@ -117,6 +117,12 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - Puntos de interés y obstáculos en METROS (`metros: true`); actores con `...enMetros("escenario", x, z)`.
 
 ## Proceso
+- **REVISIÓN RÁPIDA DE LA HOJA (lista corta, sin extenderse):** ¿el personaje está bien apoyado (pies en el suelo, sentado
+  en su silla, nunca «de pie sobre la mesa» ni flotando)? ¿se le ve entero o bien encuadrado? ¿caras correctas? ¿textos
+  sin cortar ni tapando caras? ¿objetos reconocibles? Corregir y solo entonces montar.
+- **MOVIMIENTO Y VARIEDAD (usuario, 25 nov 2026):** nada plano en un mismo sitio. Cambio de escena o de toma según
+  cada frase o idea del guion (plano general, medio, detalle del objeto, reacción), varios escenarios por vídeo
+  (los que pida la historia), personajes que se mueven (andan, se sientan, señalan, cogen cosas) y cámara viva.
 - **SIN SUBTÍTULOS EN EL VÍDEO (usuario, 25 nov 2026):** como Zenn, Dalio o Los Ecomonos, el vídeo final va sin
   subtítulos quemados; se genera un `.srt` con el texto exacto y los tiempos de la voz para subirlo a YouTube (CC).
   En las pruebas sin voz se pueden poner subtítulos solo para entender el ritmo.
