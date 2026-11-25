@@ -408,13 +408,19 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     };
     const rf = R0[estilo] ?? R0.despeinado;
     const out: P2[] = [];
-    for (let d = 158; d >= 22; d -= 2) out.push(at(d, rf(d)));
+    // los extremos del casco caen justo sobre la cabeza (sin hueco): el volumen se reduce a 0 cerca de las sienes
+    const d0 = 144, d1 = 36;
+    for (let d = d0; d >= d1; d -= 2) {
+      const borde01 = Math.min(1, Math.min(d0 - d, d - d1) / 22), k = borde01 * borde01 * (3 - 2 * borde01);
+      out.push(at(d, 1 + (rf(d) - 1) * k));
+    }
     // nacimiento del pelo (de derecha a izquierda); la frente queda libre para las cejas
     const yh = estilo === "tupe" || estilo === "despeinado" ? 0.74 : 0.66;
     const borde: P2[] = [];
     for (let i = 0; i <= 24; i++) {
-      const t = i / 24, x = 0.9 - 1.8 * t;
-      let y = yh + 0.1 * (1 - x * x) - 0.12;
+      const t = i / 24, x = Math.cos(rad(36)) - 2 * Math.cos(rad(36)) * t;
+      const xe = Math.cos(rad(36)), ye = Math.sin(rad(36)), w = 1 - (x / xe) ** 2;
+      let y = ye + (yh - ye) * Math.sqrt(Math.max(0, w));
       if (estilo === "rizos") y -= 0.05 * Math.abs(Math.sin(t * Math.PI * 6));
       if (estilo === "despeinado") y -= 0.08 * Math.max(0, Math.sin(t * Math.PI * 4 + 0.4)) ** 2 * (t > 0.3 ? 1 : 0.3);
       borde.push([cx + x * A, hc - y * B]);
@@ -434,7 +440,7 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
       p.stroke(R(curve([cx - 0.5 * A, hc - 1.0 * B], [cx - 0.1 * A, hc - 1.42 * B], [cx + 0.3 * A, hc - 1.46 * B], 10)), 3 * u, luz);
     }
     if (estilo === "despeinado") {
-      for (const k of [-0.5, -0.15, 0.2, 0.55]) p.stroke(R(curve([cx + k * A, hc - 0.72 * B], [cx + (k + 0.05) * A, hc - 0.98 * B], [cx + (k + 0.22) * A, hc - 1.12 * B], 8)), 1.4 * u, veta);
+      for (const k of [-0.5, -0.17, 0.16, 0.46]) p.stroke(R(curve([cx + k * A, hc - 0.76 * B], [cx + (k + 0.04) * A, hc - 0.96 * B], [cx + (k + 0.16) * A, hc - 1.06 * B], 8)), 1.4 * u, veta);
       p.stroke(R(curve([cx - 0.6 * A, hc - 1.0 * B], [cx - 0.2 * A, hc - 1.22 * B], [cx + 0.2 * A, hc - 1.2 * B], 10)), 3 * u, luz);
     }
     if (estilo === "rapado") for (let i = 0; i < 26; i++) {
