@@ -751,8 +751,10 @@ def tiempos_escenas(n, props):
         txt, _, vez = dsd.partition("#")
         veces = int(vez or 1)
         largo = composicion(n) == "largo"  # en los largos, cada escena busca DESPUÉS del inicio de la anterior
+        mayus = largo and txt[:1].isupper()  # «Y» solo casa con una palabra que empiece en mayúscula
         for i in range(k + (1 if largo and len(inicios) > 1 else 0), len(pal)):
-            if normal(pal[i]["p"]) == normal(txt):
+            limpia = pal[i]["p"].lstrip("¿¡\"«(…")
+            if normal(pal[i]["p"]) == normal(txt) and (not mayus or limpia[:1].isupper()):
                 veces -= 1
                 if veces == 0:
                     inicios.append(pal[i]["ini"])
