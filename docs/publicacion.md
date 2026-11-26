@@ -31,6 +31,21 @@ enseña un trozo de la respuesta y crea curiosidad.
   size. No other text, no watermark, no logos.
   ```
 
+## ESTILO DE MINIATURA DEL CANAL (aprobado por el usuario, 26 nov 2026: «A y B me gustan, seguir esas mismas»)
+Modelo: las miniaturas A y B del vídeo 1 hechas en Nano Banana (`Vídeos listos/1 - miniatura Nano Banana A/B.jpg`).
+Siempre 3 variantes (A, B, C) para «Probar y comparar», con este molde:
+- Dibujo plano 2D con contorno negro grueso, colores apagados, fondo liso (oscuro y frío, o partido en dos:
+  cálido contra frío para los contrastes) con un halo de luz detrás del objeto o del personaje.
+- Personaje de la historia MUY GRANDE (la cara ≈ 1/3 de la imagen), ojos grandes y una emoción clara (sonrisa de
+  secreto, susto…), con su seña de identidad muy visible (abrigo con imperdibles, fregona, traje y corbata).
+- UN objeto clave que brilla (caja fuerte llena, cartel de SUBASTA, árbol de monedas…).
+- Texto: 1-3 palabras AMARILLAS con borde negro grueso, arriba; si hace falta, una segunda línea BLANCA más pequeña.
+  El texto no repite el título: da la cifra o la pregunta.
+- A = el secreto / la cifra (personaje + objeto que brilla). B = el contraste (pantalla partida, ¿QUIÉN GANÓ?).
+  C = la metáfora del vídeo (el árbol, la cobra…) con el personaje en primer plano.
+- Prompt en inglés que acaba SIEMPRE en: «Keep the character style of the reference image. High contrast, readable
+  at small size. No other text, no watermark, no logos.» Formato 16:9 en Nano Banana.
+
 ## 3. Plantilla de la descripción
 ```
 [2 líneas de gancho: la frase de identificación + la promesa (se ven antes de «más»)]

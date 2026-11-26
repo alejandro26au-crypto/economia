@@ -12,6 +12,11 @@ Variante B (el contraste):
 YouTube thumbnail, 16:9, 1280x720. Flat 2D cartoon illustration, clean thick black outlines, muted flat colors, background split in two: left warm beige, right cold grey. Left: a smiling old janitor with big eyes, white hair, a long worn brown coat with safety pins and a mop, dollar bills raining around him. Right: a shocked businessman with big eyes in a navy suit and red tie, unpaid bills marked "DEBE" flying around him, and a red sign that says "SUBASTA" in front of him. Big bold text "¿QUIÉN GANÓ?" in bright yellow with a thick black outline, centered at the top. Keep the character style of the reference image. High contrast, readable at small size. No other text, no watermark, no logos.
 ```
 
+Variante C (el secreto del árbol):
+```
+YouTube thumbnail, 16:9, 1280x720. Flat 2D cartoon illustration, clean thick black outlines, muted flat colors, simple dark green background with a soft warm glow. Close-up of an old man janitor with a big round head, big expressive eyes, wrinkles, short white hair, a worn long brown coat held together with big safety pins, holding a mop, looking at the camera with a knowing smile and one finger raised to his lips as if keeping a secret. Next to him, a big tree whose fruits are shiny gold coins, glowing. The character's face is very big, taking one third of the image, on the left; the tree on the right. Big bold text "SU SECRETO" in bright yellow with a thick black outline, top right. Keep the character style of the reference image. High contrast, readable at small size. No other text, no watermark, no logos.
+```
+
 ## 2. Título
 - Elegido: **El conserje que murió con 8 millones (y nadie lo sabía)** (55 caracteres)
 - Alternativa 1: Limpiaba suelos y dejó 8 millones: su único secreto
@@ -58,7 +63,7 @@ Si hoy pudieras apartar una cantidad cada mes sin notarlo, ¿cuánto sería: 20,
 
 ## 6. Ajustes
 Educación · español · subir el `.srt` · no es para niños · sin marcar «contenido alterado» · pantalla final con
-vídeo recomendado + suscribirse · probar miniaturas A y B con «Probar y comparar».
+vídeo recomendado + suscribirse · probar miniaturas A, B y C con «Probar y comparar» (hasta 3).
 
 ## 7. Hora
 Jueves a domingo, 18:00-20:00 hora de España.
