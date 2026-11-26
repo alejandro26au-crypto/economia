@@ -75,6 +75,8 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   del motor: cara MUY grande (1/3 de la miniatura), más detalle (abrigo roto, imperdibles grandes), brillo fuerte en
   el objeto. Lección para las del motor: encuadre más cerrado y cara grande. ESTILO DE MINIATURA DEL CANAL (A, B y C)
   guardado en `docs/publicacion.md`: usarlo en TODOS los vídeos.
+- VÍDEO 1 PROGRAMADO por el usuario para el jueves 26 nov 2026 a las 18:30 (España), con miniaturas A, B y C de
+  Nano Banana en «Probar y comparar». SIGUIENTE: ver sus datos (vidIQ, con créditos desde el 9 dic) y vídeo 2.
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
