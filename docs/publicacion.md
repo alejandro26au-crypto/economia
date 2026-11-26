@@ -68,6 +68,10 @@ garantías.
 ```
 (Sin capítulos: el vídeo es una historia continua.)
 
+## 4b. Etiquetas (regla del usuario, 26 nov 2026)
+Solo lo que la gente BUSCA en español (cómo invertir, cómo ahorrar, cómo ser millonario…), en España y en
+Latinoamérica (euros y dólares). Nada de nombres propios que nadie busca. Máx. 500 caracteres.
+
 ## 6. Ajustes fijos
 - Categoría: Educación. Idioma del vídeo y del título: español.
 - Subtítulos: subir el `.srt` del vídeo (texto exacto de la voz).

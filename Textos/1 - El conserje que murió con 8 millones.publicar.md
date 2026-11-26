@@ -39,9 +39,9 @@ https://en.wikipedia.org/wiki/Ronald_Read_(philanthropist)
 #finanzaspersonales #invertir #ahorro
 ```
 
-## 4. Etiquetas (26 nov: de lo concreto a lo general)
+## 4. Etiquetas (26 nov, v2: solo lo que la gente BUSCA en español; nada de nombres propios poco conocidos)
 ```
-ronald read, conserje millonario, el conserje que murió con 8 millones, ronald read historia, millonario secreto, como invertir con poco dinero, invertir con poco dinero, como empezar a invertir, interes compuesto, interés compuesto explicado, fondo indexado, invertir 100 euros al mes, dividendos, como ahorrar dinero, finanzas personales, educacion financiera, psicologia del dinero, morgan housel, historias de dinero, invertir en bolsa para principiantes
+como invertir con poco dinero, como empezar a invertir, invertir para principiantes, como ahorrar dinero, ahorrar ganando poco, como ser millonario, como hacerse rico, habitos de millonarios, libertad financiera, interes compuesto, fondos indexados, invertir 100 euros al mes, invertir 100 dolares al mes, invertir en bolsa, finanzas personales, educacion financiera, historias reales de dinero, millonario humilde
 ```
 
 ## 5. Comentario fijado
