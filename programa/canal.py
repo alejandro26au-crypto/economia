@@ -393,7 +393,100 @@ def borrador_ts(n, fi):
     return cab + f"export const idea{n}: Idea = {{\n  n: {n},\n  titulo: {json.dumps(fi.get('titulo', ''))},\n  escenas: [\n" + "\n".join(bloques) + "\n  ],\n};\n"
 
 
+# ---------------------------------------------------------------- ficha de un vídeo LARGO (fórmula del canal)
+FICHA_LARGA = {
+    "formato": "largo",
+    "identificacion": "Primera frase en «tú»: lo que vive, quiere o le preocupa al espectador.",
+    "metafora": "La metáfora que une todo el vídeo.",
+    "mantra": "La frase que se repite 4-6 veces.",
+    "promesa": "La promesa útil con un DATO concreto que se entrega al final.",
+    "leccion": "La lección en una frase sencilla.",
+    "bolsillo": "El cálculo real para el espectador (cifras pequeñas).",
+    "accion": "La acción concreta para hoy.",
+    "dato": "El dato estrella del vídeo.",
+    "fuentes": [],
+    "pronunciacion": {},
+    "reparto": {},
+    "escenarios": [],
+}
+
+
+def es_larga(fi):
+    return fi.get("formato") == "largo"
+
+
+def revisar_larga(n, fi):
+    """Comprueba la ficha de un vídeo largo contra su guion (.txt), que es el texto EXACTO de la voz."""
+    fallos, avisos = [], []
+    for k in ("identificacion", "metafora", "mantra", "promesa", "leccion", "bolsillo", "accion", "dato"):
+        if not str(fi.get(k, "")).strip() or str(fi.get(k)) == FICHA_LARGA[k]:
+            fallos.append(f"Falta «{k}»: {FICHA_LARGA[k]}")
+    fu = fi.get("fuentes") or []
+    if not fu:
+        fallos.append("Faltan «fuentes»: cada cifra tiene que estar comprobada, calculada o marcada como dramatización.")
+    for x in fu:
+        if isinstance(x, dict) and "COMPROBAR" in str(x.get("estado", "")).upper():
+            avisos.append(f"Dato por comprobar antes de publicar: {x.get('dato', '')[:80]}")
+    d = ideas().get(n)
+    if not d:
+        fallos.append(f"No está el guion «Textos/{n} - ….txt».")
+        return fallos, avisos
+    texto = d["guion"]
+    c = len(texto)
+    if not 7300 <= c <= 8200:
+        avisos.append(f"El guion tiene {c} caracteres; el límite de ElevenLabs pide 7.500-8.000.")
+    mantra = str(fi.get("mantra", "")).strip().rstrip(".")
+    if mantra:
+        veces = len(re.findall(re.escape(normal_frase(mantra)), normal_frase(texto)))
+        if not 4 <= veces <= 6:
+            avisos.append(f"El mantra sale {veces} veces (mejor 4-6).")
+    frases = [f for f in re.split(r"(?<=[.!?…])\s+", texto) if f.strip()]
+    if frases and normal_frase(frases[0]) not in normal_frase(" ".join(frases[-4:])):
+        avisos.append("Cierre circular: la primera frase no vuelve al final.")
+    return fallos, avisos
+
+
+def normal_frase(s):
+    s = unicodedata.normalize("NFD", s.lower())
+    s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
+    return re.sub(r"[^a-z0-9ñ ]", "", re.sub(r"\s+", " ", s))
+
+
 def cmd_guion(args):
+    if args and args[0] == "nuevo" and IDIOMA == "es":
+        try:
+            n = int(args[1])
+        except (IndexError, ValueError):
+            fallo('Ejemplo:  canal guion nuevo 1 "El conserje que murió con 8 millones"')
+        titulo = " ".join(args[2:]).strip() or "Sin titulo"
+        f = TEXTOS / f"{n} - {titulo}.json"
+        if f.exists():
+            fallo(f"Ya existe «{f.name}».")
+        ficha = {"titulo": titulo, **json.loads(json.dumps(FICHA_LARGA))}
+        f.write_text(json.dumps(ficha, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"✓ Ficha creada: «Textos/{f.name}» (formato largo). Rellénala y luego:  canal guion {n}")
+        return
+    if args and args[0] != "nuevo":
+        try:
+            fs = fichas()
+            fi = json.loads(fs[int(args[0])].read_text(encoding="utf-8"))
+        except (KeyError, ValueError):
+            fi = {}
+        if es_larga(fi):
+            n = int(args[0])
+            fallos, avisos = revisar_larga(n, fi)
+            for a in avisos:
+                print("  ⚠ " + a)
+            for x in fallos:
+                print("  ✗ " + x)
+            if fallos:
+                fallo("La ficha no está completa todavía.")
+            g = ideas()[n]["guion"]
+            print(f"✓ Ficha y guion de la idea {n} en orden: {len(g)} caracteres, {len(g.split())} palabras, "
+                  f"{len(fi['fuentes'])} fuentes. El guion NO se toca: es el texto exacto de la voz.")
+            if not (RAIZ / "src" / "ideas" / f"{n}.ts").exists():
+                print(f"  Siguiente: escenas en src/ideas/{n}.ts")
+            return
     if args and args[0] == "nuevo":
         try:
             n = int(args[1])

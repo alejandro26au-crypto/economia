@@ -11,7 +11,7 @@ import { Outfit } from "./toon";
 export type Pelo = "despeinado" | "corto" | "rizos" | "tupe" | "rapado";
 
 export const PIELES = { clara: "#fff6ec", rosada: "#ffe2c2", media: "#f0c49c", morena: "#c99067", oscura: "#8d5a3c" };
-export const CABELLOS = { negro: "#1f1c1e", castano: "#5a3b2a", rubio: "#e0b252", pelirrojo: "#c4562c", canoso: "#b9b6b0" };
+export const CABELLOS = { negro: "#1f1c1e", castano: "#5a3b2a", rubio: "#e0b252", pelirrojo: "#c4562c", canoso: "#b9b6b0", blanco: "#eeece6" };
 // colores apagados (estilo del canal) para camisetas y pantalones
 export const CAMISETAS = {
   negra: "#26242a", azul: "#3f6fb5", verde: "#5d7a3a", mostaza: "#d9a441", granate: "#8c3b4a",
@@ -39,13 +39,16 @@ export const DELANTALES = { blanco: "#ecebe6", azul: "#3f6fb5", marron: "#7a5232
 export type Piezas = {
   /** traje: la camiseta pasa a ser chaqueta del color elegido y asoma una camisa blanca */
   traje?: keyof typeof TRAJES; corbata?: keyof typeof CORBATAS; gafas?: boolean; delantal?: keyof typeof DELANTALES;
+  /** abrigo largo del color dado (con imperdibles si se pide), arrugas de la edad y manos con grasa */
+  abrigo?: keyof typeof TRAJES; imperdibles?: boolean; arrugas?: boolean; manchas?: boolean;
 };
 export const CUELLOS = { blanco: "#f1efe9", igual: "", celeste: "#bcd3ea" }; // «igual»: del color de la camiseta
 
 /** Convierte una ficha en el traje que entiende toon.ts. */
 export const vestir = (f: Ficha): Outfit => ({
-  jacket: f.piezas?.traje ? TRAJES[f.piezas.traje] : CAMISETAS[f.camiseta],
-  traje: f.piezas?.traje ? "#f1efe9" : undefined,
+  jacket: f.piezas?.abrigo ? TRAJES[f.piezas.abrigo] : f.piezas?.traje ? TRAJES[f.piezas.traje] : CAMISETAS[f.camiseta],
+  traje: f.piezas?.abrigo ? "#cbbf9f" : f.piezas?.traje ? "#f1efe9" : undefined,
+  abrigo: !!f.piezas?.abrigo, imperdibles: !!f.piezas?.imperdibles, arrugas: !!f.piezas?.arrugas, manchas: !!f.piezas?.manchas,
   corbata: f.piezas?.corbata ? CORBATAS[f.piezas.corbata] : undefined,
   gafas: f.piezas?.gafas ? "#241726" : undefined,
   delantal: f.piezas?.delantal ? DELANTALES[f.piezas.delantal] : undefined, pants: PANTALONES[f.pantalon], boots: ZAPATOS[f.zapatos], hat: `pelo:${f.pelo}`,
