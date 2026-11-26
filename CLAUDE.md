@@ -95,6 +95,8 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   la crisis española de 2008, Pablo Escobar y su dinero, el Banco de Inglaterra contra Soros.
 
 ## Guion (vídeo largo)
+- **VOZ DEL CANAL (usuario, 26 nov 2026): «Fernando Martínez» en ElevenLabs.** Ajustes del vídeo 1 (según el nombre
+  del MP3): estabilidad 50, similitud 75, modelo v4. Usar siempre la misma voz para que el canal suene igual.
 - **LÍMITE DE ELEVENLABS (usuario, 25 nov 2026): máximo 10.000 créditos al mes → vídeos de ~8 MINUTOS con unos
   7.500-8.000 CARACTERES (1 crédito ≈ 1 carácter con espacios; ≈ 1.250-1.350 palabras).** Contar los caracteres
   antes de enseñar el guion (`python3 -c "print(len(open(F).read()))"`). (Sustituye a la línea siguiente.)
