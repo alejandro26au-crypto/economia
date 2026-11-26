@@ -22,6 +22,11 @@ YouTube thumbnail, 16:9, 1280x720. Flat 2D cartoon illustration, clean thick bla
 - Alternativa 1: Limpiaba suelos y dejó 8 millones: su único secreto
 - Alternativa 2: Por qué un conserje se hizo millonario y un banquero se arruinó
 
+## Títulos por miniatura (26 nov, para «Probar y comparar»)
+- A (8 MILLONES · LIMPIANDO SUELOS): Limpiaba suelos y murió con 8 millones. ¿Cómo lo hizo?
+- B (¿QUIÉN GANÓ?): El conserje y el banquero: solo uno acabó millonario
+- C (SU SECRETO): Ganaba poco y murió con 8 millones: nadie sabía cómo
+
 ## 3. Descripción (versión corta, 26 nov: el usuario la vio muy larga)
 ```
 Limpiaba suelos, llevaba un abrigo con imperdibles… y murió con 8 millones de dólares. Esta es la historia real de Ronald Read y lo que significa para tu dinero.
