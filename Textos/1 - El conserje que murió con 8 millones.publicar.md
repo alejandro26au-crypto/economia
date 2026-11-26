@@ -55,3 +55,13 @@ vídeo recomendado + suscribirse · probar miniaturas A, B y C con «Probar y co
 
 ## 7. Hora
 Jueves a domingo, 18:00-20:00 hora de España.
+
+## 8. Shorts y TikTok (6 partes, `Vídeos listos/1 - clips/`)
+Una al día, en orden, a las 18:30 (España). En Shorts: «Vídeo relacionado» = el vídeo largo. En TikTok: comentario
+fijado «La historia completa está en YouTube 👆 (nombre del canal)».
+- Parte 1 · Un pueblo recibe 6 millones de un desconocido — Un hospital y una biblioteca reciben millones de alguien a quien todo el pueblo conocía… pero nadie sabía que tenía un céntimo.
+- Parte 2 · Murió un conserje y abrieron su caja del banco — Limpió suelos toda su vida. Cuando murió, abrieron su caja de seguridad… y nadie esperaba lo que había dentro.
+- Parte 3 · Su gran error (y por qué no le importó) — Tenía acciones de Lehman Brothers cuando quebró en 2008. Lo perdió todo ahí… y casi no le afectó. ¿Por qué?
+- Parte 4 · El conserje o el banquero: ¿quién acabó millonario? — Un conserje de pueblo contra un directivo de Wall Street con una mansión enorme. Solo uno acabó millonario.
+- Parte 5 · ¿Cuánto tendrías con 100 € al mes? — Lo que cuesta una cena para dos, cada mes, durante 30 años. El resultado sorprende.
+- Parte 6 · Haz esto esta noche desde el móvil — Una sola cosa, en la app de tu banco, para empezar a hacer lo mismo que el conserje millonario.
