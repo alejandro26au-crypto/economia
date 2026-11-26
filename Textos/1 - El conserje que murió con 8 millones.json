@@ -150,9 +150,12 @@
     },
     {
       "dato": "7 % es una cifra prudente para la bolsa mundial a largo plazo",
-      "fuente": "MSCI World / UBS (antes Credit Suisse) Global Investment Returns Yearbook",
-      "url": [],
-      "estado": "COMPROBAR la cifra exacta antes de publicar (el guion avisa de que no está garantizado)"
+      "fuente": "UBS Global Investment Returns Yearbook 2025 (Dimson, Marsh, Staunton): bolsa mundial +5,2 % REAL al año 1900-2024; con la inflación, el nominal pasa holgadamente del 7 %",
+      "url": [
+        "https://www.jbs.cam.ac.uk/2025/report-stocks-have-far-outperformed-over-the-past-125-years/",
+        "https://www.ubs.com/global/en/media/display-page-ndp/en-20250304-global-investment-returns-yearbook-2025.html"
+      ],
+      "estado": "comprobado (7 % nominal es prudente)"
     }
   ],
   "pronunciacion": {

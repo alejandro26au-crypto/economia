@@ -1,14 +1,15 @@
-# Paquete de publicación — «El conserje que murió con 8 millones» (borrador, 25 nov 2026)
-Hecho con el guion v1 (aún sin aprobar). Repasar cuando el vídeo esté montado.
+# Paquete de publicación — «El conserje que murió con 8 millones» (repasado 26 nov 2026)
+Repasado con el guion v1.1 (texto exacto de la voz) y el vídeo montado. Miniaturas propias hechas con el motor:
+`Vídeos listos/1 - miniatura A.png` y `… B.png` (composiciones `miniatura-1` y `miniatura-1b`).
 
 ## 1. Miniatura (Nano Banana) — adjuntar una imagen de `public/protagonista/` como referencia de estilo
 Variante A (el secreto):
 ```
-YouTube thumbnail, 16:9, 1280x720. Flat 2D cartoon illustration, clean thick black outlines, muted flat colors, simple dark teal background. An old man janitor with big expressive eyes, white hair, a worn brown coat held together with safety pins, holding a mop in one hand, standing next to an open bank safe deposit box that overflows with a tall glowing stack of stock certificates and dollar bills. He looks to the camera with a calm, secret little smile. Character on the left, the glowing box big on the right. Big bold text "8 MILLONES" in bright yellow with a thick black outline, top right. Keep the character style of the reference image. High contrast, readable at small size. No other text, no watermark, no logos.
+YouTube thumbnail, 16:9, 1280x720. Flat 2D cartoon illustration, clean thick black outlines, muted flat colors, simple dark teal background. An old man janitor with a big round head, big expressive eyes, wrinkles, short white hair, a worn long brown coat held together with safety pins, holding a mop in one hand, standing next to an open bank safe deposit box that overflows with a tall glowing stack of stock certificates and dollar bills. He looks to the camera with a calm, secret little smile. Character on the left, the glowing box big on the right. Big bold text "8 MILLONES" in bright yellow with a thick black outline, top right, and under it smaller white text "LIMPIANDO SUELOS" with a black outline. Keep the character style of the reference image. High contrast, readable at small size. No other text, no watermark, no logos.
 ```
 Variante B (el contraste):
 ```
-YouTube thumbnail, 16:9, 1280x720. Flat 2D cartoon illustration, clean thick black outlines, muted flat colors, background split in two: left warm beige, right cold grey. Left: a smiling old janitor with big eyes, worn coat with safety pins and a mop, standing on a big pile of gold coins. Right: a worried businessman in an expensive suit with big eyes, empty pockets turned out, a mansion with a red "FORECLOSURE" sign behind him. Big bold text "¿QUIÉN GANÓ?" in bright yellow with a thick black outline, centered at the top. Keep the character style of the reference image. High contrast, readable at small size. No other text, no watermark, no logos.
+YouTube thumbnail, 16:9, 1280x720. Flat 2D cartoon illustration, clean thick black outlines, muted flat colors, background split in two: left warm beige, right cold grey. Left: a smiling old janitor with big eyes, white hair, a long worn brown coat with safety pins and a mop, dollar bills raining around him. Right: a shocked businessman with big eyes in a navy suit and red tie, unpaid bills marked "DEBE" flying around him, and a red sign that says "SUBASTA" in front of him. Big bold text "¿QUIÉN GANÓ?" in bright yellow with a thick black outline, centered at the top. Keep the character style of the reference image. High contrast, readable at small size. No other text, no watermark, no logos.
 ```
 
 ## 2. Título
@@ -38,6 +39,7 @@ Gasolinero durante 25 años, conserje después, abrigo con imperdibles y un coch
 • Ritholtz: https://ritholtz.com/2015/05/the-remarkable-life-and-lessons-of-ronald-read
 • Morgan Housel, «The Psychology of Money» (2020): el contraste entre Read y Fuscone
 • Cálculo de 100 €/mes al 7 % anual: propio (interés compuesto mensual)
+• Rentabilidad histórica de la bolsa mundial: UBS Global Investment Returns Yearbook
 
 ⚠️ Este vídeo es divulgativo y no es asesoramiento financiero. Las cifras de rentabilidad son ejemplos, no garantías: la bolsa tiene años malos.
 

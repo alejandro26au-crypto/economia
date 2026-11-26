@@ -57,6 +57,17 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   Paquete de publicación (borrador) en `Textos/1 - … .publicar.md`. SIGUIENTE: ficha (`./canal guion nuevo 1`) → escenas → prueba → voz → montar → miniatura propia + paquete.
   Guion v1.1 APROBADO (26 nov, repaso de puntuación y palabras neutras: es el texto de la voz) en `Textos/1 - El conserje que murió con 8 millones.txt` + `.fuentes.md`; el usuario saca la voz.
   El ensayo «El efecto cobra» queda solo como ensayo.
+- MOTOR 2D DE VÍDEOS LARGOS (26 nov, rama `claude/cool-wright-21sjvd`): `src/largo/` (Largo.tsx = composición
+  «largo»; lugares.ts = escenarios a medida; objetos.ts = objetos animados: árbol que crece con frutos y tormenta,
+  montón de títulos, caja del banco, gráfica del interés compuesto, móvil con la app del banco, cesta de huevos,
+  calendario, cartel, facturas, billetes…; reparto.ts; tipos.ts). Escena = UN PLANO que empieza en una palabra;
+  cámara de `cam` a `a` (nunca quieta), golpes de zoom, iris de tinta al cambiar de escenario, rótulos y cifras que
+  crecen, sonidos solos. Cada `desde` se busca DESPUÉS del inicio de la escena anterior. Subtítulos solo en las
+  pruebas sin voz. Armario nuevo: abrigo, imperdibles, arrugas, manchas de grasa, pelo blanco; objetos en la mano
+  (fregona, teléfono, carta, maleta, papeles, billete, hacha). `canal montar` hace los largos POR TRAMOS de 90 s
+  (se reanuda si se corta) + sonido aparte + `.srt`; `canal revisar` da hojas de 16 fotos. Ficha larga:
+  `canal guion nuevo` / `canal guion N` (no toca el .txt). Miniaturas con el motor: `miniatura-1`, `miniatura-1b`.
+  Red: el modelo de la voz baja de `us.aws.cdn.hf.co` (permitido en el entorno el 26 nov); usar `HF_HUB_DISABLE_XET=1`.
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).

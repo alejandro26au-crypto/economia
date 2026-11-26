@@ -4,6 +4,7 @@ import { Ficha, FichaCerca } from "./bent/Ficha";
 import { HojaReparto } from "./reparto/Hoja";
 import { Short } from "./motor/Short";
 import { Largo } from "./largo/Largo";
+import { Miniatura } from "./largo/Miniatura";
 import { Chequeo } from "./motor/Chequeo";
 import { ALTO, ANCHO, FPS } from "./motor/tiempo";
 import { PropsShort } from "./motor/tipos";
@@ -51,6 +52,8 @@ export const Root: React.FC = () => (
   <Composition id="muneco-lapiz" component={MunecoDemo} defaultProps={{ lapiz: true }} width={1920} height={1080} fps={FPS} durationInFrames={420} />
   <Composition id="prueba-recortes" component={PruebaRecortes} width={1920} height={1080} fps={FPS} durationInFrames={300} />
   <Composition id="estilo-mezcla" component={EstiloMezcla} width={1920} height={1080} fps={FPS} durationInFrames={90} />
+  <Composition id="miniatura-1" component={Miniatura} width={1280} height={720} fps={FPS} durationInFrames={1} defaultProps={{ variante: "A" as const }} />
+  <Composition id="miniatura-1b" component={Miniatura} width={1280} height={720} fps={FPS} durationInFrames={1} defaultProps={{ variante: "B" as const }} />
   <Composition
     id="largo"
     component={Largo}
