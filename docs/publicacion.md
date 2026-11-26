@@ -47,6 +47,9 @@ Siempre 3 variantes (A, B, C) para «Probar y comparar», con este molde:
   at small size. No other text, no watermark, no logos.» Formato 16:9 en Nano Banana.
 
 ## 3. Plantilla de la descripción
+REGLA (usuario, 26 nov 2026): descripción CORTA, de unas 6 líneas: gancho de 1-2 frases, fuentes en una línea
+(+1 enlace), aviso y 3 hashtags. Nada de listas largas de puntos ni de enlaces.
+
 ```
 [2 líneas de gancho: la frase de identificación + la promesa (se ven antes de «más»)]
 

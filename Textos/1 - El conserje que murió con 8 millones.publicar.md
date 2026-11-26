@@ -22,31 +22,14 @@ YouTube thumbnail, 16:9, 1280x720. Flat 2D cartoon illustration, clean thick bla
 - Alternativa 1: Limpiaba suelos y dejó 8 millones: su único secreto
 - Alternativa 2: Por qué un conserje se hizo millonario y un banquero se arruinó
 
-## 3. Descripción
+## 3. Descripción (versión corta, 26 nov: el usuario la vio muy larga)
 ```
-Crees que para invertir hay que ganar mucho. Ronald Read limpiaba suelos… y murió con 8 millones de dólares.
+Limpiaba suelos, llevaba un abrigo con imperdibles… y murió con 8 millones de dólares. Esta es la historia real de Ronald Read y lo que significa para tu dinero.
 
-Gasolinero durante 25 años, conserje después, abrigo con imperdibles y un coche de segunda mano. Cuando murió, en 2014, su pueblo descubrió lo que guardaba en una caja del banco. Y al otro lado de la historia, un directivo de Wall Street que lo tenía todo… y acabó en bancarrota.
+📚 Fuentes: NBC News, CNBC, Time, Wikipedia y «The Psychology of Money» (Morgan Housel). Cálculo del 7 % anual: propio.
+https://en.wikipedia.org/wiki/Ronald_Read_(philanthropist)
 
-📌 En este vídeo:
-• La historia real de Ronald Read, el conserje millonario de Vermont
-• Sus dos reglas para invertir (y su gran error)
-• Por qué un alto ejecutivo de Merrill Lynch acabó arruinado
-• Cuánto pueden crecer 100 € al mes en 30 años
-• Lo que puedes hacer esta misma noche desde el móvil
-
-📚 Fuentes:
-• Wikipedia, Ronald Read: https://en.wikipedia.org/wiki/Ronald_Read_(philanthropist)
-• NBC News: https://www.nbcnews.com/news/us-news/vermont-ex-janitor-bequeaths-secret-millions-library-hospital-n301396
-• CNBC: https://www.cnbc.com/amp/2016/08/29/janitor-secretly-amassed-an-8-million-fortune.html
-• Time: https://time.com/3696980/attendant-8-dollar-million-bequest
-• Motley Fool: https://www.fool.com/investing/general/2015/02/15/how-did-a-janitor-amass-8-million-the-same-way-you.aspx
-• Ritholtz: https://ritholtz.com/2015/05/the-remarkable-life-and-lessons-of-ronald-read
-• Morgan Housel, «The Psychology of Money» (2020): el contraste entre Read y Fuscone
-• Cálculo de 100 €/mes al 7 % anual: propio (interés compuesto mensual)
-• Rentabilidad histórica de la bolsa mundial: UBS Global Investment Returns Yearbook
-
-⚠️ Este vídeo es divulgativo y no es asesoramiento financiero. Las cifras de rentabilidad son ejemplos, no garantías: la bolsa tiene años malos.
+⚠️ Divulgativo, no es asesoramiento financiero. La bolsa no garantiza nada.
 
 #finanzaspersonales #invertir #ahorro
 ```
