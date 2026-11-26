@@ -71,6 +71,9 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
 - VÍDEO 1 MONTADO (26 nov): `Vídeos listos/1 - El conserje que murió con 8 millones (2363).mp4` (8 min 15 s, 143
   planos, sin subtítulos) + `.srt`. Montaje en la nube: 15 min. SIGUIENTE: el usuario saca miniaturas en Nano Banana
   (16:9) con los prompts del `.publicar.md` → compararlas con las del motor (`Vídeos listos/1 - miniatura A/B.png`).
+- MINIATURAS vídeo 1 (26 nov): las de Nano Banana (`Vídeos listos/1 - miniatura Nano Banana A/B.jpg`) GANAN a las
+  del motor: cara MUY grande (1/3 de la miniatura), más detalle (abrigo roto, imperdibles grandes), brillo fuerte en
+  el objeto. Lección para las del motor: encuadre más cerrado y cara grande. Probar A y B con «Probar y comparar».
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
   Cobra»).
