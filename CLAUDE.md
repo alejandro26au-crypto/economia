@@ -54,8 +54,8 @@ océano (para reutilizar) y estructura del código. Piezas para decorados: `src/
   pequeñas, una acción final, final abierto. Diferenciarnos con historias REALES y su lección para tu bolsillo.
 - FÓRMULA DEL CANAL apuntada en «Guion» (25 nov). ENSAYO de guion (no es el primer vídeo): `Textos/ensayo - El efecto cobra.txt` (v4, promesa y recordatorio sutiles; promesa con el DATO y no con «quédate hasta el final», anticipo al final de cada historia y recordatorio hacia el min 5; regla aprendida: tramos con cifras de empresas aburren → contarlos con PERSONAS y un giro; prometer al inicio algo ÚTIL que se da al final) + `.fuentes.md`.
 - PRIMER VÍDEO (25 nov, rama `claude/loving-volta-radjoc`): «El conserje que murió con 8 millones» (Ronald Read).
-  Paquete de publicación (borrador) en `Textos/1 - … .publicar.md`. SIGUIENTE: visto bueno del guion → ficha → escenas.
-  Guion v1 en `Textos/1 - El conserje que murió con 8 millones.txt` + `.fuentes.md`, esperando el visto bueno.
+  Paquete de publicación (borrador) en `Textos/1 - … .publicar.md`. SIGUIENTE: ficha (`./canal guion nuevo 1`) → escenas → prueba → voz → montar → miniatura propia + paquete.
+  Guion v1 APROBADO (26 nov) en `Textos/1 - El conserje que murió con 8 millones.txt` + `.fuentes.md`; el usuario saca la voz.
   El ensayo «El efecto cobra» queda solo como ensayo.
 - PENDIENTE (en orden): 1) personaje y especie (APROBADOS); 2) escenarios (muestra hecha; se hacen por vídeo); 3) montaje por tramos para vídeos largos; 4) control de calidad con ffmpeg (congelados,
   negros, borrosos, sin sonido); 5) borrador automático de escenas desde el guion; 6) piloto (candidato: «El efecto
