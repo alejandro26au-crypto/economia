@@ -3,6 +3,7 @@ import { Composition } from "remotion";
 import { Ficha, FichaCerca } from "./bent/Ficha";
 import { HojaReparto } from "./reparto/Hoja";
 import { Short } from "./motor/Short";
+import { Largo } from "./largo/Largo";
 import { Chequeo } from "./motor/Chequeo";
 import { ALTO, ANCHO, FPS } from "./motor/tiempo";
 import { PropsShort } from "./motor/tipos";
@@ -50,6 +51,16 @@ export const Root: React.FC = () => (
   <Composition id="muneco-lapiz" component={MunecoDemo} defaultProps={{ lapiz: true }} width={1920} height={1080} fps={FPS} durationInFrames={420} />
   <Composition id="prueba-recortes" component={PruebaRecortes} width={1920} height={1080} fps={FPS} durationInFrames={300} />
   <Composition id="estilo-mezcla" component={EstiloMezcla} width={1920} height={1080} fps={FPS} durationInFrames={90} />
+  <Composition
+    id="largo"
+    component={Largo}
+    width={ANCHO}
+    height={ALTO}
+    fps={FPS}
+    durationInFrames={FPS * 10}
+    defaultProps={{ ...EJEMPLO, n: 1 }}
+    calculateMetadata={({ props }) => ({ durationInFrames: Math.ceil((props.duracion + 0.7) * FPS) })}
+  />
   <Composition
     id="short"
     component={Short}

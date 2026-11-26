@@ -117,6 +117,53 @@ def idea(args):
     return n, todas[n]
 
 
+def composicion(n):
+    """«largo» (motor 2D de vídeos largos) si src/ideas/N.ts es una idea larga; si no, «short» (motor 3D)."""
+    ts = (RAIZ / "src" / "ideas" / f"{n}.ts").read_text(encoding="utf-8")
+    return "largo" if "largo: true" in ts else "short"
+
+
+def ficha_de(n):
+    for fi in TEXTOS.glob(f"{n} - *.json"):
+        return json.loads(fi.read_text(encoding="utf-8"))
+    return {}
+
+
+def escribir_srt(n, titulo, destino):
+    """Subtítulos (.srt) con el texto EXACTO del guion y los tiempos de la voz: frases cortas (≤ 42 letras)."""
+    t = json.loads((PUBLIC / "voces" / str(n) / "tiempos.json").read_text(encoding="utf-8"))
+    pal = t["palabras"]
+    cues, actual = [], []
+
+    def cierra():
+        if actual:
+            cues.append(actual[:])
+            actual.clear()
+
+    for i, w in enumerate(pal):
+        if actual and (len(" ".join(x["p"] for x in actual + [w])) > 42 or w["ini"] - actual[-1]["fin"] > 0.7):
+            cierra()
+        actual.append(w)
+        if re.search(r"[.!?…]$", w["p"]) and len(" ".join(x["p"] for x in actual)) > 12:
+            cierra()
+    cierra()
+
+    def ts(x):
+        h, r = divmod(x, 3600)
+        m, r = divmod(r, 60)
+        return f"{int(h):02d}:{int(m):02d}:{int(r):02d},{int(round((r - int(r)) * 1000)):03d}".replace(",1000", ",999")
+
+    out = []
+    for k, c in enumerate(cues):
+        ini = c[0]["ini"]
+        fin = max(c[-1]["fin"], ini + 1.0)
+        if k + 1 < len(cues):
+            fin = min(fin, cues[k + 1][0]["ini"] - 0.02)
+        out.append(f"{k + 1}\n{ts(ini)} --> {ts(fin)}\n{' '.join(x['p'] for x in c)}\n")
+    destino.write_text("\n".join(out), encoding="utf-8")
+    return len(cues)
+
+
 def duracion(audio):
     import av
 
@@ -209,7 +256,8 @@ def cmd_voz(args):
                 else:
                     oidas.append((t, float(w.start), float(w.end)))
         # cada palabra DEL GUION con el tiempo en que se oye
-        b = [normal(w) for w, _, _ in oidas]
+        cambios = {normal(k): normal(v) for k, v in ficha_de(n).get("pronunciacion", {}).items() if not k.startswith("_")}
+        b = [cambios.get(normal(w), normal(w)) for w, _, _ in oidas]
         tiempos = [None] * len(a)
         for bloque in difflib.SequenceMatcher(None, a, b, autojunk=False).get_matching_blocks():
             for k in range(bloque.size):
@@ -245,6 +293,10 @@ def cmd_voz(args):
     boca = boca_de_voz(voz)
     (destino / "tiempos.json").write_text(json.dumps({"duracion": round(total, 2), "palabras": palabras, "boca": boca}, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"✓ Voz preparada: {len(palabras)} palabras en {total:.1f} s ({claras} reconocidas).")
+    if composicion(n) == "largo":
+        LISTOS.mkdir(exist_ok=True)
+        srt = LISTOS / f"{n} - {d['titulo']}.srt"
+        print(f"✓ Subtítulos: «{LISTOS.name}/{srt.name}» ({escribir_srt(n, d['titulo'], srt)} frases).")
     if claras < 0.7 * len(a):
         print("  ⚠ La voz no parece decir el guion tal cual: el dibujo puede ir descuadrado. Genera la voz con el texto exacto.")
     print(f"  Siguiente:  canal montar {n}")
@@ -580,9 +632,66 @@ def preparar_props(n, args):
     return props, pf, (pistas and elegida.name)
 
 
+def montar_largo(n, d, args, props, pf):
+    """Vídeo largo POR TRAMOS (la nube corta los procesos de más de 2 h): cada tramo de 90 s se guarda y, si se
+    corta, al repetir la orden se sigue por donde iba. La imagen va sin sonido y el sonido se hace aparte, una vez."""
+    v = props["variante"]
+    total = int((props["duracion"] + 0.7) * 30) + 1
+    carpeta = SALIDA / f"largo-{n}{'-prueba' if '--prueba' in args else ''}"
+    firma = carpeta / "firma.json"
+    clave = {"props": json.loads(pf.read_text(encoding="utf-8")), "rapido": "--rapido" in args}
+    if firma.exists() and json.loads(firma.read_text(encoding="utf-8")) != clave:
+        shutil.rmtree(carpeta)  # algo cambió (voz, variante): se empieza de nuevo
+    carpeta.mkdir(parents=True, exist_ok=True)
+    firma.write_text(json.dumps(clave), encoding="utf-8")
+    paquete = SALIDA / "paquete"
+    r = subprocess.run([npx(), "remotion", "bundle", "src/index.ts", f"--out-dir={paquete}", "--log=error"], cwd=RAIZ, env=entorno())
+    if r.returncode != 0:
+        fallo("No se ha podido preparar el proyecto.")
+    hilos = "100%" if NUBE else "50%"
+    paso = 2700
+    tramos = []
+    inicio = time.time()
+    for k, a in enumerate(range(0, total, paso)):
+        b = min(total - 1, a + paso - 1)
+        out = carpeta / f"tramo-{k:03d}.mp4"
+        tramos.append(out)
+        if out.exists():
+            continue
+        tmp = carpeta / f"tramo-{k:03d}.tmp.mp4"
+        print(f"  Tramo {k + 1}/{(total + paso - 1) // paso} (segundos {a / 30:.0f}-{b / 30:.0f})…", flush=True)
+        orden = [npx(), "remotion", "render", str(paquete), "largo", str(tmp), f"--props={pf}", f"--frames={a}-{b}", "--muted", f"--concurrency={hilos}", "--crf=19", "--x264-preset=veryfast", "--log=error"]
+        if "--rapido" in args:
+            orden.append("--scale=0.5")
+        with open(carpeta / "registro.log", "a", encoding="utf-8") as reg:
+            r = subprocess.run(orden, cwd=RAIZ, stdout=reg, stderr=subprocess.STDOUT, env=entorno())
+        if r.returncode != 0 or not tmp.exists():
+            fallo(f"Falló el tramo {k + 1}. Mira {carpeta}/registro.log\n" + (carpeta / "registro.log").read_text(encoding="utf-8")[-1500:])
+        tmp.rename(out)
+    audio = carpeta / "audio.wav"
+    if not audio.exists():
+        print("  Sonido (voz + efectos)…", flush=True)
+        r = subprocess.run([npx(), "remotion", "render", str(paquete), "largo", str(audio), f"--props={pf}", "--codec=wav", "--log=error"], cwd=RAIZ, env=entorno())
+        if r.returncode != 0:
+            fallo("No se ha podido hacer el sonido.")
+    lista = carpeta / "lista.txt"
+    lista.write_text("".join(f"file '{t.name}'\n" for t in tramos), encoding="utf-8")
+    imagen = carpeta / "imagen.mp4"
+    subprocess.run([ffmpeg(), "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(lista), "-c", "copy", str(imagen)], check=True)
+    LISTOS.mkdir(exist_ok=True)
+    final = LISTOS / f"{n} - {d['titulo']} ({v}){' PRUEBA' if '--prueba' in args else ''}.mp4"
+    subprocess.run([ffmpeg(), "-v", "error", "-y", "-i", str(imagen), "-i", str(audio), "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", "48000", "-c:a", "aac", "-b:a", "192k", "-shortest", str(final)], check=True)
+    if "--prueba" not in args and (PUBLIC / "voces" / str(n) / "tiempos.json").exists():
+        escribir_srt(n, d["titulo"], final.with_suffix(".srt"))
+        print(f"✓ Subtítulos: «{LISTOS.name}/{final.with_suffix('.srt').name}» (súbelos a YouTube; el vídeo va sin subtítulos).")
+    print(f"✓ Vídeo listo en {(time.time() - inicio) / 60:.0f} min: «{LISTOS.name}/{final.name}»")
+
+
 def cmd_montar(args):
     n, d = idea(args)
     props, pf, musica = preparar_props(n, args)
+    if composicion(n) == "largo":
+        return montar_largo(n, d, args, props, pf)
     v = props["variante"]
     bruto = SALIDA / f"short-{n}.mp4"
     registro = SALIDA / f"short-{n}.log"
@@ -619,7 +728,7 @@ def cmd_foto(args):
         fallo("Dime el segundo. Ejemplo:  canal foto 1 3.5")
     props, pf, _ = preparar_props(n, args)
     out = SALIDA / f"foto-{n}-{seg:g}s.png"
-    r = subprocess.run([npx(), "remotion", "still", "src/index.ts", "short", str(out), f"--props={pf}", f"--frame={int(seg * 30)}", "--log=error"], cwd=RAIZ, env=entorno())
+    r = subprocess.run([npx(), "remotion", "still", "src/index.ts", composicion(n), str(out), f"--props={pf}", f"--frame={int(seg * 30)}", "--log=error"], cwd=RAIZ, env=entorno())
     if r.returncode != 0:
         fallo("No se ha podido sacar la foto (mira el error de arriba).")
     print(f"✓ {out}")
@@ -631,7 +740,7 @@ def tiempos_escenas(n, props):
     ts_src = (RAIZ / "src" / "ideas" / f"{n}.ts").read_text(encoding="utf-8")
     # igual que el montaje (indicePalabra en tiempo.tsx): un número es el índice de la palabra; un texto se busca
     # desde la palabra donde empieza la escena anterior (incluida)
-    desdes = re.findall(r'\n    \{\n      desde: (?:"([^"]+)"|(\d+))', ts_src)
+    desdes = re.findall(r'\{\s*\n\s*desde: (?:"([^"]+)"|(\d+))', ts_src)
     inicios = [0.0]
     k = 0
     for dsd, num in desdes:
@@ -641,7 +750,8 @@ def tiempos_escenas(n, props):
             continue
         txt, _, vez = dsd.partition("#")
         veces = int(vez or 1)
-        for i in range(k, len(pal)):
+        largo = composicion(n) == "largo"  # en los largos, cada escena busca DESPUÉS del inicio de la anterior
+        for i in range(k + (1 if largo and len(inicios) > 1 else 0), len(pal)):
             if normal(pal[i]["p"]) == normal(txt):
                 veces -= 1
                 if veces == 0:
@@ -668,26 +778,28 @@ def cmd_revisar(args):
     for i, seg in enumerate(segundos):
         out = SALIDA / f"rev-{n}-{i + 1}.png"
         fotos.append(out)
-        procesos.append(subprocess.Popen([npx(), "remotion", "still", str(paquete), "short", str(out), f"--props={pf}", f"--frame={int(seg * 30)}", "--scale=0.5", "--log=error"], cwd=RAIZ, env=entorno()))
+        procesos.append(subprocess.Popen([npx(), "remotion", "still", str(paquete), composicion(n), str(out), f"--props={pf}", f"--frame={int(seg * 30)}", "--scale=0.5", "--log=error"], cwd=RAIZ, env=entorno()))
         if len(procesos) >= (4 if NUBE else 3):
             procesos.pop(0).wait()
     for p in procesos:
         p.wait()
-    hoja = SALIDA / f"revision-{n}.jpg"
-    columnas = 3
-    entradas = []
-    for f in fotos:
-        entradas += ["-i", str(f)]
-    filas = (len(fotos) + columnas - 1) // columnas
-    capas = "".join(f"[{i}:v]scale=640:360[v{i}];" for i in range(len(fotos)))
-    huecos = len(fotos)
-    pos = "|".join(f"{(i % columnas) * 640}_{(i // columnas) * 360}" for i in range(huecos))
-    filtro = capas + "".join(f"[v{i}]" for i in range(huecos)) + f"xstack=inputs={huecos}:layout={pos}:fill=white"
-    if huecos == 1:
-        filtro = "[0:v]scale=640:360"
-    subprocess.run([ffmpeg(), "-v", "error", "-y", *entradas, "-filter_complex", filtro, str(hoja)], check=True)
-    print(f"✓ Hoja de revisión: {hoja}  (variante {props['variante']}; {', '.join(f'{x}s' for x in segundos)})")
-    chequear_planos(n, pf)
+    # hojas de 16 fotos (4 x 4), con el número de escena y su segundo
+    fuente = str(PUBLIC / "fuentes" / "InterDisplay-Black.otf").replace(":", "\\:")
+    hojas = []
+    for h0 in range(0, len(fotos), 16):
+        grupo = fotos[h0 : h0 + 16]
+        hoja = SALIDA / f"revision-{n}-{h0 // 16 + 1}.jpg"
+        entradas = []
+        for f in grupo:
+            entradas += ["-i", str(f)]
+        capas = "".join(f"[{i}:v]scale=480:270,drawtext=fontfile='{fuente}':text='{h0 + i + 1} · {segundos[h0 + i]:.0f}s':x=8:y=8:fontsize=26:fontcolor=white:box=1:boxcolor=black@0.6[v{i}];" for i in range(len(grupo)))
+        pos = "|".join(f"{(i % 4) * 480}_{(i // 4) * 270}" for i in range(len(grupo)))
+        filtro = capas + "".join(f"[v{i}]" for i in range(len(grupo))) + (f"xstack=inputs={len(grupo)}:layout={pos}:fill=white" if len(grupo) > 1 else "null")
+        subprocess.run([ffmpeg(), "-v", "error", "-y", *entradas, "-filter_complex", filtro, "-q:v", "3", str(hoja)], check=True)
+        hojas.append(hoja)
+    print(f"✓ Hojas de revisión ({len(hojas)}): " + ", ".join(str(h) for h in hojas) + f"  (variante {props['variante']})")
+    if composicion(n) == "short":
+        chequear_planos(n, pf)
 
 
 def cmd_todo(args):

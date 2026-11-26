@@ -16,7 +16,7 @@ export type Quien =
   | "ronald_soldado"
   | "fuscone" // Richard Fuscone: traje marino y corbata roja
   | "tu" // el protagonista del canal
-  | "abogado" | "enfermera" | "bibliotecaria" | "empresario" | "banquero" | "actor"
+  | "abogado" | "vecina" | "enfermera" | "bibliotecaria" | "empresario" | "banquero" | "actor"
   | "gente"; // persona de relleno (cambia con `semilla`)
 
 export type Modo = "stand" | "stroll" | "sit" | "fall";
