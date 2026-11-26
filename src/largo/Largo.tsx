@@ -14,6 +14,21 @@ import { ActorL, Cam, EscenaL, IdeaLarga } from "./tipos";
 
 type Plan = { e: EscenaL; ini: number; fin: number; base: number; i: number };
 
+/** Palabra de inicio de una escena. Si va en MAYÚSCULA («Y», «No»), solo vale una palabra del guion que también
+ *  empiece en mayúscula (inicio de frase): así «Y» no se confunde con la «y» de «treinta y nueve». */
+export const buscarDesde = (pal: PropsShort["palabras"], en: En, desde: number): number => {
+  if (typeof en === "number") return indicePalabra(pal, en, desde);
+  const [texto, vez] = en.split("#");
+  if (texto[0] !== texto[0].toUpperCase() || texto[0] === texto[0].toLowerCase()) return indicePalabra(pal, en, desde);
+  let veces = Number(vez || 1);
+  const n = (x: string) => x.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9ñ]/g, "");
+  for (let i = desde; i < pal.length; i++) {
+    const w = pal[i].p.replace(/^[¿¡"«(…]+/, "");
+    if (w[0] && w[0] === w[0].toUpperCase() && w[0] !== w[0].toLowerCase() && n(w) === n(texto) && --veces === 0) return i;
+  }
+  return indicePalabra(pal, en, desde);
+};
+
 /** fotogramas de inicio de cada escena (según su palabra `desde`) */
 export const planificar = (idea: IdeaLarga, props: PropsShort): Plan[] => {
   const pal = props.palabras, total = Math.ceil((props.duracion + 0.7) * FPS);
@@ -21,7 +36,7 @@ export const planificar = (idea: IdeaLarga, props: PropsShort): Plan[] => {
   let base = 0;
   idea.escenas.forEach((e, i) => {
     let ini = 0;
-    if (i > 0 && e.desde !== undefined) { base = indicePalabra(pal, e.desde, i === 1 ? 0 : base + 1); /* busca DESPUÉS del inicio de la escena anterior */ ini = Math.max(0, Math.round(pal[base].ini * FPS) - 3); }
+    if (i > 0 && e.desde !== undefined) { base = buscarDesde(pal, e.desde, i === 1 ? 0 : base + 1); /* busca DESPUÉS del inicio de la escena anterior */ ini = Math.max(0, Math.round(pal[base].ini * FPS) - 3); }
     out.push({ e, ini, fin: total, base, i });
   });
   for (let i = 0; i < out.length - 1; i++) out[i].fin = out[i + 1].ini;

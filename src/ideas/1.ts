@@ -109,12 +109,12 @@ const escenas: EscenaL[] = [
   // ======== ¿quién era?
   {
     desde: "Quién",
-    lugar: "pizarra", cam: [960, 560, 1.2], a: [960, 560, 1.45],
-    actores: [ronald(960, 1000, { sombra: true, k: 0.55 })],
+    lugar: "pizarra", cam: [960, 640, 1.15], a: [960, 640, 1.3],
+    actores: [ronald(960, 1000, { sombra: true, k: 0.55 }), { quien: "empresario", x: 520, y: 1000, expr: "grin", entra: "empresario" }],
     objetos: [{ tipo: "interroga", x: 1300, y: 420 }],
   },
   {
-    desde: "Un",
+    desde: "banquero",
     lugar: "pizarra", cam: [960, 640, 1.2], a: [960, 660, 1.35],
     actores: [
       { quien: "empresario", x: 500, y: 980, expr: "grin", entra: "empresario" },
@@ -216,7 +216,7 @@ const escenas: EscenaL[] = [
     desde: "Y",
     lugar: "gasolinera", cam: [1000, 600, 1.8], a: [1000, 580, 2.1],
     actores: [{ quien: "ronald_joven", x: 1000, y: 900, expr: "nervous", mira: 1 }],
-    objetos: [{ tipo: "interroga", x: 1250, y: 380, en: "ascenso", tam: 160 }],
+    objetos: [{ tipo: "interroga", x: 1300, y: 470, en: "ascenso", tam: 150 }],
     rotulos: [R("ascenso", "¿ASCENSO?", 150, 90, "#ffffff", 600), R("negocio", "¿NEGOCIO PROPIO?", 270, 80, "#ffffff", 600)],
   },
   // ======== conserje
@@ -352,7 +352,7 @@ const escenas: EscenaL[] = [
   // ======== ningún secreto
   {
     desde: "Aquí",
-    lugar: "pizarra", cam: [960, 540, 1], a: [960, 560, 1.15],
+    lugar: "pizarra", cam: [700, 330, 1.7], a: [900, 640, 1.15],
     actores: [ronald(1550, 1000, { expr: "smile_closed", acciones: [{ en: "brillante", expr: "grin" }] })],
     objetos: [
       { tipo: "texto", x: 650, y: 330, texto: "Un secreto", tam: 90, en: "secreto" }, { tipo: "tacha", x: 650, y: 330, r: 110, en: "No#2", delante: true },
@@ -396,7 +396,7 @@ const escenas: EscenaL[] = [
   },
   {
     desde: "Siempre",
-    lugar: "pizarra", cam: [960, 560, 1.05], a: [960, 560, 1.2],
+    lugar: "pizarra", cam: [500, 560, 1.7], a: [1450, 560, 1.7],
     objetos: [{ tipo: "iconos", x: 440, y: 560, lista: ["banco", "farmacia", "comida", "limpieza"], ens: ["Bancos", "farmacias", "comida", "limpieza"], paso: 345 }],
     rotulos: [R("entendía", "EMPRESAS QUE ENTENDÍA", 150, 90)],
   },
@@ -694,7 +694,7 @@ const escenas: EscenaL[] = [
     desde: "Debía",
     lugar: "mansion", cam: [1200, 620, 1.6], a: [1200, 600, 1.85], noche: true,
     actores: [fus(1200, 960, { expr: "nervous", acciones: [{ en: "crédito", expr: "pained" }] })],
-    objetos: [{ tipo: "facturas", x: 1200, y: 640, n: 12, r: 360, delante: true }],
+    objetos: [{ tipo: "facturas", x: 1200, y: 600, n: 12, r: 520 }],
     rotulos: [R("tiendas", "TIENDAS", 150, 72, "#ffffff", 500), R("colegio", "COLEGIO", 150, 72, "#ffffff", 960), R("tarjeta", "TARJETA", 150, 72, "#ffffff", 1420)],
   },
   {
@@ -753,6 +753,13 @@ const escenas: EscenaL[] = [
   },
   {
     desde: "Y",
+    lugar: "pizarra", cam: [960, 640, 1.5], a: [960, 620, 1.7],
+    actores: [ronald(1380, 1000, { expr: "grin", acciones: [{ en: "Ronald", senala: true }] })],
+    objetos: [{ tipo: "cesta", x: 900, y: 900, k: 1.1 }],
+    rotulos: [R("cartera", "COMO LA CARTERA DE RONALD", 150, 76, "#ffffff")],
+  },
+  {
+    desde: "un",
     lugar: "pizarra", cam: [960, 600, 1.2], a: [960, 620, 1.4],
     objetos: [{ tipo: "cesta", x: 960, y: 900, k: 1.3 }],
     rotulos: [R("fondo", "FONDO INDEXADO", 150, 110), R("cientos", "CIENTOS DE EMPRESAS", 270, 70, "#ffffff")],
@@ -836,7 +843,7 @@ const escenas: EscenaL[] = [
     rotulos: [R("diez", "10 AÑOS ANTES", 150, 90, "#ffffff")],
   },
   {
-    desde: "Tendrías#2",
+    desde: "Tendrías",
     lugar: "pizarra", cam: [1500, 330, 1.5], a: [1520, 320, 1.7],
     objetos: [grafica({ en: "Tendrías", dura: 0.1, anos: 30, anosEje: 40, mensual: 100, max: 270000, en2: "Tendrías", hasta2: "Tendrías", anos2: 40 })],
     rotulos: [N("doscientos", 260000, " €", 150, 130, { pre: "+", dura: 1.4 })],
@@ -946,7 +953,7 @@ const escenas: EscenaL[] = [
     rotulos: [R("sabes", "AHORA YA SABES QUE NO", 150, 90)],
   },
   {
-    desde: "No#2",
+    desde: "No",
     lugar: "arbol", cam: [960, 560, 1.25], a: [960, 500, 1.0],
     actores: [ronald(480, 960, { expr: "smile", cosa: "fregona" }), tu(700, 960, { expr: "grin" })],
     objetos: [arbol(1150, 950, { de: 1, a: 1, en: "No#2", dura: 0.1, frutos: "No#2" })],
